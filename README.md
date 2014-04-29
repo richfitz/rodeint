@@ -7,3 +7,4 @@ Pre-issues:
 - [ ] Implement all examples pointing at [BH](http://cran.r-project.org/web/packages/BH/index.html) to confirm that we have all the required headers, gather any others needed.
 - [ ] Write simple handler for integrating derivatives written in R
 - [ ] Extend to a C++ API that is accessible via include files.  This should be fairly straightforward given that odeint is header only.
+- [ ] Benchmarks against gsl and lsoda - can use the gsl code in diversitree, and lsoda code in deSolve.
