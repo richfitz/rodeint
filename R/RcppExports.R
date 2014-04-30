@@ -9,3 +9,7 @@ foo_run <- function(obj) {
     .Call('rodeint_foo_run', PACKAGE = 'rodeint', obj)
 }
 
+foo_set_a <- function(obj, a) {
+    invisible(.Call('rodeint_foo_set_a', PACKAGE = 'rodeint', obj, a))
+}
+

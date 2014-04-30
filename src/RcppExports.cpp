@@ -23,17 +23,30 @@ BEGIN_RCPP
 END_RCPP
 }
 // foo_run
-double foo_run(foo obj);
+double foo_run(Rcpp::XPtr<foo> obj);
 RcppExport SEXP rodeint_foo_run(SEXP objSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< foo >::type obj(objSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<foo> >::type obj(objSEXP );
         double __result = foo_run(obj);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
+END_RCPP
+}
+// foo_set_a
+void foo_set_a(Rcpp::XPtr<foo> obj, double a);
+RcppExport SEXP rodeint_foo_set_a(SEXP objSEXP, SEXP aSEXP) {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<foo> >::type obj(objSEXP );
+        Rcpp::traits::input_parameter< double >::type a(aSEXP );
+        foo_set_a(obj, a);
+    }
+    return R_NilValue;
 END_RCPP
 }

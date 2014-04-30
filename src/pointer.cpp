@@ -26,6 +26,11 @@ foo make_foo(double a, double b) {
 }
 
 // [[Rcpp::export]]
-double foo_run(foo obj) {
-  return obj.run();
+double foo_run(Rcpp::XPtr<foo> obj) {
+  return obj->run();
+}
+
+// [[Rcpp::export]]
+void foo_set_a(Rcpp::XPtr<foo> obj, double a) {
+  obj->a = a;
 }
