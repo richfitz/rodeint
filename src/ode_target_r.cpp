@@ -1,32 +1,53 @@
-// #include "ode_target_r.hpp"
-// #include <Rcpp.h>
+#include <boost/numeric/odeint.hpp>
+#include "ode_target_r.hpp"
 
-// namespace rodeint {
+namespace rodeint {
 
-// ode_target_r::ode_target_r(SEXP derivs_, pars_type pars_)
-//   : derivs(Rcpp::as<Rcpp::Function>(derivs_)), pars(pars_) {
-// }
+ode_target_r::ode_target_r(Rcpp::Function derivs_, SEXP pars_)
+  : derivs(derivs_), pars(pars_) {
+}
 
-// void ode_target_r::operator()(const state_type& y, state_type &dydt,
-//                               const double t) {
-//   // This obviously does more copying than seems necessary, but even
-//   // more may happen on the R side...
-//   const state_type ret = derivs(Rcpp::wrap(t), Rcpp::wrap(y), pars);
-//   std::copy(ret.begin(), ret.end(), dydt.end());
-// }
+void ode_target_r::operator()(const state_type& y, state_type &dydt,
+                              const double t) {
+  const state_type ret = 
+    Rcpp::as<state_type>(derivs(Rcpp::wrap(t), Rcpp::wrap(y), pars));
+  std::copy(ret.begin(), ret.end(), dydt.begin());
+}
 
-// }
+void ode_target_r::set_pars(SEXP pars_) {
+  pars = pars_;
+}
 
-// namespace Rcpp {
-// template<>
-// SEXP wrap(const rodeint::ode_target_r& obj) {
-//   return Rcpp::wrap(Rcpp::Xptr<rodeint::ode_target_r>(obj));
-// }
+}
 
-// template<>
-// rodeint::ode_target_r as(SEXP) {
-  
-// }
-// }
+// Then the exports
+// [[Rcpp::export]]
+rodeint::ode_target_r ode_target_r_make(Rcpp::Function derivs,
+                                        SEXP pars_type) {
+  return rodeint::ode_target_r(derivs, pars_type);
+}
 
-// }
+// TODO: use 'rodeint::ode_target_r::state_type' for argument and return.
+// [[Rcpp::export]]
+std::vector<double> ode_target_r_derivs(Rcpp::XPtr<rodeint::ode_target_r> obj,
+                                        std::vector<double> y, 
+                                        double t) {
+  std::vector<double> dydt(y.size());
+  (*obj)(y, dydt, t);
+  return dydt;
+}
+
+// [[Rcpp::export]]
+void ode_target_r_set_pars(Rcpp::XPtr<rodeint::ode_target_r> obj,
+                           SEXP pars) {
+  obj->set_pars(pars);
+}
+
+// [[Rcpp::export]]
+std::vector<double> ode_target_r_basic(rodeint::ode_target_r obj,
+                                       std::vector<double> y, 
+                                       double t0, double t1,
+                                       double dt) {
+  boost::numeric::odeint::integrate(obj, y, t0, t1, dt);
+  return y;
+}
