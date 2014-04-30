@@ -50,3 +50,18 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// foo_run_copy
+double foo_run_copy(const foo& obj);
+RcppExport SEXP rodeint_foo_run_copy(SEXP objSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< const foo& >::type obj(objSEXP );
+        double __result = foo_run_copy(obj);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}

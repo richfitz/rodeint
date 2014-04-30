@@ -16,7 +16,7 @@ SEXP wrap(const foo& obj) {
 template<>
 foo as(SEXP obj) {
   XPtr<foo> xp(obj);
-  return static_cast<foo>(*xp);
+  return *xp;
 }
 }
 
@@ -33,4 +33,9 @@ double foo_run(Rcpp::XPtr<foo> obj) {
 // [[Rcpp::export]]
 void foo_set_a(Rcpp::XPtr<foo> obj, double a) {
   obj->a = a;
+}
+
+// [[Rcpp::export]]
+double foo_run_copy(const foo& obj) {
+  return obj.run();
 }

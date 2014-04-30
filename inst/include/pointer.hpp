@@ -6,7 +6,7 @@
 struct foo {
   foo(double a_, double b_) : a(a_), b(b_) {}
   ~foo() {std::cout << "Deleting foo\n" << std::endl;}
-  double run() {return a+b;}
+  double run() const {return a+b;}
   double a, b;
 };
 

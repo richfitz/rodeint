@@ -13,3 +13,7 @@ foo_set_a <- function(obj, a) {
     invisible(.Call('rodeint_foo_set_a', PACKAGE = 'rodeint', obj, a))
 }
 
+foo_run_copy <- function(obj) {
+    .Call('rodeint_foo_run_copy', PACKAGE = 'rodeint', obj)
+}
+

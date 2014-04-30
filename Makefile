@@ -1,4 +1,5 @@
 all:
+	make -C src
 
 attributes:
 	Rscript -e "Rcpp::compileAttributes()"
