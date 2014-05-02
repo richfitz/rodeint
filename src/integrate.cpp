@@ -36,20 +36,23 @@ Rcpp::List integrate_observed(rodeint::target_r target,
 // generalise out even more of the hassle if boost variant would work
 // in a nested way there (it might).
 //
-// Some serious weirdness going on with attributes here:
+// Some serious weirdness going on with attributes here; if this is
+// called integrate_adaptive, then it finds
+// boost::numeric::odeint::integrate_adaptive.  Editing the
+// RcppExports.cpp manually to replace integrate_adaptive to
+// ::integrate_adaptive finds this function instead.  But I can't see
+// where any case of 'using namespace ...odeint' is that could
+// possibly have lifted that function to the global namespace.  I've
+// done a little dance with renaming things though.
 //
-// integrate_adaptive does not work as a name, but
-// do_integrate_adapative,a nd controlled_stepper__integrate_adaptive
-// does.
-//
-// [[Rcpp::export]]
+// [[Rcpp::export(integrate_adaptive)]]
 Rcpp::NumericVector
-controlled_stepper__integrate_adaptive(rodeint::controlled_stepper stepper,
-                                       rodeint::target_r target,
-                                       rodeint::target_r::state_type y,
-                                       double t0, double t1,
-                                       double dt,
-                                       bool with_info=false) {
+r_integrate_adaptive(rodeint::controlled_stepper stepper,
+                     rodeint::target_r target,
+                     rodeint::target_r::state_type y,
+                     double t0, double t1,
+                     double dt,
+                     bool with_info=false) {
   rodeint::controlled_stepper_integrate_adaptive_visitor
     vis(target, y, t0, t1, dt);
   boost::apply_visitor(vis, stepper);

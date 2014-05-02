@@ -5,7 +5,11 @@
 rodeint::controlled_stepper
 controlled_stepper__ctor(std::string type,
                          double eps_abs, double eps_rel) {
-  using namespace boost::numeric::odeint;
+  using boost::numeric::odeint::make_controlled;
+  using boost::numeric::odeint::runge_kutta_cash_karp54;
+  using boost::numeric::odeint::runge_kutta_fehlberg78;
+  using boost::numeric::odeint::runge_kutta_dopri5;
+
   typedef std::vector<double> state;
 
   rodeint::controlled_stepper ret;

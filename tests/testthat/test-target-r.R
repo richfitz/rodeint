@@ -40,7 +40,7 @@ types <- c("runge_kutta_cash_karp54",
            "runge_kutta_dopri5")
 cmp <- unname(lsoda(y0, c(0, t), wrap.deSolve(harm.osc), pars)[-1,-1])
 for (type in types) {
-  integrate_adaptive <- rodeint:::controlled_stepper__integrate_adaptive
+  integrate_adaptive <- rodeint:::integrate_adaptive
   s <- rodeint:::controlled_stepper__ctor(type, 1e-6, 1e-6)
   y1 <- integrate_adaptive(s, ode, y0, 0, t, 0.01)
   expect_that(y1, equals(cmp, tolerance=1e-5))

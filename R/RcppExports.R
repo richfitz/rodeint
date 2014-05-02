@@ -17,8 +17,8 @@ integrate_observed <- function(target, y, t0, t1, dt) {
     .Call('rodeint_integrate_observed', PACKAGE = 'rodeint', target, y, t0, t1, dt)
 }
 
-controlled_stepper__integrate_adaptive <- function(stepper, target, y, t0, t1, dt, with_info = FALSE) {
-    .Call('rodeint_controlled_stepper__integrate_adaptive', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, with_info)
+integrate_adaptive <- function(stepper, target, y, t0, t1, dt, with_info = FALSE) {
+    .Call('rodeint_r_integrate_adaptive', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, with_info)
 }
 
 target_r__ctor <- function(derivs, pars_type) {
