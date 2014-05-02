@@ -22,4 +22,7 @@ check: build
 	@rm -f `ls -1tr rodeint*gz | tail -n1`
 	@rm -rf rodeint.Rcheck
 
+test:
+	make -C tests/testthat
+
 .PHONY: attributes document install clean build check
