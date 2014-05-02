@@ -11,35 +11,26 @@
 namespace Rcpp {
 // 'wrap' definitions for each class:
 template<>
-inline SEXP wrap(const rodeint::ode_target_r& obj) {
-  XPtr<rodeint::ode_target_r> ret(new rodeint::ode_target_r(obj), true);
+inline SEXP wrap(const rodeint::target_r& obj) {
+  XPtr<rodeint::target_r> ret(new rodeint::target_r(obj), true);
   return wrap(ret);
 }
 template<>
-inline SEXP wrap(const rodeint::integrator& obj) {
-  XPtr<rodeint::integrator> ret(new rodeint::integrator(obj), true);
-  return wrap(ret);
-}
-template<>
-inline SEXP wrap(const rodeint::foo& obj) {
-  XPtr<rodeint::foo> ret(new rodeint::foo(obj), true);
+inline SEXP wrap(const rodeint::controlled_stepper& obj) {
+  XPtr<rodeint::controlled_stepper>
+    ret(new rodeint::controlled_stepper(obj), true);
   return wrap(ret);
 }
 
 // 'as' definitions for each class:
 template<>
-rodeint::ode_target_r as(SEXP obj) {
-  XPtr<rodeint::ode_target_r> xp(obj);
+rodeint::target_r as(SEXP obj) {
+  XPtr<rodeint::target_r> xp(obj);
   return *xp;
 }
 template<>
-rodeint::integrator as(SEXP obj) {
-  XPtr<rodeint::integrator> xp(obj);
-  return *xp;
-}
-template<>
-rodeint::foo as(SEXP obj) {
-  XPtr<rodeint::foo> xp(obj);
+rodeint::controlled_stepper as(SEXP obj) {
+  XPtr<rodeint::controlled_stepper> xp(obj);
   return *xp;
 }
 }

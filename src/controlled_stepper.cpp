@@ -10,7 +10,7 @@ controlled_stepper__ctor(std::string type,
 
   rodeint::controlled_stepper ret;
 
-  if (type == "runge_kutta_cash_karp45") {
+  if (type == "runge_kutta_cash_karp54") {
     ret = make_controlled<runge_kutta_cash_karp54<state> >(eps_abs, eps_rel);
   } else if (type == "runge_kutta_fehlberg78") {
     ret = make_controlled<runge_kutta_fehlberg78<state> >(eps_abs, eps_rel);

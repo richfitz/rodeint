@@ -27,7 +27,7 @@ typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_cash_karp54<
     std::vector<double> > >
-controlled_stepper_runge_killta_cash_karp54;
+controlled_stepper_runge_kutta_cash_karp54;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
@@ -43,7 +43,7 @@ controlled_stepper_runge_kutta_dopri5;
 
 typedef
 boost::variant<
-  controlled_stepper_runge_killta_cash_karp54,
+  controlled_stepper_runge_kutta_cash_karp54,
   controlled_stepper_runge_kutta_fehlberg78,
   controlled_stepper_runge_kutta_dopri5>
 controlled_stepper;
@@ -55,7 +55,7 @@ class controlled_stepper_type_visitor : boost::static_visitor<> {
 public:
   typedef std::string result_type;
   result_type operator()(const controlled_stepper_runge_kutta_cash_karp54&) const {
-    return "runge_kutta_cash_karp45";
+    return "runge_kutta_cash_karp54";
   }
   result_type operator()(const controlled_stepper_runge_kutta_fehlberg78&) const {
     return "runge_kutta_fehlberg78";

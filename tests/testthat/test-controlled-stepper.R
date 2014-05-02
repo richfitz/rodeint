@@ -1,3 +1,5 @@
+source("helper-rodeint.R")
+
 context("controlled_stepper")
 
 test_that("corner cases", {
@@ -10,7 +12,7 @@ test_that("corner cases", {
 })
 
 test_that("construction", {
-  types <- c("runge_kutta_cash_karp45",
+  types <- c("runge_kutta_cash_karp54",
              "runge_kutta_fehlberg78",
              "runge_kutta_dopri5")
   for (t in types) {

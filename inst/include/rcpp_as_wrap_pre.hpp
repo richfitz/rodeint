@@ -14,23 +14,21 @@
 
 #include <RcppCommon.h>
 
-// List of classes to expose, all within the rodeint namespace.
+// Forward declare a list of classes to expose, all within the rodeint
+// namespace (not needed for files included before this one in
+// rodeint.h)
 namespace rodeint {
-class ode_target_r;
-class integrator;
-struct foo;
+class target_r;
 }
 
 namespace Rcpp {
 // A 'wrap' prototype for each class:
-template<> SEXP wrap(const rodeint::ode_target_r&);
-template<> SEXP wrap(const rodeint::integrator&);
-template<> SEXP wrap(const rodeint::foo&);
+template<> SEXP wrap(const rodeint::target_r&);
+template<> SEXP wrap(const rodeint::controlled_stepper&);
 
 // An 'as' prototype for each class:
-template<> rodeint::ode_target_r as(SEXP);
-template<> rodeint::integrator as(SEXP);
-template<> rodeint::foo as(SEXP);
+template<> rodeint::target_r as(SEXP);
+template<> rodeint::controlled_stepper as(SEXP);
 }
 
 #endif
