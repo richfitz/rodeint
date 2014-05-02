@@ -1,4 +1,2 @@
-update_upstream.sh
-.odeint-v2
 src/GNUmakefile
 Makefile
