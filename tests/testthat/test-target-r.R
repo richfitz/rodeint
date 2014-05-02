@@ -31,3 +31,19 @@ res <- rodeint:::integrate_observed(ode, y0, 0, t, 0.1)
 expect_that(names(res), equals(c("t", "y")))
 cmp <- lsoda(y0, res$t, wrap.deSolve(harm.osc), pars)
 expect_that(res$y, equals(unname(cmp[,-1]), tolerance=1e-5))
+
+## So, how do we get things like the number of steps or estimated
+## error out of this?  That's going to require creating a little
+## object thing, or adding attributes on later (which is cool).
+types <- c("runge_kutta_cash_karp54",
+           "runge_kutta_fehlberg78",
+           "runge_kutta_dopri5")
+cmp <- unname(lsoda(y0, c(0, t), wrap.deSolve(harm.osc), pars)[-1,-1])
+for (type in types) {
+  integrate_adaptive <- rodeint:::controlled_stepper__integrate_adaptive
+  s <- rodeint:::controlled_stepper__ctor(type, 1e-6, 1e-6)
+  y1 <- integrate_adaptive(s, ode, y0, 0, t, 0.01)
+  expect_that(y1, equals(cmp, tolerance=1e-5))
+  y2 <- integrate_adaptive(s, ode, y0, 0, t, 0.01, TRUE)
+  expect_that(attr(y2, "steps"), is_a("numeric"))
+}
