@@ -9,11 +9,11 @@ controlled_stepper__type <- function(s) {
     .Call('rodeint_controlled_stepper__type', PACKAGE = 'rodeint', s)
 }
 
-integrate <- function(target, y, t0, t1, dt, save_state = FALSE) {
-    .Call('rodeint_r_integrate', PACKAGE = 'rodeint', target, y, t0, t1, dt, save_state)
+r_integrate_simple <- function(target, y, t0, t1, dt, save_state = FALSE) {
+    .Call('rodeint_r_integrate_simple', PACKAGE = 'rodeint', target, y, t0, t1, dt, save_state)
 }
 
-integrate_adaptive <- function(stepper, target, y, t0, t1, dt, save_state = FALSE) {
+r_integrate_adaptive <- function(stepper, target, y, t0, t1, dt, save_state = FALSE) {
     .Call('rodeint_r_integrate_adaptive', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
 }
 

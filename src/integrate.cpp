@@ -5,12 +5,14 @@
 #include "controlled_stepper.hpp"
 #include "util.hpp"
 
-// [[Rcpp::export(integrate)]]
+// TODO: Drop the default args here and in called functions.
+
+// [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate(rodeint::target_r target,
-            rodeint::target_r::state_type y, 
-            double t0, double t1, double dt,
-            bool save_state=false) {
+r_integrate_simple(rodeint::target_r target,
+                   rodeint::target_r::state_type y,
+                   double t0, double t1, double dt,
+                   bool save_state=false) {
   typedef rodeint::target_r::state_type state_type;
   using boost::numeric::odeint::integrate;
 
@@ -40,7 +42,7 @@ r_integrate(rodeint::target_r target,
 // generalise out even more of the hassle if boost variant would work
 // in a nested way there (it might).
 //
-// [[Rcpp::export(integrate_adaptive)]]
+// [[Rcpp::export]]
 Rcpp::NumericVector
 r_integrate_adaptive(rodeint::controlled_stepper stepper,
                      rodeint::target_r target,

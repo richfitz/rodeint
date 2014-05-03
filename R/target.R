@@ -1,7 +1,4 @@
-## ##' @title 
-## ##' ...
-## ##' @name target_r
-## ##' @export
+##' @export target_r
 NULL
 
 target_r <- setRefClass("target_r",

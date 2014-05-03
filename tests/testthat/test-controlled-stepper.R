@@ -8,10 +8,7 @@ test_that("corner cases", {
 })
 
 test_that("construction", {
-  types <- c("runge_kutta_cash_karp54",
-             "runge_kutta_fehlberg78",
-             "runge_kutta_dopri5")
-  for (type in types) {
+  for (type in controlled_stepper_types()) {
     s <- controlled_stepper(type)
     expect_that(s, is_a("controlled_stepper"))
 

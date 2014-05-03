@@ -1,3 +1,6 @@
+##' @export controlled_stepper
+NULL
+
 controlled_stepper <- setRefClass("controlled_stepper",
                                   fields=list(
                                     name="character",
@@ -12,3 +15,15 @@ controlled_stepper$methods(initialize=function(name, atol=1e-6, rtol=1e-6) {
   rtol <<- rtol
   ptr  <<- rodeint:::controlled_stepper__ctor(name, atol, rtol)
 })
+
+## This is going to change at some point, but this is a list of the
+## possible controlled stepper types.  Once I work out what to do
+## about non-controlled steppers (dense output, etc), then this might
+## change.
+
+##' @export controlled_stepper_types
+controlled_stepper_types <- function() {
+  c("runge_kutta_cash_karp54",
+    "runge_kutta_fehlberg78",
+    "runge_kutta_dopri5")
+}
