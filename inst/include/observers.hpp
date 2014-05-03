@@ -17,17 +17,17 @@ template <typename T>
 struct obs_save_state {
   typedef T state_type;
 
-  std::vector<state_type>& states;
-  std::vector<double>&     times;
+  std::vector<state_type>& y_vec;
+  std::vector<double>&     t_vec;
 
   // Default state is empty.
-  obs_save_state(std::vector<state_type>& states_,
-                 std::vector<double>& times_)
-    : states(states_), times(times_) { }
+  obs_save_state(std::vector<state_type>& y_vec_, 
+                 std::vector<double>& t_vec_)
+    : y_vec(y_vec_), t_vec(t_vec_) {}
 
   void operator()(const state_type& y, double t) {
-    states.push_back(y);
-    times.push_back(t);
+    y_vec.push_back(y);
+    t_vec.push_back(t);
   }
 };
 

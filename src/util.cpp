@@ -1,5 +1,7 @@
 #include "util.hpp"
 
+namespace rodeint {
+
 // Given a vector-of-vectors, copy the vector x[i] into the ith
 // *column* of an Rcpp matrix.
 Rcpp::NumericMatrix 
@@ -30,4 +32,6 @@ to_rcpp_matrix_by_row(const std::vector< std::vector<double> >& x) {
     std::copy(x[i].begin(), x[i].end(), r.begin());
   }
   return ret;
+}
+
 }

@@ -4,9 +4,13 @@
 #include <Rcpp.h>
 #include <vector>
 
+namespace rodeint {
+
 Rcpp::NumericMatrix 
 to_rcpp_matrix_by_col(const std::vector< std::vector<double> >& x);
 Rcpp::NumericMatrix
 to_rcpp_matrix_by_row(const std::vector< std::vector<double> >& x);
+
+}
 
 #endif
