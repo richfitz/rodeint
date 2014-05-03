@@ -1,2 +1,4 @@
 src/GNUmakefile
 Makefile
+ignore
+.travis.yml
