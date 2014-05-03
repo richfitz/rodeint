@@ -18,6 +18,11 @@ target_r__derivs(Rcpp::XPtr<rodeint::target_r> target,
 }
 
 // [[Rcpp::export]]
+SEXP target_r__get_pars(Rcpp::XPtr<rodeint::target_r> target) {
+  return target->get_pars();
+}
+
+// [[Rcpp::export]]
 void target_r__set_pars(Rcpp::XPtr<rodeint::target_r> target,
                         SEXP pars) {
   target->set_pars(pars);

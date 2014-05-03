@@ -17,6 +17,9 @@ public:
       Rcpp::as<state_type>(derivs(Rcpp::wrap(t), Rcpp::wrap(y), pars));
     std::copy(ret.begin(), ret.end(), dydt.begin());
   }
+  pars_type get_pars() const {
+    return pars;
+  }
   void set_pars(pars_type pars_) {
     pars = pars_;
   }

@@ -1,3 +1,4 @@
 import(Rcpp)
 import(methods)
 useDynLib(rodeint)
+export(target_r)

@@ -25,6 +25,10 @@ target_r__derivs <- function(target, y, t) {
     .Call('rodeint_target_r__derivs', PACKAGE = 'rodeint', target, y, t)
 }
 
+target_r__get_pars <- function(target) {
+    .Call('rodeint_target_r__get_pars', PACKAGE = 'rodeint', target)
+}
+
 target_r__set_pars <- function(target, pars) {
     invisible(.Call('rodeint_target_r__set_pars', PACKAGE = 'rodeint', target, pars))
 }
