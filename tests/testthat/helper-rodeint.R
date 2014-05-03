@@ -12,4 +12,3 @@ harmonic.oscillator <- function(t, y, pars) {
 ## Wrapper to turn functions like harmonic.oscillator into deSolve
 ## compatible ones.
 wrap.deSolve <- function(f) function(...) list(f(...))
-
