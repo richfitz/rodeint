@@ -18,8 +18,7 @@ integrate(rodeint::target_r target,
 // [[Rcpp::export]]
 Rcpp::List integrate_observed(rodeint::target_r target,
                               rodeint::target_r::state_type y, 
-                              double t0, double t1,
-                              double dt) {
+                              double t0, double t1, double dt) {
   typedef rodeint::target_r::state_type state_type;
   // Perhaps store these as an attribute, rather than return the list?
   std::vector<state_type> y_vec;
@@ -59,6 +58,26 @@ r_integrate_adaptive(rodeint::controlled_stepper stepper,
   Rcpp::NumericVector ret(y.begin(), y.end());
   if (with_info) {
     ret.attr("steps") = vis.last_steps();
+  }
+  return ret;
+}
+
+// [[Rcpp::export(integrate_adaptive_observed)]]
+Rcpp::NumericVector
+r_integrate_adaptive_observed(rodeint::controlled_stepper stepper,
+                              rodeint::target_r target,
+                              rodeint::target_r::state_type y,
+                              double t0, double t1, double dt,
+                              bool with_info=false) {
+  rodeint::controlled_stepper_integrate_adaptive_save_state_visitor
+    vis(target, y, t0, t1, dt);
+  boost::apply_visitor(vis, stepper);
+  Rcpp::NumericVector ret(y.begin(), y.end());
+  if (with_info) {
+    ret.attr("steps") = vis.last_steps();
+    // Fucking name soup over here.
+    ret.attr("t") = vis.times();
+    ret.attr("y") = to_rcpp_matrix_by_row(vis.states());
   }
   return ret;
 }

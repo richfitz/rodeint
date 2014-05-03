@@ -7,6 +7,12 @@ namespace rodeint {
 
 // Based on harmonic_oscillator.hpp -- we need to take a reference
 // here.
+
+// NOTE: Given that this is the *only* observer that we're likely to
+// produce it might be worth renaming this file a bit.  However, later
+// on getting other observers might be worthwhile, even if they're not
+// actually used in the interface.  Or we could add other features to
+// this one such as optional printing.
 template <typename T>
 struct obs_save_state {
   typedef T state_type;

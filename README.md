@@ -5,7 +5,7 @@ Pre-issues:
 - [x] Decide on a better name? (*actually keep this name and then we can have a logo which is a rat with an integral sign on its body*)
 - [x] Decide on the version of odeint to target, and a mechanism for tracking upstream (*Looks like BH has a decent version of odeint (2.2) as of 1.54.0-1, so I'm going to use that until I know I need something else*)
 - [x] Implement all examples pointing at [BH](http://cran.r-project.org/web/packages/BH/index.html) to confirm that we have all the required headers, gather any others needed (*No longer the idea, I think*)
-- [ ] Write simple handler for integrating derivatives written in R
+- [x] Write simple handler for integrating derivatives written in R
 - [ ] Extend to a C++ API that is accessible via include files.  This should be fairly straightforward given that odeint is header only.
 - [ ] Benchmarks against gsl and lsoda - can use the gsl code in diversitree, and lsoda code in deSolve.
 
@@ -47,3 +47,7 @@ At the underlying level, I guess we need at least one for an R function and one 
 # Logo
 
 https://www.flickr.com/photos/biodivlibrary/6276945294/in/photostream/
+https://www.etsy.com/au/listing/158152391/squirrel-illustration-print?ref=listing-shop-header-0
+https://www.pinterest.com/pin/275493702179289855/
+http://www.redbubble.com/people/greenave/works/11109881-vintage-squirrel-illustration-from-1842?p=sticker
+http://www.google.com/imgres?imgurl=http%3A%2F%2Fvintageprintable.com%2Fwordpress%2Fwp-content%2Fuploads%2F2010%2F08%2FAnimal-Woodland-Squirrel-Carolina.jpg&imgrefurl=http%3A%2F%2Fvintageprintable.com%2Fwordpress%2F2010%2F10%2F01%2Fvintage-printable-squirrels%2Fanimal-woodland-squirrel-carolina-2%2F&h=397&w=500&tbnid=EoSUsjwQMu2JyM%3A&zoom=1&docid=g_xdJu9Ow9LzRM&ei=PJpkU9aUAYiUkgWrsoGADA&tbm=isch&ved=0CF8QMygEMAQ&iact=rc&uact=3&dur=676&page=1&start=0&ndsp=14

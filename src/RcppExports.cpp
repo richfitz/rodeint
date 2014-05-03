@@ -97,6 +97,27 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// r_integrate_adaptive_observed
+Rcpp::NumericVector r_integrate_adaptive_observed(rodeint::controlled_stepper stepper, rodeint::target_r target, rodeint::target_r::state_type y, double t0, double t1, double dt, bool with_info = false);
+RcppExport SEXP rodeint_r_integrate_adaptive_observed(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP with_infoSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::controlled_stepper >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_r >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_r::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
+        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::traits::input_parameter< bool >::type with_info(with_infoSEXP );
+        Rcpp::NumericVector __result = r_integrate_adaptive_observed(stepper, target, y, t0, t1, dt, with_info);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // target_r__ctor
 rodeint::target_r target_r__ctor(Rcpp::Function derivs, SEXP pars_type);
 RcppExport SEXP rodeint_target_r__ctor(SEXP derivsSEXP, SEXP pars_typeSEXP) {

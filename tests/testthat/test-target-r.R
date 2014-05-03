@@ -38,6 +38,7 @@ expect_that(res$y, equals(unname(cmp[,-1]), tolerance=1e-5))
 types <- c("runge_kutta_cash_karp54",
            "runge_kutta_fehlberg78",
            "runge_kutta_dopri5")
+
 cmp <- unname(lsoda(y0, c(0, t), wrap.deSolve(harm.osc), pars)[-1,-1])
 for (type in types) {
   integrate_adaptive <- rodeint:::integrate_adaptive
@@ -46,4 +47,21 @@ for (type in types) {
   expect_that(y1, equals(cmp, tolerance=1e-5))
   y2 <- integrate_adaptive(s, ode, y0, 0, t, 0.01, TRUE)
   expect_that(attr(y2, "steps"), is_a("numeric"))
+
+  integrate_adaptive <- rodeint:::integrate_adaptive_observed
+  y3 <- integrate_adaptive(s, ode, y0, 0, t, 0.01)
+  expect_that(y3, equals(cmp, tolerance=1e-5))
+  y4 <- integrate_adaptive(s, ode, y0, 0, t, 0.01, TRUE)
+  expect_that(attr(y4, "steps"), is_a("numeric"))
+  n <- attr(y4, "steps")
+  expect_that(attr(y4, "y"), is_a("matrix"))
+  tmp <- attr(y4, "y")
+  expect_that(dim(tmp), equals(c(n+1, length(y0))))
+  expect_that(tmp[1,], is_identical_to(y0))
+  expect_that(tmp[n+1,], is_identical_to(as.numeric(y4)))
+  expect_that(attr(y4, "t"), is_a("numeric"))
+  tmp <- attr(y4, "t")
+  expect_that(length(tmp), equals(n+1))
+  expect_that(tmp[1], equals(0))
+  expect_that(tmp[n+1], equals(t))
 }
