@@ -8,7 +8,8 @@ Description: Not yet
 License: BSD_2_clause + file LICENSE
 LinkingTo: Rcpp, BH (>= 1.54.0-1)
 Suggests:
-    testthat
+    testthat,
+    deSolve
 Imports:
     Rcpp,
     methods
