@@ -1,6 +1,5 @@
 language: c
 
-# Once I get the reference classes documented, this can get switched on.
 env:
   - global:
     - WARNINGS_ARE_ERRORS=1

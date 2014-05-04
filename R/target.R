@@ -1,6 +1,7 @@
 ##' Integration targets (documentating coming)
 ##' @title Integration Target
 ##' @aliases target_r
+##' @export target_r
 ##' @export
 target_r <- setRefClass("target_r",
                         fields=list(

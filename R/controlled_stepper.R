@@ -1,6 +1,7 @@
 ##' ##' Controlled stepper (documentating coming)
 ##' @title Controlled Stepper
 ##' @aliases controlled_stepper
+##' @export controlled_stepper
 ##' @export
 controlled_stepper <- setRefClass("controlled_stepper",
                                   fields=list(
