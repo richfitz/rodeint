@@ -93,22 +93,17 @@ public:
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_), steps(0), obs(y_vec, t_vec) {}
   void operator()(controlled_stepper_runge_kutta_cash_karp54 s) {
-    using boost::numeric::odeint::integrate_adaptive;
-    if (save_state) {
-      steps = integrate_adaptive(s, target, y, t0, t1, dt, obs);
-    } else {
-      integrate_adaptive(s, target, y, t0, t1, dt);
-    }
+    integrate_adaptive(s);
   }
   void operator()(controlled_stepper_runge_kutta_fehlberg78 s) {
-    using boost::numeric::odeint::integrate_adaptive;
-    if (save_state) {
-      steps = integrate_adaptive(s, target, y, t0, t1, dt, obs);
-    } else {
-      integrate_adaptive(s, target, y, t0, t1, dt);
-    }
+    integrate_adaptive(s);
   }
   void operator()(controlled_stepper_runge_kutta_dopri5 s) {
+    integrate_adaptive(s);
+  }
+private:
+  template <typename Stepper>
+  void integrate_adaptive(Stepper s) {
     using boost::numeric::odeint::integrate_adaptive;
     if (save_state) {
       steps = integrate_adaptive(s, target, y, t0, t1, dt, obs);
