@@ -11,6 +11,11 @@
 namespace Rcpp {
 // 'wrap' definitions for each class:
 template<>
+inline SEXP wrap(const rodeint::target_c& obj) {
+  XPtr<rodeint::target_c> ret(new rodeint::target_c(obj), true);
+  return wrap(ret);
+}
+template<>
 inline SEXP wrap(const rodeint::target_r& obj) {
   XPtr<rodeint::target_r> ret(new rodeint::target_r(obj), true);
   return wrap(ret);
@@ -35,6 +40,11 @@ inline SEXP wrap(const rodeint::stepper_controlled& obj) {
 }
 
 // 'as' definitions for each class:
+template<>
+rodeint::target_c as(SEXP obj) {
+  XPtr<rodeint::target_c> xp(obj);
+  return *xp;
+}
 template<>
 rodeint::target_r as(SEXP obj) {
   XPtr<rodeint::target_r> xp(obj);

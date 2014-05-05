@@ -45,6 +45,22 @@ stepper__type <- function(s) {
     .Call('rodeint_stepper__type', PACKAGE = 'rodeint', s)
 }
 
+target_c__ctor <- function(pars) {
+    .Call('rodeint_target_c__ctor', PACKAGE = 'rodeint', pars)
+}
+
+target_c__derivs <- function(target, y, t) {
+    .Call('rodeint_target_c__derivs', PACKAGE = 'rodeint', target, y, t)
+}
+
+target_c__get_pars <- function(target) {
+    .Call('rodeint_target_c__get_pars', PACKAGE = 'rodeint', target)
+}
+
+target_c__set_pars <- function(target, pars) {
+    invisible(.Call('rodeint_target_c__set_pars', PACKAGE = 'rodeint', target, pars))
+}
+
 target_r__ctor <- function(derivs, pars_type) {
     .Call('rodeint_target_r__ctor', PACKAGE = 'rodeint', derivs, pars_type)
 }

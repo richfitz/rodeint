@@ -18,6 +18,7 @@
 #include "rcpp_as_wrap_pre.hpp"
 
 // Then the actual code from the package:
+#include "target_c.hpp"
 #include "target_r.hpp"
 
 // And then the actual as/wrap definitions now that all classes have

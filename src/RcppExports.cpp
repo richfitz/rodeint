@@ -203,6 +203,66 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// target_c__ctor
+rodeint::target_c target_c__ctor(rodeint::target_c::pars_type pars);
+RcppExport SEXP rodeint_target_c__ctor(SEXP parsSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::target_c::pars_type >::type pars(parsSEXP );
+        rodeint::target_c __result = target_c__ctor(pars);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// target_c__derivs
+rodeint::target_c::state_type target_c__derivs(Rcpp::XPtr<rodeint::target_c> target, rodeint::target_c::state_type y, double t);
+RcppExport SEXP rodeint_target_c__derivs(SEXP targetSEXP, SEXP ySEXP, SEXP tSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_c> >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_c::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t(tSEXP );
+        rodeint::target_c::state_type __result = target_c__derivs(target, y, t);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// target_c__get_pars
+rodeint::target_c::pars_type target_c__get_pars(Rcpp::XPtr<rodeint::target_c> target);
+RcppExport SEXP rodeint_target_c__get_pars(SEXP targetSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_c> >::type target(targetSEXP );
+        rodeint::target_c::pars_type __result = target_c__get_pars(target);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// target_c__set_pars
+void target_c__set_pars(Rcpp::XPtr<rodeint::target_c> target, rodeint::target_c::pars_type pars);
+RcppExport SEXP rodeint_target_c__set_pars(SEXP targetSEXP, SEXP parsSEXP) {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_c> >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_c::pars_type >::type pars(parsSEXP );
+        target_c__set_pars(target, pars);
+    }
+    return R_NilValue;
+END_RCPP
+}
 // target_r__ctor
 rodeint::target_r target_r__ctor(Rcpp::Function derivs, SEXP pars_type);
 RcppExport SEXP rodeint_target_r__ctor(SEXP derivsSEXP, SEXP pars_typeSEXP) {

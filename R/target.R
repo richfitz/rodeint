@@ -25,3 +25,31 @@ target_r$methods(set_pars = function(pars) {
 target_r$methods(derivs = function(y, t) {
   rodeint:::target_r__derivs(ptr, y, t)
 })
+
+##' Integration targets (documentating coming)
+##' @title Integration Target
+##' @aliases target_c
+##' @export target_c
+##' @export
+target_c <- setRefClass("target_c",
+                        fields=list(
+                          "ptr"="externalptr"))
+target_c$lock(c("ptr"))
+
+## TODO: This is going to change once we can look up function pointers
+## by name.
+target_c$methods(initialize = function(pars) {
+  ptr <<- rodeint:::target_c__ctor(pars)
+})
+
+target_c$methods(pars = function() {
+  rodeint:::target_c__get_pars(ptr)
+})
+
+target_c$methods(set_pars = function(pars) {
+  rodeint:::target_c__set_pars(ptr, pars)
+})
+
+target_c$methods(derivs = function(y, t) {
+  rodeint:::target_c__derivs(ptr, y, t)
+})
