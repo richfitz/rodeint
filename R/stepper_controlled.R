@@ -5,17 +5,17 @@
 ##' @export
 stepper_controlled <- setRefClass("stepper_controlled",
                                   fields=list(
-                                    name="character",
+                                    type="character",
                                     atol="numeric",
                                     rtol="numeric",
                                     ptr="externalptr"))
-stepper_controlled$lock(c("name", "atol", "rtol", "ptr"))
+stepper_controlled$lock(c("type", "atol", "rtol", "ptr"))
 
-stepper_controlled$methods(initialize=function(name, atol=1e-6, rtol=1e-6) {
-  name <<- name
+stepper_controlled$methods(initialize=function(type, atol=1e-6, rtol=1e-6) {
+  type <<- type
   atol <<- atol
   rtol <<- rtol
-  ptr  <<- rodeint:::stepper_controlled__ctor(name, atol, rtol)
+  ptr  <<- rodeint:::stepper_controlled__ctor(type, atol, rtol)
 })
 
 ## This is going to change at some point, but this is a list of the

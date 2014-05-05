@@ -15,8 +15,8 @@ test_that("construction", {
     expect_that(s$ptr, is_a("externalptr"))
     expect_that(s$ptr <- s$ptr, throws_error("read-only"))
 
-    expect_that(s$name, equals(type))
-    expect_that(s$name <- s$name, throws_error("read-only"))
+    expect_that(s$type, equals(type))
+    expect_that(s$type <- s$type, throws_error("read-only"))
 
     ## Test of internal method:
     expect_that(rodeint:::stepper_basic__type(s$ptr),

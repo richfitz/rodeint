@@ -15,8 +15,8 @@ test_that("construction", {
     expect_that(s$ptr, is_a("externalptr"))
     expect_that(s$ptr <- s$ptr, throws_error("read-only"))
 
-    expect_that(s$name, equals(type))
-    expect_that(s$name <- s$name, throws_error("read-only"))
+    expect_that(s$type, equals(type))
+    expect_that(s$type <- s$type, throws_error("read-only"))
 
     expect_that(s$atol, equals(1e-6))
     expect_that(s$atol <- s$atol, throws_error("read-only"))

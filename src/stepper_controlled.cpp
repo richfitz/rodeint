@@ -21,7 +21,7 @@ stepper_controlled__ctor(std::string type,
   } else if (type == "runge_kutta_dopri5") {
     ret = make_controlled<runge_kutta_dopri5<state> >(eps_abs, eps_rel);
   } else {
-    Rcpp::stop("Unknown type");
+    Rcpp::stop("Unknown type: " + type);
   }
 
   return ret;

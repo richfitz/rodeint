@@ -5,13 +5,13 @@
 ##' @export
 stepper_basic <- setRefClass("stepper_basic",
                                   fields=list(
-                                    name="character",
+                                    type="character",
                                     ptr="externalptr"))
-stepper_basic$lock(c("name", "ptr"))
+stepper_basic$lock(c("type", "ptr"))
 
-stepper_basic$methods(initialize=function(name) {
-  name <<- name
-  ptr  <<- rodeint:::stepper_basic__ctor(name)
+stepper_basic$methods(initialize=function(type) {
+  type <<- type
+  ptr  <<- rodeint:::stepper_basic__ctor(type)
 })
 
 ## This is going to change at some point, but this is a list of the
