@@ -5,8 +5,8 @@
 integrate_times(stepper, target, y, times, dt)
 }
 \arguments{
-  \item{stepper}{A \code{controlled_stepper} object,
-  created by \code{\link{controlled_stepper}} (other types
+  \item{stepper}{A \code{stepper_controlled} object,
+  created by \code{\link{stepper_controlled}} (other types
   will be supported soon).}
 
   \item{target}{The target system, created by

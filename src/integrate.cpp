@@ -2,7 +2,7 @@
 #include <boost/numeric/odeint.hpp>
 #include "target_r.hpp"
 #include "observers.hpp"
-#include "controlled_stepper.hpp"
+#include "stepper_controlled.hpp"
 #include "util.hpp"
 
 // TODO: Drop the default args here and in called functions.
@@ -39,12 +39,12 @@ r_integrate_simple(rodeint::target_r target,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_const(rodeint::controlled_stepper stepper,
+r_integrate_const(rodeint::stepper_controlled stepper,
                   rodeint::target_r target,
                   rodeint::target_r::state_type y,
                   double t0, double t1, double dt,
                   bool save_state) {
-  rodeint::controlled_stepper_integrate_const
+  rodeint::stepper_controlled_integrate_const
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();
@@ -52,12 +52,12 @@ r_integrate_const(rodeint::controlled_stepper stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_n_steps(rodeint::controlled_stepper stepper,
+r_integrate_n_steps(rodeint::stepper_controlled stepper,
                     rodeint::target_r target,
                     rodeint::target_r::state_type y,
                     double t0, double dt, size_t n,
                     bool save_state) {
-  rodeint::controlled_stepper_integrate_n_steps
+  rodeint::stepper_controlled_integrate_n_steps
     vis(target, y, t0, dt, n, save_state);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();
@@ -65,12 +65,12 @@ r_integrate_n_steps(rodeint::controlled_stepper stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_adaptive(rodeint::controlled_stepper stepper,
+r_integrate_adaptive(rodeint::stepper_controlled stepper,
                      rodeint::target_r target,
                      rodeint::target_r::state_type y,
                      double t0, double t1, double dt,
                      bool save_state=false) {
-  rodeint::controlled_stepper_integrate_adaptive
+  rodeint::stepper_controlled_integrate_adaptive
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();
@@ -78,12 +78,12 @@ r_integrate_adaptive(rodeint::controlled_stepper stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_times(rodeint::controlled_stepper stepper,
+r_integrate_times(rodeint::stepper_controlled stepper,
                   rodeint::target_r target,
                   rodeint::target_r::state_type y,
                   std::vector<double> times,
                   double dt) {
-  rodeint::controlled_stepper_integrate_times
+  rodeint::stepper_controlled_integrate_times
     vis(target, y, times.begin(), times.end(), dt);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();

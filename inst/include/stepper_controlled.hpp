@@ -1,5 +1,5 @@
-#ifndef _RODEINT_CONTROLLED_STEPPER_HPP_
-#define _RODEINT_CONTROLLED_STEPPER_HPP_
+#ifndef _RODEINT_STEPPER_CONTROLLED_HPP_
+#define _RODEINT_STEPPER_CONTROLLED_HPP_
 
 // TODO: Going to need templating over state type -- for now
 // everything is explicitly typedef-ed on std::vector<double>
@@ -31,40 +31,40 @@ typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_cash_karp54<
     std::vector<double> > >
-controlled_stepper_runge_kutta_cash_karp54;
+stepper_controlled_runge_kutta_cash_karp54;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_fehlberg78<
     std::vector<double> > >
-controlled_stepper_runge_kutta_fehlberg78;
+stepper_controlled_runge_kutta_fehlberg78;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_dopri5<
     std::vector<double> > >
-controlled_stepper_runge_kutta_dopri5;
+stepper_controlled_runge_kutta_dopri5;
 
 typedef
 boost::variant<
-  controlled_stepper_runge_kutta_cash_karp54,
-  controlled_stepper_runge_kutta_fehlberg78,
-  controlled_stepper_runge_kutta_dopri5>
-controlled_stepper;
+  stepper_controlled_runge_kutta_cash_karp54,
+  stepper_controlled_runge_kutta_fehlberg78,
+  stepper_controlled_runge_kutta_dopri5>
+stepper_controlled;
 
 // This is more of a demonstration of how the approach will work more
 // than anything else, really.  Gives a human readable version of the
 // type of the controlled output stepper.
-class controlled_stepper_type_visitor : boost::static_visitor<> {
+class stepper_controlled_type_visitor : boost::static_visitor<> {
 public:
   typedef std::string result_type;
-  result_type operator()(const controlled_stepper_runge_kutta_cash_karp54&) const {
+  result_type operator()(const stepper_controlled_runge_kutta_cash_karp54&) const {
     return "runge_kutta_cash_karp54";
   }
-  result_type operator()(const controlled_stepper_runge_kutta_fehlberg78&) const {
+  result_type operator()(const stepper_controlled_runge_kutta_fehlberg78&) const {
     return "runge_kutta_fehlberg78";
   }
-  result_type operator()(const controlled_stepper_runge_kutta_dopri5&) const {
+  result_type operator()(const stepper_controlled_runge_kutta_dopri5&) const {
     return "runge_kutta_dopri5";
   }
 };

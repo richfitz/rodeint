@@ -1,9 +1,9 @@
-#include "controlled_stepper.hpp"
+#include "stepper_controlled.hpp"
 #include <Rcpp.h> // Rcpp::stop
 
 // [[Rcpp::export]]
-rodeint::controlled_stepper
-controlled_stepper__ctor(std::string type,
+rodeint::stepper_controlled
+stepper_controlled__ctor(std::string type,
                          double eps_abs, double eps_rel) {
   using boost::numeric::odeint::make_controlled;
   using boost::numeric::odeint::runge_kutta_cash_karp54;
@@ -12,7 +12,7 @@ controlled_stepper__ctor(std::string type,
 
   typedef std::vector<double> state;
 
-  rodeint::controlled_stepper ret;
+  rodeint::stepper_controlled ret;
 
   if (type == "runge_kutta_cash_karp54") {
     ret = make_controlled<runge_kutta_cash_karp54<state> >(eps_abs, eps_rel);
@@ -28,6 +28,6 @@ controlled_stepper__ctor(std::string type,
 }
 
 // [[Rcpp::export]]
-std::string controlled_stepper__type(rodeint::controlled_stepper s) {
-  return boost::apply_visitor(rodeint::controlled_stepper_type_visitor(), s);
+std::string stepper_controlled__type(rodeint::stepper_controlled s) {
+  return boost::apply_visitor(rodeint::stepper_controlled_type_visitor(), s);
 }

@@ -10,7 +10,7 @@
 // Some of these are needed by rcpp_as_wrap_pre as they define types
 // used within, saving the need for forward declaration.
 #include "stepper_basic.hpp"
-#include "controlled_stepper.hpp"
+#include "stepper_controlled.hpp"
 
 // This one goes first, because as/wrap prototypes must preceed
 // Rcpp.h -- after this point anything is allowed to include Rcpp

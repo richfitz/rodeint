@@ -29,8 +29,8 @@ integrate_simple <- function(target, y, t0, t1, dt,
 ##' Integrate a system of ODEs, taking fixed steps
 ##'
 ##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{controlled_stepper} object, created by
-##' \code{\link{controlled_stepper}} (other types will be supported
+##' @param stepper A \code{stepper_controlled} object, created by
+##' \code{\link{stepper_controlled}} (other types will be supported
 ##' soon).
 ##' @param target The target system, created by \code{\link{target_r}}
 ##' @param y Initial conditions
@@ -43,7 +43,7 @@ integrate_simple <- function(target, y, t0, t1, dt,
 ##' @export
 integrate_const <- function(stepper, target, y, t0, t1, dt,
                             save_state=FALSE) {
-  assert_controlled_stepper(stepper)
+  assert_stepper_controlled(stepper)
   assert_target_r(target)
   r_integrate_const(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
 }
@@ -51,8 +51,8 @@ integrate_const <- function(stepper, target, y, t0, t1, dt,
 ##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
 ##'
 ##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{controlled_stepper} object, created by
-##' \code{\link{controlled_stepper}} (other types will be supported
+##' @param stepper A \code{stepper_controlled} object, created by
+##' \code{\link{stepper_controlled}} (other types will be supported
 ##' soon).
 ##' @param target The target system, created by \code{\link{target_r}}
 ##' @param y Initial conditions
@@ -65,7 +65,7 @@ integrate_const <- function(stepper, target, y, t0, t1, dt,
 ##' @export
 integrate_n_steps <- function(stepper, target, y, t0, dt, n,
                               save_state=FALSE) {
-  assert_controlled_stepper(stepper)
+  assert_stepper_controlled(stepper)
   assert_target_r(target)
   r_integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n, save_state)
 }
@@ -73,8 +73,8 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
 ##' Integrate a system of ODEs adaptively.
 ##'
 ##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{controlled_stepper} object, created by
-##' \code{\link{controlled_stepper}} (other types will be supported
+##' @param stepper A \code{stepper_controlled} object, created by
+##' \code{\link{stepper_controlled}} (other types will be supported
 ##' soon).
 ##' @param target The target system, created by \code{\link{target_r}}
 ##' @param y Initial conditions
@@ -88,7 +88,7 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
 ##' @export
 integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
                                save_state=FALSE) {
-  assert_controlled_stepper(stepper)
+  assert_stepper_controlled(stepper)
   assert_target_r(target)
   r_integrate_adaptive(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
 }
@@ -98,8 +98,8 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
 ##' calling it.
 ##'
 ##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{controlled_stepper} object, created by
-##' \code{\link{controlled_stepper}} (other types will be supported
+##' @param stepper A \code{stepper_controlled} object, created by
+##' \code{\link{stepper_controlled}} (other types will be supported
 ##' soon).
 ##' @param target The target system, created by \code{\link{target_r}}
 ##' @param y Initial conditions
@@ -110,7 +110,7 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
 ##' @author Rich FitzJohn
 ##' @export
 integrate_times <- function(stepper, target, y, times, dt) {
-  assert_controlled_stepper(stepper)
+  assert_stepper_controlled(stepper)
   assert_target_r(target)
   if (length(times) < 2) {
     stop("Must provide at least two times")

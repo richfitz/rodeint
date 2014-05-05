@@ -25,12 +25,12 @@ namespace Rcpp {
 // A 'wrap' prototype for each class:
 template<> SEXP wrap(const rodeint::target_r&);
 template<> SEXP wrap(const rodeint::stepper_basic&);
-template<> SEXP wrap(const rodeint::controlled_stepper&);
+template<> SEXP wrap(const rodeint::stepper_controlled&);
 
 // An 'as' prototype for each class:
 template<> rodeint::target_r as(SEXP);
 template<> rodeint::stepper_basic as(SEXP);
-template<> rodeint::controlled_stepper as(SEXP);
+template<> rodeint::stepper_controlled as(SEXP);
 }
 
 #endif

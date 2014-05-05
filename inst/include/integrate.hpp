@@ -6,7 +6,7 @@
 #include <vector>
 #include "target_r.hpp"
 #include "observers.hpp"
-#include "controlled_stepper.hpp"
+#include "stepper_controlled.hpp"
 
 namespace rodeint {
 
@@ -27,7 +27,7 @@ Rcpp::NumericVector integration_state(const Visitor* vis, bool save_state) {
 // though, which is pretty sweet.
 
 // 1: integrate_const: "Equidistant observer calls"
-class controlled_stepper_integrate_const : boost::static_visitor<> {
+class stepper_controlled_integrate_const : boost::static_visitor<> {
 public:
   typedef rodeint::target_r::state_type state_type;
   rodeint::target_r target;
@@ -37,20 +37,20 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  controlled_stepper_integrate_const(rodeint::target_r target_,
+  stepper_controlled_integrate_const(rodeint::target_r target_,
                                      state_type &y_,
                                      double t0_, double t1_,
                                      double dt_,
                                      bool save_state_)
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_) {}
-  void operator()(controlled_stepper_runge_kutta_cash_karp54 s) {
+  void operator()(stepper_controlled_runge_kutta_cash_karp54 s) {
     integrate_const(s);
   }
-  void operator()(controlled_stepper_runge_kutta_fehlberg78 s) {
+  void operator()(stepper_controlled_runge_kutta_fehlberg78 s) {
     integrate_const(s);
   }
-  void operator()(controlled_stepper_runge_kutta_dopri5 s) {
+  void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_const(s);
   }
   Rcpp::NumericVector r_state() const {
@@ -70,7 +70,7 @@ private:
 };
 
 // 2. integrate_n_steps: "Integrate a given number of steps"
-class controlled_stepper_integrate_n_steps : boost::static_visitor<> {
+class stepper_controlled_integrate_n_steps : boost::static_visitor<> {
 public:
   typedef rodeint::target_r::state_type state_type;
   rodeint::target_r target;
@@ -81,19 +81,19 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  controlled_stepper_integrate_n_steps(rodeint::target_r target_,
+  stepper_controlled_integrate_n_steps(rodeint::target_r target_,
                                        state_type &y_,
                                        double t0_, double dt_, size_t n_,
                                        bool save_state_)
     : target(target_), y(y_), t0(t0_), dt(dt_), n(n_),
       save_state(save_state_) {}
-  void operator()(controlled_stepper_runge_kutta_cash_karp54 s) {
+  void operator()(stepper_controlled_runge_kutta_cash_karp54 s) {
     integrate_n_steps(s);
   }
-  void operator()(controlled_stepper_runge_kutta_fehlberg78 s) {
+  void operator()(stepper_controlled_runge_kutta_fehlberg78 s) {
     integrate_n_steps(s);
   }
-  void operator()(controlled_stepper_runge_kutta_dopri5 s) {
+  void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_n_steps(s);
   }
   Rcpp::NumericVector r_state() const {
@@ -114,7 +114,7 @@ private:
 };
 
 // 3. integrate_adaptive "Observer calls at each step"
-class controlled_stepper_integrate_adaptive : boost::static_visitor<> {
+class stepper_controlled_integrate_adaptive : boost::static_visitor<> {
 public:
   typedef rodeint::target_r::state_type state_type;
   rodeint::target_r target;
@@ -124,20 +124,20 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  controlled_stepper_integrate_adaptive(rodeint::target_r target_,
+  stepper_controlled_integrate_adaptive(rodeint::target_r target_,
                                         state_type &y_,
                                         double t0_, double t1_,
                                         double dt_,
                                         bool save_state_)
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_) {}
-  void operator()(controlled_stepper_runge_kutta_cash_karp54 s) {
+  void operator()(stepper_controlled_runge_kutta_cash_karp54 s) {
     integrate_adaptive(s);
   }
-  void operator()(controlled_stepper_runge_kutta_fehlberg78 s) {
+  void operator()(stepper_controlled_runge_kutta_fehlberg78 s) {
     integrate_adaptive(s);
   }
-  void operator()(controlled_stepper_runge_kutta_dopri5 s) {
+  void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_adaptive(s);
   }
   Rcpp::NumericVector r_state() const {
@@ -163,7 +163,7 @@ private:
 // std::vector<double>::iterator types anyway.
 //
 // NOTE: In this case, state is *always* saved.
-class controlled_stepper_integrate_times : boost::static_visitor<> {
+class stepper_controlled_integrate_times : boost::static_visitor<> {
   typedef std::vector<double>::const_iterator Iterator;
 public:
   typedef rodeint::target_r::state_type state_type;
@@ -175,7 +175,7 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  controlled_stepper_integrate_times(rodeint::target_r target_,
+  stepper_controlled_integrate_times(rodeint::target_r target_,
                                      state_type &y_,
                                      Iterator times_start_,
                                      Iterator times_end_,
@@ -183,13 +183,13 @@ public:
     : target(target_), y(y_),
       times_start(times_start_), times_end(times_end_), dt(dt_),
       save_state(true) {}
-  void operator()(controlled_stepper_runge_kutta_cash_karp54 s) {
+  void operator()(stepper_controlled_runge_kutta_cash_karp54 s) {
     integrate_times(s);
   }
-  void operator()(controlled_stepper_runge_kutta_fehlberg78 s) {
+  void operator()(stepper_controlled_runge_kutta_fehlberg78 s) {
     integrate_times(s);
   }
-  void operator()(controlled_stepper_runge_kutta_dopri5 s) {
+  void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_times(s);
   }
   Rcpp::NumericVector r_state() const {

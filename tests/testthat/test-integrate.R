@@ -62,8 +62,8 @@ test_that("integrate_const", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (type in controlled_stepper_types()) {
-    s <- controlled_stepper(type)
+  for (type in stepper_controlled_types()) {
+    s <- stepper_controlled(type)
     y1 <- integrate_const(s, ode, y0, t0, t1, dt0)
     expect_that(y1, is_a("numeric"))
     expect_that(y1, equals(cmp, tolerance=1e-5))
@@ -110,8 +110,8 @@ test_that("integrate_n_steps", {
                       wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (type in controlled_stepper_types()) {
-    s <- controlled_stepper(type)
+  for (type in stepper_controlled_types()) {
+    s <- stepper_controlled(type)
     y1 <- integrate_n_steps(s, ode, y0, t0, dt0, n)
     expect_that(y1, is_a("numeric"))
     expect_that(y1, equals(cmp, tolerance=1e-5))
@@ -153,8 +153,8 @@ test_that("integrate_adaptive", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (type in controlled_stepper_types()) {
-    s <- controlled_stepper(type)
+  for (type in stepper_controlled_types()) {
+    s <- stepper_controlled(type)
 
     ## Run with rodent:
     y1 <- integrate_adaptive(s, ode, y0, t0, t1, dt0)
@@ -204,8 +204,8 @@ test_that("integrate_times", {
   cmp <- unname(lsoda(y0, times, wrap.deSolve(harmonic.oscillator),
                       pars)[,-1])
 
-  for (type in controlled_stepper_types()) {
-    s <- controlled_stepper(type)
+  for (type in stepper_controlled_types()) {
+    s <- stepper_controlled(type)
 
     ## Run with rodent:
     y2 <- integrate_times(s, ode, y0, times, dt0)

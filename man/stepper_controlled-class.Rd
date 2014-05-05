@@ -1,7 +1,7 @@
 \docType{class}
-\name{controlled_stepper-class}
-\alias{controlled_stepper}
-\alias{controlled_stepper-class}
+\name{stepper_controlled-class}
+\alias{stepper_controlled}
+\alias{stepper_controlled-class}
 \title{Controlled Stepper}
 \description{
 Controlled stepper (documentation coming)

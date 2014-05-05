@@ -22,9 +22,9 @@ inline SEXP wrap(const rodeint::stepper_basic& obj) {
   return wrap(ret);
 }
 template<>
-inline SEXP wrap(const rodeint::controlled_stepper& obj) {
-  XPtr<rodeint::controlled_stepper>
-    ret(new rodeint::controlled_stepper(obj), true);
+inline SEXP wrap(const rodeint::stepper_controlled& obj) {
+  XPtr<rodeint::stepper_controlled>
+    ret(new rodeint::stepper_controlled(obj), true);
   return wrap(ret);
 }
 
@@ -40,8 +40,8 @@ rodeint::stepper_basic as(SEXP obj) {
   return *xp;
 }
 template<>
-rodeint::controlled_stepper as(SEXP obj) {
-  XPtr<rodeint::controlled_stepper> xp(obj);
+rodeint::stepper_controlled as(SEXP obj) {
+  XPtr<rodeint::stepper_controlled> xp(obj);
   return *xp;
 }
 }
