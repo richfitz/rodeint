@@ -33,7 +33,7 @@ test_that("integrate_simple", {
   steps <- attr(y2, "steps")
   tt    <- attr(y2, "t")
   yy    <- attr(y2, "y")
-  
+
   expect_that(steps, is_a("numeric"))
   expect_that(tt,    is_a("numeric"))
   expect_that(yy,    is_a("matrix"))
@@ -78,7 +78,7 @@ test_that("integrate_adaptive", {
     steps <- attr(y2, "steps")
     tt    <- attr(y2, "t")
     yy    <- attr(y2, "y")
-    
+
     expect_that(steps, is_a("numeric"))
     expect_that(tt,    is_a("numeric"))
     expect_that(yy,    is_a("matrix"))
@@ -91,5 +91,51 @@ test_that("integrate_adaptive", {
 
     expect_that(yy[1,],         is_identical_to(y0))
     expect_that(yy[steps + 1,], is_identical_to(y1))
+  }
+})
+
+test_that("integrate_times", {
+  source("helper-rodeint.R")
+  type <- controlled_stepper_types()[[1]]
+
+  pars <- 0.5
+  ode <- target_r(harmonic.oscillator, pars)
+
+  y0 <- c(0, 1)
+  t0 <- 0
+  t1 <- 1
+  dt0 <- 0.01
+  tol <- 1e-6
+
+  # Some randomly spaced times between t0 and t1:
+  set.seed(1)
+  times <- sort(c(t0, t1, runif(5, t0, t1)))
+
+  ## Here is the solution from deSolve, using lsoda:
+  cmp <- unname(lsoda(y0, times, wrap.deSolve(harmonic.oscillator),
+                      pars)[,-1])
+
+  for (type in controlled_stepper_types()) {
+    s <- controlled_stepper(type)
+
+    ## Run with rodent:
+    y2 <- integrate_times(s, ode, y0, times, dt0)
+    expect_that(y2, equals(cmp[nrow(cmp),], tolerance=1e-5,
+                           check.attributes=FALSE))
+    expect_that(names(attributes(y2)), equals(c("steps", "t", "y")))
+
+    steps <- attr(y2, "steps")
+    tt    <- attr(y2, "t")
+    yy    <- attr(y2, "y")
+
+    expect_that(steps, is_a("numeric"))
+    expect_that(tt,    is_a("numeric"))
+    expect_that(yy,    is_a("matrix"))
+
+    expect_that(steps, is_more_than(length(tt) - 1))
+    expect_that(nrow(yy), equals(length(times)))
+
+    expect_that(tt,    is_identical_to(times))
+    expect_that(yy,    equals(cmp, tolerance=1e-5))
   }
 })

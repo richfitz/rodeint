@@ -79,6 +79,25 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// r_integrate_times
+Rcpp::NumericVector r_integrate_times(rodeint::controlled_stepper stepper, rodeint::target_r target, rodeint::target_r::state_type y, std::vector<double> times, double dt);
+RcppExport SEXP rodeint_r_integrate_times(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::controlled_stepper >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_r >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_r::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::NumericVector __result = r_integrate_times(stepper, target, y, times, dt);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // target_r__ctor
 rodeint::target_r target_r__ctor(Rcpp::Function derivs, SEXP pars_type);
 RcppExport SEXP rodeint_target_r__ctor(SEXP derivsSEXP, SEXP pars_typeSEXP) {

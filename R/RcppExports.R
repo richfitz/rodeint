@@ -17,6 +17,10 @@ r_integrate_adaptive <- function(stepper, target, y, t0, t1, dt, save_state = FA
     .Call('rodeint_r_integrate_adaptive', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
 }
 
+r_integrate_times <- function(stepper, target, y, times, dt) {
+    .Call('rodeint_r_integrate_times', PACKAGE = 'rodeint', stepper, target, y, times, dt)
+}
+
 target_r__ctor <- function(derivs, pars_type) {
     .Call('rodeint_target_r__ctor', PACKAGE = 'rodeint', derivs, pars_type)
 }

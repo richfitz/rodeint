@@ -60,3 +60,26 @@ r_integrate_adaptive(rodeint::controlled_stepper stepper,
   }
   return ret;
 }
+
+// There is a slight departure from the rodeint version here, in that
+// we pass in a vector of times rather than the iterator pair
+// times_start, times_end.  This is a bit more like the times_range
+// version.
+
+// [[Rcpp::export]]
+Rcpp::NumericVector
+r_integrate_times(rodeint::controlled_stepper stepper,
+                  rodeint::target_r target,
+                  rodeint::target_r::state_type y,
+                  std::vector<double> times,
+                  double dt) {
+  rodeint::controlled_stepper_integrate_times
+    vis(target, y, times, dt);
+  boost::apply_visitor(vis, stepper);
+  Rcpp::NumericVector ret(y.begin(), y.end());
+  // Always save state here:
+  ret.attr("steps") = vis.steps;
+  ret.attr("t")     = vis.t_vec;
+  ret.attr("y")     = rodeint::to_rcpp_matrix_by_row(vis.y_vec);
+  return ret;
+}
