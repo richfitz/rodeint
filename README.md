@@ -47,11 +47,3 @@ The plan:
 The desirable outcome for forest/diversitree is a fully self contained "integrator" object that will take initial conditions and times and spit back end points (running in single or multi mode).  I'm happy to have a few fairly non-generic types (e.g. one for rk) though that'd be better to be wrapped up.
 
 At the underlying level, I guess we need at least one for an R function and one for a C function that takes a vector<double> for parameters and state.  It's probably going to be most natural to write that with templates though.
-
-# Logo
-
-https://www.flickr.com/photos/biodivlibrary/6276945294/in/photostream/
-https://www.etsy.com/au/listing/158152391/squirrel-illustration-print?ref=listing-shop-header-0
-https://www.pinterest.com/pin/275493702179289855/
-http://www.redbubble.com/people/greenave/works/11109881-vintage-squirrel-illustration-from-1842?p=sticker
-http://www.google.com/imgres?imgurl=http%3A%2F%2Fvintageprintable.com%2Fwordpress%2Fwp-content%2Fuploads%2F2010%2F08%2FAnimal-Woodland-Squirrel-Carolina.jpg&imgrefurl=http%3A%2F%2Fvintageprintable.com%2Fwordpress%2F2010%2F10%2F01%2Fvintage-printable-squirrels%2Fanimal-woodland-squirrel-carolina-2%2F&h=397&w=500&tbnid=EoSUsjwQMu2JyM%3A&zoom=1&docid=g_xdJu9Ow9LzRM&ei=PJpkU9aUAYiUkgWrsoGADA&tbm=isch&ved=0CF8QMygEMAQ&iact=rc&uact=3&dur=676&page=1&start=0&ndsp=14

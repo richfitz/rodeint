@@ -19,9 +19,6 @@ integrate_times(stepper, target, y, times, dt)
 
   \item{dt}{Initial step size (will be tuned for controlled
   steppers -- see odeint documentation)}
-
-  \item{save_state}{Return information about intermediate
-  points as an attribute?}
 }
 \description{
 Integrate a system of ODEs at fixed times (perhaps

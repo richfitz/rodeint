@@ -13,6 +13,14 @@ r_integrate_simple <- function(target, y, t0, t1, dt, save_state = FALSE) {
     .Call('rodeint_r_integrate_simple', PACKAGE = 'rodeint', target, y, t0, t1, dt, save_state)
 }
 
+r_integrate_const <- function(stepper, target, y, t0, t1, dt, save_state) {
+    .Call('rodeint_r_integrate_const', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
+}
+
+r_integrate_n_steps <- function(stepper, target, y, t0, dt, n, save_state) {
+    .Call('rodeint_r_integrate_n_steps', PACKAGE = 'rodeint', stepper, target, y, t0, dt, n, save_state)
+}
+
 r_integrate_adaptive <- function(stepper, target, y, t0, t1, dt, save_state = FALSE) {
     .Call('rodeint_r_integrate_adaptive', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
 }

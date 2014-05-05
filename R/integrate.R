@@ -26,6 +26,50 @@ integrate_simple <- function(target, y, t0, t1, dt,
   r_integrate_simple(target$ptr, y, t0, t1, dt, save_state)
 }
 
+##' Integrate a system of ODEs, taking fixed steps
+##'
+##' @title Adaptively Integrate an ODE System
+##' @param stepper A \code{controlled_stepper} object, created by
+##' \code{\link{controlled_stepper}} (other types will be supported
+##' soon).
+##' @param target The target system, created by \code{\link{target_r}}
+##' @param y Initial conditions
+##' @param t0 Time to start the integration
+##' @param t1 Time to finish the integration
+##' @param dt Step size
+##' @param save_state Return information about intermediate points as
+##' an attribute?
+##' @author Rich FitzJohn
+##' @export
+integrate_const <- function(stepper, target, y, t0, t1, dt,
+                            save_state=FALSE) {
+  assert_controlled_stepper(stepper)
+  assert_target_r(target)
+  r_integrate_const(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+}
+
+##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
+##'
+##' @title Adaptively Integrate an ODE System
+##' @param stepper A \code{controlled_stepper} object, created by
+##' \code{\link{controlled_stepper}} (other types will be supported
+##' soon).
+##' @param target The target system, created by \code{\link{target_r}}
+##' @param y Initial conditions
+##' @param t0 Time to start the integration
+##' @param dt Step size
+##' @param n Number of steps
+##' @param save_state Return information about intermediate points as
+##' an attribute?
+##' @author Rich FitzJohn
+##' @export
+integrate_n_steps <- function(stepper, target, y, t0, dt, n,
+                              save_state=FALSE) {
+  assert_controlled_stepper(stepper)
+  assert_target_r(target)
+  r_integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n, save_state)
+}
+
 ##' Integrate a system of ODEs adaptively.
 ##'
 ##' @title Adaptively Integrate an ODE System
@@ -63,8 +107,6 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
 ##' is end time.
 ##' @param dt Initial step size (will be tuned for controlled steppers
 ##' -- see odeint documentation)
-##' @param save_state Return information about intermediate points as
-##' an attribute?
 ##' @author Rich FitzJohn
 ##' @export
 integrate_times <- function(stepper, target, y, times, dt) {

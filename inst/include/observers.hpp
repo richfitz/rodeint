@@ -2,6 +2,8 @@
 #define _RODEINT_OBSERVERS_HPP_
 
 #include <vector>
+#include <Rcpp.h>
+#include "util.hpp"
 
 namespace rodeint {
 
@@ -14,21 +16,26 @@ namespace rodeint {
 // actually used in the interface.  Or we could add other features to
 // this one such as optional printing.
 template <typename T>
-struct obs_save_state {
-  typedef T state_type;
-
-  std::vector<state_type>& y_vec;
-  std::vector<double>&     t_vec;
-
-  // Default state is empty.
-  obs_save_state(std::vector<state_type>& y_vec_, 
-                 std::vector<double>& t_vec_)
-    : y_vec(y_vec_), t_vec(t_vec_) {}
-
-  void operator()(const state_type& y, double t) {
-    y_vec.push_back(y);
-    t_vec.push_back(t);
+struct state_saver {
+  struct observer {
+    std::vector<T>&      y;
+    std::vector<double>& t;
+    observer(std::vector<T>& y_, std::vector<double>& t_) : y(y_), t(t_) {}
+    void operator()(const T &yi, double ti) {
+      y.push_back(yi);
+      t.push_back(ti);
+    }
+  };
+  state_saver() : steps(0), obs(y, t) {}
+  void add_state(Rcpp::NumericVector& ry) const {
+    ry.attr("steps") = steps;
+    ry.attr("t")     = t;
+    ry.attr("y")     = to_rcpp_matrix_by_row(y);
   }
+  std::vector<T>      y;
+  std::vector<double> t;
+  size_t steps;
+  observer obs;
 };
 
 }
