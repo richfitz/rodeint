@@ -170,6 +170,39 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// stepper__ctor
+rodeint::stepper stepper__ctor(std::string type, std::string subtype, double eps_abs, double eps_rel);
+RcppExport SEXP rodeint_stepper__ctor(SEXP typeSEXP, SEXP subtypeSEXP, SEXP eps_absSEXP, SEXP eps_relSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< std::string >::type type(typeSEXP );
+        Rcpp::traits::input_parameter< std::string >::type subtype(subtypeSEXP );
+        Rcpp::traits::input_parameter< double >::type eps_abs(eps_absSEXP );
+        Rcpp::traits::input_parameter< double >::type eps_rel(eps_relSEXP );
+        rodeint::stepper __result = stepper__ctor(type, subtype, eps_abs, eps_rel);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// stepper__type
+std::vector<std::string> stepper__type(rodeint::stepper s);
+RcppExport SEXP rodeint_stepper__type(SEXP sSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
+        std::vector<std::string> __result = stepper__type(s);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // target_r__ctor
 rodeint::target_r target_r__ctor(Rcpp::Function derivs, SEXP pars_type);
 RcppExport SEXP rodeint_target_r__ctor(SEXP derivsSEXP, SEXP pars_typeSEXP) {

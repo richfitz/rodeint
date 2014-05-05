@@ -72,4 +72,7 @@ public:
 
 }
 
+// For Rcpp
+rodeint::stepper_basic stepper_basic__ctor(std::string type);
+
 #endif

@@ -71,4 +71,10 @@ public:
 
 }
 
+// For Rcpp
+rodeint::stepper_controlled
+stepper_controlled__ctor(std::string type,
+                         double eps_abs, double eps_rel);
+
+
 #endif

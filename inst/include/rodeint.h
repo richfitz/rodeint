@@ -1,7 +1,6 @@
 // -*-c++-*-
-
-#ifndef _RODEINT_RCPP_AS_WRAP_PRE_H_
-#define _RODEINT_RCPP_AS_WRAP_PRE_H_
+#ifndef _RODEINT_H_
+#define _RODEINT_H_
 
 // NOTE: This file must be a ".h" file, not a ".hpp" file to work with
 // Rcpp attributes.
@@ -9,6 +8,7 @@
 // These files do not reference Rcpp, and so can be included first.
 // Some of these are needed by rcpp_as_wrap_pre as they define types
 // used within, saving the need for forward declaration.
+#include "stepper.hpp"
 #include "stepper_basic.hpp"
 #include "stepper_controlled.hpp"
 
