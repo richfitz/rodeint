@@ -1,4 +1,4 @@
-##' ##' Controlled stepper (documentating coming)
+##' Controlled stepper (documentation coming)
 ##' @title Controlled Stepper
 ##' @aliases controlled_stepper
 ##' @export controlled_stepper

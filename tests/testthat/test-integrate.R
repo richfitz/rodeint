@@ -23,8 +23,6 @@ test_that("integrate_simple", {
   expect_that(y1, is_a("numeric"))
   expect_that(y1, equals(cmp, tolerance=1e-5))
 
-  ## Also return information about the run (seems not to have worked,
-  ## may have been busted by adding attributes afterwards).
   y2 <- integrate_simple(ode, y0, t0, t1, dt, TRUE)
   expect_that(y2, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
   expect_that(as.numeric(y2), is_identical_to(y1))

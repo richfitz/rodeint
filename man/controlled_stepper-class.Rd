@@ -4,6 +4,6 @@
 \alias{controlled_stepper-class}
 \title{Controlled Stepper}
 \description{
-##' Controlled stepper (documentating coming)
+Controlled stepper (documentation coming)
 }
 

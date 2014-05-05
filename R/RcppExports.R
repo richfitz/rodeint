@@ -29,6 +29,14 @@ r_integrate_times <- function(stepper, target, y, times, dt) {
     .Call('rodeint_r_integrate_times', PACKAGE = 'rodeint', stepper, target, y, times, dt)
 }
 
+stepper_basic__ctor <- function(type) {
+    .Call('rodeint_stepper_basic__ctor', PACKAGE = 'rodeint', type)
+}
+
+stepper_basic__type <- function(s) {
+    .Call('rodeint_stepper_basic__type', PACKAGE = 'rodeint', s)
+}
+
 target_r__ctor <- function(derivs, pars_type) {
     .Call('rodeint_target_r__ctor', PACKAGE = 'rodeint', derivs, pars_type)
 }

@@ -31,4 +31,3 @@ controlled_stepper__ctor(std::string type,
 std::string controlled_stepper__type(rodeint::controlled_stepper s) {
   return boost::apply_visitor(rodeint::controlled_stepper_type_visitor(), s);
 }
-
