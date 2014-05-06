@@ -30,7 +30,7 @@ struct state_saver {
   void add_state(Rcpp::NumericVector& ry) const {
     ry.attr("steps") = steps;
     ry.attr("t")     = t;
-    ry.attr("y")     = to_rcpp_matrix_by_row(y);
+    ry.attr("y")     = util::to_rcpp_matrix_by_row(y);
   }
   std::vector<T>      y;
   std::vector<double> t;

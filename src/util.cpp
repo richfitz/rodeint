@@ -1,6 +1,7 @@
 #include "util.hpp"
 
 namespace rodeint {
+namespace util {
 
 // Given a vector-of-vectors, copy the vector x[i] into the ith
 // *column* of an Rcpp matrix.
@@ -32,6 +33,15 @@ to_rcpp_matrix_by_row(const std::vector< std::vector<double> >& x) {
     std::copy(x[i].begin(), x[i].end(), r.begin());
   }
   return ret;
+}
+
+void check_length(size_t received, size_t expected) {
+  if (expected != received)
+    Rcpp::stop("Incorrect length input; expected " +
+               to_string(expected) + ", received " +
+               to_string(received));
+}
+
 }
 
 }

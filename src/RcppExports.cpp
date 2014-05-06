@@ -203,62 +203,47 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
-// target_c__ctor
-rodeint::target_c target_c__ctor(rodeint::target_c::pars_type pars);
-RcppExport SEXP rodeint_target_c__ctor(SEXP parsSEXP) {
+// target_cpp__derivs
+rodeint::target_cpp::state_type target_cpp__derivs(Rcpp::XPtr<rodeint::target_cpp> target, rodeint::target_cpp::state_type y, double t);
+RcppExport SEXP rodeint_target_cpp__derivs(SEXP targetSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::target_c::pars_type >::type pars(parsSEXP );
-        rodeint::target_c __result = target_c__ctor(pars);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// target_c__derivs
-rodeint::target_c::state_type target_c__derivs(Rcpp::XPtr<rodeint::target_c> target, rodeint::target_c::state_type y, double t);
-RcppExport SEXP rodeint_target_c__derivs(SEXP targetSEXP, SEXP ySEXP, SEXP tSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_c> >::type target(targetSEXP );
-        Rcpp::traits::input_parameter< rodeint::target_c::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_cpp> >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::target_c::state_type __result = target_c__derivs(target, y, t);
+        rodeint::target_cpp::state_type __result = target_cpp__derivs(target, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// target_c__get_pars
-rodeint::target_c::pars_type target_c__get_pars(Rcpp::XPtr<rodeint::target_c> target);
-RcppExport SEXP rodeint_target_c__get_pars(SEXP targetSEXP) {
+// target_cpp__get_pars
+rodeint::target_cpp::pars_type target_cpp__get_pars(Rcpp::XPtr<rodeint::target_cpp> target);
+RcppExport SEXP rodeint_target_cpp__get_pars(SEXP targetSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_c> >::type target(targetSEXP );
-        rodeint::target_c::pars_type __result = target_c__get_pars(target);
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_cpp> >::type target(targetSEXP );
+        rodeint::target_cpp::pars_type __result = target_cpp__get_pars(target);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// target_c__set_pars
-void target_c__set_pars(Rcpp::XPtr<rodeint::target_c> target, rodeint::target_c::pars_type pars);
-RcppExport SEXP rodeint_target_c__set_pars(SEXP targetSEXP, SEXP parsSEXP) {
+// target_cpp__set_pars
+void target_cpp__set_pars(Rcpp::XPtr<rodeint::target_cpp> target, rodeint::target_cpp::pars_type pars);
+RcppExport SEXP rodeint_target_cpp__set_pars(SEXP targetSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_c> >::type target(targetSEXP );
-        Rcpp::traits::input_parameter< rodeint::target_c::pars_type >::type pars(parsSEXP );
-        target_c__set_pars(target, pars);
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_cpp> >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_cpp::pars_type >::type pars(parsSEXP );
+        target_cpp__set_pars(target, pars);
     }
     return R_NilValue;
 END_RCPP
@@ -322,5 +307,19 @@ BEGIN_RCPP
         target_r__set_pars(target, pars);
     }
     return R_NilValue;
+END_RCPP
+}
+// test_harmonic_oscillator
+rodeint::target_cpp test_harmonic_oscillator();
+RcppExport SEXP rodeint_test_harmonic_oscillator() {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        rodeint::target_cpp __result = test_harmonic_oscillator();
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
 END_RCPP
 }

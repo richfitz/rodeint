@@ -1,7 +1,7 @@
 \docType{class}
-\name{target_c-class}
-\alias{target_c}
-\alias{target_c-class}
+\name{target_cpp-class}
+\alias{target_cpp}
+\alias{target_cpp-class}
 \title{Integration Target}
 \description{
 Integration targets (documentating coming)

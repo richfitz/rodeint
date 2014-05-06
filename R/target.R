@@ -28,28 +28,36 @@ target_r$methods(derivs = function(y, t) {
 
 ##' Integration targets (documentating coming)
 ##' @title Integration Target
-##' @aliases target_c
-##' @export target_c
+##' @aliases target_cpp
+##' @export target_cpp
 ##' @export
-target_c <- setRefClass("target_c",
+target_cpp <- setRefClass("target_cpp",
                         fields=list(
+                          "generator"="function",
                           "ptr"="externalptr"))
-target_c$lock(c("ptr"))
+target_cpp$lock(c("generator", "ptr"))
 
 ## TODO: This is going to change once we can look up function pointers
 ## by name.
-target_c$methods(initialize = function(pars) {
-  ptr <<- rodeint:::target_c__ctor(pars)
+target_cpp$methods(initialize = function(generator, pars) {
+  generator <<- generator
+  ptr <<- generator()
+  ## TODO: Does this determine if the class is really a ptr?
+  ## TODO: Can I use set_pars(pars) directly?
+  rodeint:::target_cpp__set_pars(ptr, pars)
 })
 
-target_c$methods(pars = function() {
-  rodeint:::target_c__get_pars(ptr)
+target_cpp$methods(pars = function() {
+  rodeint:::target_cpp__get_pars(ptr)
 })
 
-target_c$methods(set_pars = function(pars) {
-  rodeint:::target_c__set_pars(ptr, pars)
+## For this, and for target_r, it would be nice to have a callback
+## function that verifies the parameters.  A function that takes them
+## as an argument and throws iff there's a problem would be OK.
+target_cpp$methods(set_pars = function(pars) {
+  rodeint:::target_cpp__set_pars(ptr, pars)
 })
 
-target_c$methods(derivs = function(y, t) {
-  rodeint:::target_c__derivs(ptr, y, t)
+target_cpp$methods(derivs = function(y, t) {
+  rodeint:::target_cpp__derivs(ptr, y, t)
 })
