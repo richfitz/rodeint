@@ -2,19 +2,12 @@
 #define _RODEINT_OBSERVERS_HPP_
 
 #include <vector>
-#include <Rcpp.h>
-#include "util.hpp"
 
 namespace rodeint {
 
-// Based on harmonic_oscillator.hpp -- we need to take a reference
-// here.
-
-// NOTE: Given that this is the *only* observer that we're likely to
-// produce it might be worth renaming this file a bit.  However, later
-// on getting other observers might be worthwhile, even if they're not
-// actually used in the interface.  Or we could add other features to
-// this one such as optional printing.
+// NOTE: This is probably the only observer that will be added until
+// the stiff systems are supported.  Then, at the least, we need to
+// support a different state type.
 template <typename T>
 struct state_saver {
   struct observer {
@@ -27,11 +20,6 @@ struct state_saver {
     }
   };
   state_saver() : steps(0), obs(y, t) {}
-  void add_state(Rcpp::NumericVector& ry) const {
-    ry.attr("steps") = steps;
-    ry.attr("t")     = t;
-    ry.attr("y")     = util::to_rcpp_matrix_by_row(y);
-  }
   std::vector<T>      y;
   std::vector<double> t;
   size_t steps;

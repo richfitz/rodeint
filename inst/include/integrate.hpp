@@ -4,26 +4,32 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/variant.hpp>
 #include <vector>
+#include <Rcpp.h>
 #include "observers.hpp"
 #include "stepper.hpp"
+#include "util.hpp"
 
 namespace rodeint {
 
-// This is a helper for the little visitor classes below, and saves
-// the state in a repeatable way.  It feels unduly complicated though,
-// and there's probably a nicer way of doing it.
-template <typename Visitor>
-Rcpp::NumericVector integration_state(const Visitor* vis, bool save_state) {
-  Rcpp::NumericVector ret(vis->y.begin(), vis->y.end());
+// This is a helper used by many of the functions below, which saves
+// the state in a repeatable way and reduces repetition.
+template <typename State>
+Rcpp::NumericVector integration_state(const std::vector<double>& y,
+                                      const State& state,
+                                      bool save_state) {
+  Rcpp::NumericVector ret(y.begin(), y.end());
   if (save_state) {
-    vis->state.add_state(ret);
+    ret.attr("steps") = state.steps;
+    ret.attr("t")     = state.t;
+    ret.attr("y")     = util::to_rcpp_matrix_by_row(state.y);
   }
   return ret;
 }
 
 // There is quite a bit of repetition here, but it's not *that* bad.
 // This gives us compile time polymorphism based on runtime input
-// though, which is pretty sweet.
+// though, which is pretty sweet.  Eventually most of the repetition
+// can be removed by code generation.
 
 // 1: integrate_const: "Equidistant observer calls"
 template <typename Target>
@@ -71,9 +77,6 @@ public:
   void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_const(s);
   }
-  Rcpp::NumericVector r_state() const {
-    return integration_state(this, save_state);
-  }
 private:
   template <typename Stepper>
   void integrate_const(Stepper s) {
@@ -95,7 +98,7 @@ r_integrate_const(stepper stepper, Target target,
   stepper_integrate_const<Target>
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
-  return integration_state(&vis, save_state);
+  return integration_state(y, vis.state, save_state);
 }
 
 // 2. integrate_n_steps: "Integrate a given number of steps"
@@ -145,9 +148,6 @@ public:
   void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_n_steps(s);
   }
-  Rcpp::NumericVector r_state() const {
-    return integration_state(this, save_state);
-  }
 private:
   template <typename Stepper>
   void integrate_n_steps(Stepper s) {
@@ -170,7 +170,7 @@ r_integrate_n_steps(stepper stepper, Target target,
   stepper_integrate_n_steps<Target>
     vis(target, y, t0, dt, n, save_state);
   boost::apply_visitor(vis, stepper);
-  return vis.r_state();
+  return integration_state(y, vis.state, save_state);
 }
 
 // 3. integrate_adaptive "Observer calls at each step"
@@ -219,9 +219,6 @@ public:
   void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_adaptive(s);
   }
-  Rcpp::NumericVector r_state() const {
-    return integration_state(this, save_state);
-  }
 private:
   template <typename Stepper>
   void integrate_adaptive(Stepper s) {
@@ -243,7 +240,7 @@ r_integrate_adaptive(stepper stepper, Target target,
   stepper_integrate_adaptive<Target>
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
-  return vis.r_state();
+  return integration_state(y, vis.state, save_state);
 }
 
 // 4. integrate_times: "Observer calls at given time points"
@@ -263,7 +260,6 @@ public:
   state_type& y;
   Iterator times_start, times_end;
   double dt;
-  bool save_state; // NOTE: always true
   state_saver<state_type> state;
 
   typedef void result_type;
@@ -271,8 +267,7 @@ public:
                           Iterator times_start_, Iterator times_end_,
                           double dt_)
     : target(target_), y(y_),
-      times_start(times_start_), times_end(times_end_), dt(dt_),
-      save_state(true) {}
+      times_start(times_start_), times_end(times_end_), dt(dt_) {}
   void operator()(stepper_basic_euler s) {
     integrate_times(s);
   }
@@ -301,9 +296,6 @@ public:
   void operator()(stepper_controlled_runge_kutta_dopri5 s) {
     integrate_times(s);
   }
-  Rcpp::NumericVector r_state() const {
-    return integration_state(this, save_state);
-  }
 private:
   template <typename Stepper>
   void integrate_times(Stepper s) {
@@ -321,7 +313,7 @@ r_integrate_times(stepper stepper, Target target,
   stepper_integrate_times<Target>
     vis(target, y, times.begin(), times.end(), dt);
   boost::apply_visitor(vis, stepper);
-  return vis.r_state();
+  return integration_state(y, vis.state, true);
 }
 
 // 5. Convenience function
@@ -331,9 +323,8 @@ r_integrate_simple(Target target,
                    typename Target::state_type y,
                    double t0, double t1, double dt,
                    bool save_state=false) {
-  typedef typename Target::state_type state_type;
   using boost::numeric::odeint::integrate;
-  state_saver<state_type> state;
+  state_saver<typename Target::state_type> state;
 
   if (save_state) {
     state.steps = integrate(target, y, t0, t1, dt, state.obs);
@@ -341,13 +332,7 @@ r_integrate_simple(Target target,
     integrate(target, y, t0, t1, dt);
   }
 
-  // This bit here duplicates code from rodeint::integration_state().
-  Rcpp::NumericVector ret(y.begin(), y.end());
-  if (save_state) {
-    state.add_state(ret);
-  }
-
-  return ret;
+  return integration_state(y, state, save_state);
 }
 
 }
