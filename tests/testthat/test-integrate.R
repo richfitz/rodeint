@@ -2,6 +2,16 @@ source("helper-rodeint.R")
 
 context("integrate")
 
+## Once we get the non-adaptive integrators working here, there's
+## potentially a bunch more to work on -- they do have slightly
+## different behaviours.
+##
+## Also we'll need to tune tolerances for different algorithms --
+## euler won't do as well as rk4, for example!
+##
+## Might be worth getting the analytical solution (Mathematica?) so
+## that we can compare that too.
+
 test_that("integrate_const", {
   ## TODO: A couple of things to try here:
   ##   - t1 - t0 not a multiple of dt
@@ -20,52 +30,54 @@ test_that("integrate_const", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (type in stepper_controlled_types()) {
-    s <- make_stepper_controlled(type)
-    y_r <- ode_r$integrate_const(s, y0, t0, t1, dt0)
-    expect_that(y_r, is_a("numeric"))
-    expect_that(y_r, equals(cmp, tolerance=1e-5))
+  for (category in c("basic", "controlled")) {
+    for (type in stepper_types(category)) {
+      s <- make_stepper(category, type)
+      y_r <- ode_r$integrate_const(s, y0, t0, t1, dt0)
+      expect_that(y_r, is_a("numeric"))
+      expect_that(y_r, equals(cmp, tolerance=1e-5))
 
-    y_r_s <- ode_r$integrate_const(s, y0, t0, t1, dt0, TRUE)
-    expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
-    ## This fails for all three, which is extremely surprising...
-    ##   expect_that(as.numeric(y_r_s), is_identical_to(y_r))
-    ## This is because:
-    ##   "However, if an observer is provided the step size will be
-    ##    adjusted such that the algorithm always calculates x(t) at t
-    ##    = t0 + n dt and calls the observer at that point."
-    expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
+      y_r_s <- ode_r$integrate_const(s, y0, t0, t1, dt0, TRUE)
+      expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+      ## This fails for all three, which is extremely surprising...
+      ##   expect_that(as.numeric(y_r_s), is_identical_to(y_r))
+      ## This is because:
+      ##   "However, if an observer is provided the step size will be
+      ##    adjusted such that the algorithm always calculates x(t) at t
+      ##    = t0 + n dt and calls the observer at that point."
+      expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
-    steps <- attr(y_r_s, "steps")
-    tt    <- attr(y_r_s, "t")
-    yy    <- attr(y_r_s, "y")
+      steps <- attr(y_r_s, "steps")
+      tt    <- attr(y_r_s, "t")
+      yy    <- attr(y_r_s, "y")
 
-    expect_that(steps, is_a("numeric"))
-    expect_that(tt,    is_a("numeric"))
-    expect_that(yy,    is_a("matrix"))
+      expect_that(steps, is_a("numeric"))
+      expect_that(tt,    is_a("numeric"))
+      expect_that(yy,    is_a("matrix"))
 
-    expect_that(tt[[1]],         is_identical_to(t0))
-    expect_that(tt[[steps + 1]], is_identical_to(t1))
+      expect_that(tt[[1]],         is_identical_to(t0))
+      expect_that(tt[[steps + 1]], is_identical_to(t1))
 
-    expect_that(yy[1,],         is_identical_to(y0))
-    expect_that(yy[steps + 1,], is_identical_to(as.numeric(y_r_s)))
+      expect_that(yy[1,],         is_identical_to(y0))
+      expect_that(yy[steps + 1,], is_identical_to(as.numeric(y_r_s)))
 
-    ## Check the compiled version:
-    expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0),
-                is_identical_to(y_r))
-    expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0, TRUE),
-                is_identical_to(y_r_s))
+      ## Check the compiled version:
+      expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
 
-    ## Check the alternative syntax:
-    expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0),
-                is_identical_to(y_r))
-    expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0, TRUE),
-                is_identical_to(y_r_s))
+      ## Check the alternative syntax:
+      expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
 
-    expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0),
-                is_identical_to(y_r))
-    expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0, TRUE),
-                is_identical_to(y_r_s))
+      expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
+    }
   }
 })
 
@@ -86,48 +98,50 @@ test_that("integrate_n_steps", {
                       wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (type in stepper_controlled_types()) {
-    s <- make_stepper_controlled(type)
-    y_r <- ode_r$integrate_n_steps(s, y0, t0, dt0, n)
-    expect_that(y_r, is_a("numeric"))
-    expect_that(y_r, equals(cmp, tolerance=1e-5))
+  for (category in c("basic", "controlled")) {
+    for (type in stepper_types(category)) {
+      s <- make_stepper(category, type)
+      y_r <- ode_r$integrate_n_steps(s, y0, t0, dt0, n)
+      expect_that(y_r, is_a("numeric"))
+      expect_that(y_r, equals(cmp, tolerance=1e-5))
 
-    y_r_s <- ode_r$integrate_n_steps(s, y0, t0, dt0, n, TRUE)
-    expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
-    expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
+      y_r_s <- ode_r$integrate_n_steps(s, y0, t0, dt0, n, TRUE)
+      expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+      expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
-    steps <- attr(y_r_s, "steps")
-    tt    <- attr(y_r_s, "t")
-    yy    <- attr(y_r_s, "y")
+      steps <- attr(y_r_s, "steps")
+      tt    <- attr(y_r_s, "t")
+      yy    <- attr(y_r_s, "y")
 
-    expect_that(steps, is_a("numeric"))
-    expect_that(tt,    is_a("numeric"))
-    expect_that(yy,    is_a("matrix"))
+      expect_that(steps, is_a("numeric"))
+      expect_that(tt,    is_a("numeric"))
+      expect_that(yy,    is_a("matrix"))
 
-    expect_that(steps, equals(n))
+      expect_that(steps, equals(n))
 
-    expect_that(tt[[1]],         is_identical_to(t0))
-    expect_that(tt[[steps + 1]], is_identical_to(t1))
+      expect_that(tt[[1]],         is_identical_to(t0))
+      expect_that(tt[[steps + 1]], is_identical_to(t1))
 
-    expect_that(yy[1,],         is_identical_to(y0))
-    expect_that(yy[steps + 1,], is_identical_to(as.numeric(y_r_s)))
+      expect_that(yy[1,],         is_identical_to(y0))
+      expect_that(yy[steps + 1,], is_identical_to(as.numeric(y_r_s)))
 
-    ## Check the compiled version:
-    expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n),
-                is_identical_to(y_r))
-    expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n, TRUE),
-                is_identical_to(y_r_s))
+      ## Check the compiled version:
+      expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n),
+                  is_identical_to(y_r))
+      expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n, TRUE),
+                  is_identical_to(y_r_s))
 
-    ## Check the alternative syntax:
-    expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n),
-                is_identical_to(y_r))
-    expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n, TRUE),
-                is_identical_to(y_r_s))
+      ## Check the alternative syntax:
+      expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n),
+                  is_identical_to(y_r))
+      expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n, TRUE),
+                  is_identical_to(y_r_s))
 
-    expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n),
-                is_identical_to(y_r))
-    expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n, TRUE),
-                is_identical_to(y_r_s))
+      expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n),
+                  is_identical_to(y_r))
+      expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n, TRUE),
+                  is_identical_to(y_r_s))
+    }
   }
 })
 
@@ -147,52 +161,54 @@ test_that("integrate_adaptive", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (type in stepper_controlled_types()) {
-    s <- make_stepper_controlled(type)
+  for (category in c("basic", "controlled")) {
+    for (type in stepper_types(category)) {
+      s <- make_stepper(category, type)
 
-    ## run with rodeint:
-    y_r <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0)
-    expect_that(y_r, is_a("numeric"))
-    expect_that(y_r, equals(cmp, tolerance=1e-5))
+      ## run with rodeint:
+      y_r <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0)
+      expect_that(y_r, is_a("numeric"))
+      expect_that(y_r, equals(cmp, tolerance=1e-5))
 
-    y_r_s <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0, TRUE)
-    expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
-    expect_that(as.numeric(y_r_s), is_identical_to(y_r))
-    expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
+      y_r_s <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0, TRUE)
+      expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+      expect_that(as.numeric(y_r_s), is_identical_to(y_r))
+      expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
-    steps <- attr(y_r_s, "steps")
-    tt    <- attr(y_r_s, "t")
-    yy    <- attr(y_r_s, "y")
+      steps <- attr(y_r_s, "steps")
+      tt    <- attr(y_r_s, "t")
+      yy    <- attr(y_r_s, "y")
 
-    expect_that(steps, is_a("numeric"))
-    expect_that(tt,    is_a("numeric"))
-    expect_that(yy,    is_a("matrix"))
+      expect_that(steps, is_a("numeric"))
+      expect_that(tt,    is_a("numeric"))
+      expect_that(yy,    is_a("matrix"))
 
-    expect_that(length(tt), equals(steps + 1))
-    expect_that(dim(yy),    equals(c(steps + 1, length(y0))))
+      expect_that(length(tt), equals(steps + 1))
+      expect_that(dim(yy),    equals(c(steps + 1, length(y0))))
 
-    expect_that(tt[[1]],         is_identical_to(t0))
-    expect_that(tt[[steps + 1]], is_identical_to(t1))
+      expect_that(tt[[1]],         is_identical_to(t0))
+      expect_that(tt[[steps + 1]], is_identical_to(t1))
 
-    expect_that(yy[1,],         is_identical_to(y0))
-    expect_that(yy[steps + 1,], is_identical_to(y_r))
+      expect_that(yy[1,],         is_identical_to(y0))
+      expect_that(yy[steps + 1,], is_identical_to(y_r))
 
-    ## Check the compiled version:
-    expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0),
-                is_identical_to(y_r))
-    expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0, TRUE),
-                is_identical_to(y_r_s))
+      ## Check the compiled version:
+      expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
 
-    ## Check the alternative syntax:
-    expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0),
-                is_identical_to(y_r))
-    expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0, TRUE),
-                is_identical_to(y_r_s))
+      ## Check the alternative syntax:
+      expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
 
-    expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0),
-                is_identical_to(y_r))
-    expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0, TRUE),
-                is_identical_to(y_r_s))
+      expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
+    }
   }
 })
 
@@ -216,38 +232,40 @@ test_that("integrate_times", {
   cmp <- unname(lsoda(y0, times, wrap.deSolve(harmonic.oscillator),
                       pars)[,-1])
 
-  for (type in stepper_controlled_types()) {
-    s <- make_stepper_controlled(type)
+  for (category in c("basic", "controlled")) {
+    for (type in stepper_types(category)) {
+      s <- make_stepper(category, type)
 
-    ## run with rodeint:
-    y_r_s <- ode_r$integrate_times(s, y0, times, dt0)
-    expect_that(y_r_s, equals(cmp[nrow(cmp),], tolerance=1e-5,
-                           check.attributes=FALSE))
-    expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
+      ## run with rodeint:
+      y_r_s <- ode_r$integrate_times(s, y0, times, dt0)
+      expect_that(y_r_s, equals(cmp[nrow(cmp),], tolerance=1e-5,
+                                check.attributes=FALSE))
+      expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
-    steps <- attr(y_r_s, "steps")
-    tt    <- attr(y_r_s, "t")
-    yy    <- attr(y_r_s, "y")
+      steps <- attr(y_r_s, "steps")
+      tt    <- attr(y_r_s, "t")
+      yy    <- attr(y_r_s, "y")
 
-    expect_that(steps, is_a("numeric"))
-    expect_that(tt,    is_a("numeric"))
-    expect_that(yy,    is_a("matrix"))
+      expect_that(steps, is_a("numeric"))
+      expect_that(tt,    is_a("numeric"))
+      expect_that(yy,    is_a("matrix"))
 
-    expect_that(steps, is_more_than(length(tt) - 1))
-    expect_that(nrow(yy), equals(length(times)))
+      expect_that(steps, is_more_than(length(tt) - 1))
+      expect_that(nrow(yy), equals(length(times)))
 
-    expect_that(tt,    is_identical_to(times))
-    expect_that(yy,    equals(cmp, tolerance=1e-5))
+      expect_that(tt,    is_identical_to(times))
+      expect_that(yy,    equals(cmp, tolerance=1e-5))
 
-    ## Check the compiled version:
-    expect_that(ode_cpp$integrate_times(s, y0, times, dt0),
-                is_identical_to(y_r_s))
+      ## Check the compiled version:
+      expect_that(ode_cpp$integrate_times(s, y0, times, dt0),
+                  is_identical_to(y_r_s))
 
-    ## Check the alternative syntax:
-    expect_that(integrate_times(s, ode_r, y0, times, dt0),
-                is_identical_to(y_r_s))
-    expect_that(integrate_times(s, ode_cpp, y0, times, dt0),
-                is_identical_to(y_r_s))
+      ## Check the alternative syntax:
+      expect_that(integrate_times(s, ode_r, y0, times, dt0),
+                  is_identical_to(y_r_s))
+      expect_that(integrate_times(s, ode_cpp, y0, times, dt0),
+                  is_identical_to(y_r_s))
+    }
   }
 })
 

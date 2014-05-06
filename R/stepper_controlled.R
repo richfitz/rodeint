@@ -76,3 +76,10 @@ make_stepper_basic <- function(type) {
 make_stepper_controlled <- function(type, atol=1e-6, rtol=1e-6) {
   stepper_controlled$new("controlled", type, atol, rtol)
 }
+
+##' @rdname stepper_controlled
+##' @export
+make_stepper <- function(category, type, ...) {
+  list(basic=make_stepper_basic,
+       controlled=make_stepper_controlled)[[category]](type, ...)
+}
