@@ -8,7 +8,6 @@
 // These files do not reference Rcpp, and so can be included first.
 // Some of these are needed by rcpp_as_wrap_pre as they define types
 // used within, saving the need for forward declaration.
-#include "stepper.hpp"
 #include "stepper_basic.hpp"
 #include "stepper_controlled.hpp"
 
