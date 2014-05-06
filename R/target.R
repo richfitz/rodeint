@@ -33,22 +33,22 @@ target_r$methods(derivs = function(y, t) {
 ## crash.
 target_r$methods(integrate_const =
                  function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_const_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
 })
 target_r$methods(integrate_n_steps =
                  function(stepper, y, t0, dt, n, save_state=FALSE) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_n_steps_r(stepper$ptr, ptr, y, t0, dt, n, save_state)
 })
 target_r$methods(integrate_adaptive =
                  function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_adaptive_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
 })
 target_r$methods(integrate_times =
                  function(stepper, y, times, dt) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_times_r(stepper$ptr, ptr, y, times, dt)
 })
 target_r$methods(integrate_simple =
@@ -94,22 +94,22 @@ target_cpp$methods(derivs = function(y, t) {
 
 target_cpp$methods(integrate_const =
                  function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_const_cpp(stepper$ptr, ptr, y, t0, t1, dt, save_state)
 })
 target_cpp$methods(integrate_n_steps =
                  function(stepper, y, t0, dt, n, save_state=FALSE) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_n_steps_cpp(stepper$ptr, ptr, y, t0, dt, n, save_state)
 })
 target_cpp$methods(integrate_adaptive =
                  function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_adaptive_cpp(stepper$ptr, ptr, y, t0, t1, dt, save_state)
 })
 target_cpp$methods(integrate_times =
                  function(stepper, y, times, dt) {
-  assert_stepper_controlled(stepper)
+  assert_stepper(stepper)
   r_integrate_times_cpp(stepper$ptr, ptr, y, times, dt)
 })
 target_cpp$methods(integrate_simple =

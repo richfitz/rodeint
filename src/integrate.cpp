@@ -3,12 +3,12 @@
 #include "target_r.hpp"
 #include "target_cpp.hpp"
 #include "observers.hpp"
-#include "stepper_controlled.hpp"
+#include "stepper.hpp"
 #include "util.hpp"
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_const_r(rodeint::stepper_controlled stepper,
+r_integrate_const_r(rodeint::stepper stepper,
                     rodeint::target_r target,
                     rodeint::target_r::state_type y,
                     double t0, double t1, double dt,
@@ -19,7 +19,7 @@ r_integrate_const_r(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_const_cpp(rodeint::stepper_controlled stepper,
+r_integrate_const_cpp(rodeint::stepper stepper,
                       rodeint::target_cpp target,
                       rodeint::target_cpp::state_type y,
                       double t0, double t1, double dt,
@@ -30,7 +30,7 @@ r_integrate_const_cpp(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_n_steps_r(rodeint::stepper_controlled stepper,
+r_integrate_n_steps_r(rodeint::stepper stepper,
                       rodeint::target_r target,
                       rodeint::target_r::state_type y,
                       double t0, double dt, size_t n,
@@ -41,7 +41,7 @@ r_integrate_n_steps_r(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_n_steps_cpp(rodeint::stepper_controlled stepper,
+r_integrate_n_steps_cpp(rodeint::stepper stepper,
                         rodeint::target_cpp target,
                         rodeint::target_cpp::state_type y,
                         double t0, double dt, size_t n,
@@ -52,7 +52,7 @@ r_integrate_n_steps_cpp(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_adaptive_r(rodeint::stepper_controlled stepper,
+r_integrate_adaptive_r(rodeint::stepper stepper,
                        rodeint::target_r target,
                        rodeint::target_r::state_type y,
                        double t0, double t1, double dt,
@@ -63,7 +63,7 @@ r_integrate_adaptive_r(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_adaptive_cpp(rodeint::stepper_controlled stepper,
+r_integrate_adaptive_cpp(rodeint::stepper stepper,
                          rodeint::target_cpp target,
                          rodeint::target_cpp::state_type y,
                          double t0, double t1, double dt,
@@ -74,7 +74,7 @@ r_integrate_adaptive_cpp(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_times_r(rodeint::stepper_controlled stepper,
+r_integrate_times_r(rodeint::stepper stepper,
                     rodeint::target_r target,
                     rodeint::target_r::state_type y,
                     std::vector<double> times,
@@ -85,7 +85,7 @@ r_integrate_times_r(rodeint::stepper_controlled stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_times_cpp(rodeint::stepper_controlled stepper,
+r_integrate_times_cpp(rodeint::stepper stepper,
                       rodeint::target_cpp target,
                       rodeint::target_cpp::state_type y,
                       std::vector<double> times,

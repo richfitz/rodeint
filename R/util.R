@@ -5,10 +5,6 @@ assert_inherits <- function(x, what) {
   }
 }
 
-assert_target_r <- function(x) {
-  assert_inherits(x, "target_r")
-}
-
-assert_stepper_controlled <- function(x) {
-  assert_inherits(x, "stepper_controlled")
+assert_stepper <- function(x) {
+  assert_inherits(x, "stepper")
 }

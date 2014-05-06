@@ -5,7 +5,7 @@
 #include <boost/variant.hpp>
 #include <vector>
 #include "observers.hpp"
-#include "stepper_controlled.hpp"
+#include "stepper.hpp"
 
 namespace rodeint {
 
@@ -27,7 +27,7 @@ Rcpp::NumericVector integration_state(const Visitor* vis, bool save_state) {
 
 // 1: integrate_const: "Equidistant observer calls"
 template <typename Target>
-class stepper_controlled_integrate_const : boost::static_visitor<> {
+class stepper_integrate_const : boost::static_visitor<> {
 public:
   typedef Target target_type;
   typedef typename Target::state_type state_type;
@@ -38,11 +38,9 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_const(Target target_,
-                                     state_type &y_,
-                                     double t0_, double t1_,
-                                     double dt_,
-                                     bool save_state_)
+  stepper_integrate_const(Target target_, state_type &y_,
+                          double t0_, double t1_, double dt_,
+                          bool save_state_)
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_) {}
   void operator()(stepper_basic_runge_kutta4 s) {
@@ -76,10 +74,10 @@ private:
 
 template <typename Target>
 Rcpp::NumericVector
-r_integrate_const(stepper_controlled stepper, Target target,
+r_integrate_const(stepper stepper, Target target,
                   typename Target::state_type y,
                   double t0, double t1, double dt, bool save_state) {
-  stepper_controlled_integrate_const<Target>
+  stepper_integrate_const<Target>
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
   return integration_state(&vis, save_state);
@@ -87,7 +85,7 @@ r_integrate_const(stepper_controlled stepper, Target target,
 
 // 2. integrate_n_steps: "Integrate a given number of steps"
 template <typename Target>
-class stepper_controlled_integrate_n_steps : boost::static_visitor<> {
+class stepper_integrate_n_steps : boost::static_visitor<> {
 public:
   typedef Target target_type;
   typedef typename Target::state_type state_type;
@@ -99,10 +97,9 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_n_steps(Target target_,
-                                       state_type &y_,
-                                       double t0_, double dt_, size_t n_,
-                                       bool save_state_)
+  stepper_integrate_n_steps(Target target_, state_type &y_,
+                            double t0_, double dt_, size_t n_,
+                            bool save_state_)
     : target(target_), y(y_), t0(t0_), dt(dt_), n(n_),
       save_state(save_state_) {}
   void operator()(stepper_basic_runge_kutta4 s) {
@@ -137,10 +134,10 @@ private:
 
 template <typename Target>
 Rcpp::NumericVector
-r_integrate_n_steps(stepper_controlled stepper, Target target,
+r_integrate_n_steps(stepper stepper, Target target,
                     typename Target::state_type y,
                     double t0, double dt, size_t n, bool save_state) {
-  stepper_controlled_integrate_n_steps<Target>
+  stepper_integrate_n_steps<Target>
     vis(target, y, t0, dt, n, save_state);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();
@@ -148,7 +145,7 @@ r_integrate_n_steps(stepper_controlled stepper, Target target,
 
 // 3. integrate_adaptive "Observer calls at each step"
 template <typename Target>
-class stepper_controlled_integrate_adaptive : boost::static_visitor<> {
+class stepper_integrate_adaptive : boost::static_visitor<> {
 public:
   typedef Target target_type;
   typedef typename Target::state_type state_type;
@@ -159,11 +156,9 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_adaptive(Target target_,
-                                        state_type &y_,
-                                        double t0_, double t1_,
-                                        double dt_,
-                                        bool save_state_)
+  stepper_integrate_adaptive(Target target_, state_type &y_,
+                             double t0_, double t1_, double dt_,
+                             bool save_state_)
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_) {}
   void operator()(stepper_basic_runge_kutta4 s) {
@@ -197,10 +192,10 @@ private:
 
 template <typename Target>
 Rcpp::NumericVector
-r_integrate_adaptive(stepper_controlled stepper, Target target,
+r_integrate_adaptive(stepper stepper, Target target,
                      typename Target::state_type y,
                      double t0, double t1, double dt, bool save_state) {
-  stepper_controlled_integrate_adaptive<Target>
+  stepper_integrate_adaptive<Target>
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();
@@ -214,7 +209,7 @@ r_integrate_adaptive(stepper_controlled stepper, Target target,
 //
 // NOTE: In this case, state is *always* saved.
 template <typename Target>
-class stepper_controlled_integrate_times : boost::static_visitor<> {
+class stepper_integrate_times : boost::static_visitor<> {
   typedef std::vector<double>::const_iterator Iterator;
 public:
   typedef Target target_type;
@@ -227,11 +222,9 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_times(Target target_,
-                                     state_type &y_,
-                                     Iterator times_start_,
-                                     Iterator times_end_,
-                                     double dt_)
+  stepper_integrate_times(Target target_, state_type &y_,
+                          Iterator times_start_, Iterator times_end_,
+                          double dt_)
     : target(target_), y(y_),
       times_start(times_start_), times_end(times_end_), dt(dt_),
       save_state(true) {}
@@ -262,10 +255,10 @@ private:
 
 template <typename Target>
 Rcpp::NumericVector
-r_integrate_times(stepper_controlled stepper, Target target,
+r_integrate_times(stepper stepper, Target target,
                   typename Target::state_type y,
                   std::vector<double> times, double dt) {
-  stepper_controlled_integrate_times<Target>
+  stepper_integrate_times<Target>
     vis(target, y, times.begin(), times.end(), dt);
   boost::apply_visitor(vis, stepper);
   return vis.r_state();

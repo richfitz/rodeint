@@ -1,19 +1,19 @@
-##' Controlled stepper (documentation coming)
-##' @title Controlled Stepper
-##' @aliases stepper_controlled
-##' @rdname stepper_controlled
-##' @export stepper_controlled
+##' Stepper (documentation coming)
+##' @title Stepper
+##' @aliases stepper
+##' @rdname stepper
+##' @export stepper
 ##' @export
-stepper_controlled <- setRefClass("stepper_controlled",
+stepper <- setRefClass("stepper",
                                   fields=list(
                                     category="character",
                                     type="character",
                                     atol="numeric",
                                     rtol="numeric",
                                     ptr="externalptr"))
-stepper_controlled$lock(c("category", "type", "atol", "rtol", "ptr"))
+stepper$lock(c("category", "type", "atol", "rtol", "ptr"))
 
-stepper_controlled$methods(initialize=function(category, type, atol, rtol) {
+stepper$methods(initialize=function(category, type, atol, rtol) {
   category <<- category
   type <<- type
   atol <<- atol
@@ -32,7 +32,7 @@ stepper_controlled$methods(initialize=function(category, type, atol, rtol) {
 ## about non-controlled steppers (dense output, etc), then this might
 ## change.
 
-##' Valid values for making a \code{\link{stepper_controlled}}.
+##' Valid values for making a \code{\link{stepper}}.
 ##' @title Types of Controlled Stepper
 ##' @author Rich FitzJohn
 ##' @export
@@ -65,21 +65,24 @@ stepper_basic_types <- function() {
   "runge_kutta4"
 }
 
-##' @rdname stepper_controlled
+##' @rdname stepper
 ##' @export
 make_stepper_basic <- function(type) {
-  stepper_controlled$new("basic", type, NA_real_, NA_real_)
+  stepper$new("basic", type, NA_real_, NA_real_)
 }
 
-##' @rdname stepper_controlled
+##' @rdname stepper
 ##' @export
 make_stepper_controlled <- function(type, atol=1e-6, rtol=1e-6) {
-  stepper_controlled$new("controlled", type, atol, rtol)
+  stepper$new("controlled", type, atol, rtol)
 }
 
-##' @rdname stepper_controlled
+##' @rdname stepper
 ##' @export
 make_stepper <- function(category, type, ...) {
-  list(basic=make_stepper_basic,
-       controlled=make_stepper_controlled)[[category]](type, ...)
+  make <- switch(category,
+                 basic=make_stepper_basic,
+                 controlled=make_stepper_controlled,
+                 stop("Invalid category"))
+  make(type, ...)
 }

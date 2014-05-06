@@ -14,7 +14,7 @@ stepper_basic_types()
   \item{category}{Either "basic" or "controlled"}
 }
 \description{
-Valid values for making a \code{\link{stepper_controlled}}.
+Valid values for making a \code{\link{stepper}}.
 }
 \author{
 Rich FitzJohn

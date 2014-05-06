@@ -13,7 +13,7 @@ Pre-issues:
 - [x] Decide on the version of odeint to target, and a mechanism for tracking upstream (*Looks like BH has a decent version of odeint (2.2) as of 1.54.0-1, so I'm going to use that until I know I need something else*)
 - [x] Implement all examples pointing at [BH](http://cran.r-project.org/web/packages/BH/index.html) to confirm that we have all the required headers, gather any others needed (*No longer the idea, I think*)
 - [x] Write simple handler for integrating derivatives written in R
-- [ ] Extend to a C++ API that is accessible via include files.  This should be fairly straightforward given that odeint is header only.
+- [x] Extend to a C++ API that is accessible via include files.  This should be fairly straightforward given that odeint is header only.
 - [ ] Benchmarks against gsl and lsoda - can use the gsl code in diversitree, and lsoda code in deSolve.
 
 # Boost and odeint version

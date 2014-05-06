@@ -49,8 +49,8 @@ stepper_basic__ctor <- function(type) {
     .Call('rodeint_stepper_basic__ctor', PACKAGE = 'rodeint', type)
 }
 
-stepper_controlled__type <- function(s) {
-    .Call('rodeint_stepper_controlled__type', PACKAGE = 'rodeint', s)
+stepper__type <- function(s) {
+    .Call('rodeint_stepper__type', PACKAGE = 'rodeint', s)
 }
 
 target_cpp__derivs <- function(target, y, t) {

@@ -1,11 +1,5 @@
-#ifndef _RODEINT_STEPPER_CONTROLLED_HPP_
-#define _RODEINT_STEPPER_CONTROLLED_HPP_
-
-// TODO: Going to need templating over state type -- for now
-// everything is explicitly typedef-ed on std::vector<double>
-
-// TODO: replace std::vector<double> with target_r::state_type, but
-// wait until the more general target support is done.
+#ifndef _RODEINT_STEPPER_HPP_
+#define _RODEINT_STEPPER_HPP_
 
 #include <boost/numeric/odeint.hpp>
 
@@ -76,12 +70,12 @@ boost::variant<
   stepper_controlled_runge_kutta_cash_karp54,
   stepper_controlled_runge_kutta_fehlberg78,
   stepper_controlled_runge_kutta_dopri5>
-stepper_controlled;
+stepper;
 
 // This is more of a demonstration of how the approach will work more
 // than anything else, really.  Gives a human readable version of the
 // type of the controlled output stepper.
-class stepper_controlled_type_visitor : boost::static_visitor<> {
+class stepper_type_visitor : boost::static_visitor<> {
 public:
   typedef std::string result_type;
   result_type operator()(const stepper_basic_runge_kutta4&) const {
@@ -100,11 +94,5 @@ public:
 };
 
 }
-
-// For Rcpp
-rodeint::stepper_controlled
-stepper_controlled__ctor(std::string type,
-                         double eps_abs, double eps_rel);
-
 
 #endif
