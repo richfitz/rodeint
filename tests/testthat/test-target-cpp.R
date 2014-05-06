@@ -31,7 +31,7 @@ test_that("parameters", {
   expect_that(obj$set_pars(numeric(0)),   throws_error())
 })
 
-context("target_c [via sourceCpp, compilation may be slow]")
+context("target_cpp [via sourceCpp, compilation may be slow]")
 
 test_that("via sourceCpp", {
   ## TODO: For some reason, if I do sourceCpp(file.cpp), then it fails
@@ -40,7 +40,7 @@ test_that("via sourceCpp", {
   ## stripped the version dependency, but this looks like a Rcpp bug.
   file.cpp <- system.file("examples/harmonic_oscillator.cpp",
                           package="rodeint")
-  Rcpp::sourceCpp(file.cpp)
+  Rcpp::sourceCpp(code=paste(readLines(file.cpp), collapse="\n"))
   pars <- 0.5
   obj <- target_cpp(example_harmonic_oscillator, pars)
   y0 <- c(0, 1)
