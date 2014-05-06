@@ -12,7 +12,3 @@ assert_target_r <- function(x) {
 assert_stepper_controlled <- function(x) {
   assert_inherits(x, "stepper_controlled")
 }
-
-assert_stepper_basic <- function(x) {
-  assert_inherits(x, "stepper_basic")
-}

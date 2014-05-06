@@ -6,6 +6,7 @@ test_that("integrate_const", {
   ## TODO: A couple of things to try here:
   ##   - t1 - t0 not a multiple of dt
   ##   - t1 < t0
+  ##   - less obscure message if dt is stats::dt (or other wrong type)
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
