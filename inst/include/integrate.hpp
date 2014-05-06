@@ -4,7 +4,6 @@
 #include <boost/numeric/odeint.hpp>
 #include <boost/variant.hpp>
 #include <vector>
-#include "target_r.hpp"
 #include "observers.hpp"
 #include "stepper_controlled.hpp"
 
@@ -27,17 +26,19 @@ Rcpp::NumericVector integration_state(const Visitor* vis, bool save_state) {
 // though, which is pretty sweet.
 
 // 1: integrate_const: "Equidistant observer calls"
+template <typename Target>
 class stepper_controlled_integrate_const : boost::static_visitor<> {
 public:
-  typedef rodeint::target_r::state_type state_type;
-  rodeint::target_r target;
+  typedef Target target_type;
+  typedef typename Target::state_type state_type;
+  Target target;
   state_type& y;
   double t0, t1, dt;
   bool save_state;
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_const(rodeint::target_r target_,
+  stepper_controlled_integrate_const(Target target_,
                                      state_type &y_,
                                      double t0_, double t1_,
                                      double dt_,
@@ -69,11 +70,24 @@ private:
   }
 };
 
+template <typename Target>
+Rcpp::NumericVector
+r_integrate_const(stepper_controlled stepper, Target target,
+                  typename Target::state_type y,
+                  double t0, double t1, double dt, bool save_state) {
+  stepper_controlled_integrate_const<Target>
+    vis(target, y, t0, t1, dt, save_state);
+  boost::apply_visitor(vis, stepper);
+  return integration_state(&vis, save_state);
+}
+
 // 2. integrate_n_steps: "Integrate a given number of steps"
+template <typename Target>
 class stepper_controlled_integrate_n_steps : boost::static_visitor<> {
 public:
-  typedef rodeint::target_r::state_type state_type;
-  rodeint::target_r target;
+  typedef Target target_type;
+  typedef typename Target::state_type state_type;
+  Target target;
   state_type& y;
   double t0, dt;
   size_t n;
@@ -81,7 +95,7 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_n_steps(rodeint::target_r target_,
+  stepper_controlled_integrate_n_steps(Target target_,
                                        state_type &y_,
                                        double t0_, double dt_, size_t n_,
                                        bool save_state_)
@@ -113,18 +127,31 @@ private:
   }
 };
 
+template <typename Target>
+Rcpp::NumericVector
+r_integrate_n_steps(stepper_controlled stepper, Target target,
+                    typename Target::state_type y,
+                    double t0, double dt, size_t n, bool save_state) {
+  stepper_controlled_integrate_n_steps<Target>
+    vis(target, y, t0, dt, n, save_state);
+  boost::apply_visitor(vis, stepper);
+  return vis.r_state();
+}
+
 // 3. integrate_adaptive "Observer calls at each step"
+template <typename Target>
 class stepper_controlled_integrate_adaptive : boost::static_visitor<> {
 public:
-  typedef rodeint::target_r::state_type state_type;
-  rodeint::target_r target;
+  typedef Target target_type;
+  typedef typename Target::state_type state_type;
+  Target target;
   state_type& y;
   double t0, t1, dt;
   bool save_state;
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_adaptive(rodeint::target_r target_,
+  stepper_controlled_integrate_adaptive(Target target_,
                                         state_type &y_,
                                         double t0_, double t1_,
                                         double dt_,
@@ -156,6 +183,17 @@ private:
   }
 };
 
+template <typename Target>
+Rcpp::NumericVector
+r_integrate_adaptive(stepper_controlled stepper, Target target,
+                     typename Target::state_type y,
+                     double t0, double t1, double dt, bool save_state) {
+  stepper_controlled_integrate_adaptive<Target>
+    vis(target, y, t0, t1, dt, save_state);
+  boost::apply_visitor(vis, stepper);
+  return vis.r_state();
+}
+
 // 4. integrate_times: "Observer calls at given time points"
 //
 // NOTE: This could have been templated on the time iterator, but
@@ -163,11 +201,13 @@ private:
 // std::vector<double>::iterator types anyway.
 //
 // NOTE: In this case, state is *always* saved.
+template <typename Target>
 class stepper_controlled_integrate_times : boost::static_visitor<> {
   typedef std::vector<double>::const_iterator Iterator;
 public:
-  typedef rodeint::target_r::state_type state_type;
-  rodeint::target_r target;
+  typedef Target target_type;
+  typedef typename Target::state_type state_type;
+  Target target;
   state_type& y;
   Iterator times_start, times_end;
   double dt;
@@ -175,7 +215,7 @@ public:
   state_saver<state_type> state;
 
   typedef void result_type;
-  stepper_controlled_integrate_times(rodeint::target_r target_,
+  stepper_controlled_integrate_times(Target target_,
                                      state_type &y_,
                                      Iterator times_start_,
                                      Iterator times_end_,
@@ -203,6 +243,43 @@ private:
       integrate_times(s, target, y, times_start, times_end, dt, state.obs);
   }
 };
+
+template <typename Target>
+Rcpp::NumericVector
+r_integrate_times(stepper_controlled stepper, Target target,
+                  typename Target::state_type y,
+                  std::vector<double> times, double dt) {
+  stepper_controlled_integrate_times<Target>
+    vis(target, y, times.begin(), times.end(), dt);
+  boost::apply_visitor(vis, stepper);
+  return vis.r_state();
+}
+
+// 5. Convenience function
+template <typename Target>
+Rcpp::NumericVector
+r_integrate_simple(Target target,
+                   typename Target::state_type y,
+                   double t0, double t1, double dt,
+                   bool save_state=false) {
+  typedef typename Target::state_type state_type;
+  using boost::numeric::odeint::integrate;
+  state_saver<state_type> state;
+
+  if (save_state) {
+    state.steps = integrate(target, y, t0, t1, dt, state.obs);
+  } else {
+    integrate(target, y, t0, t1, dt);
+  }
+
+  // This bit here duplicates code from rodeint::integration_state().
+  Rcpp::NumericVector ret(y.begin(), y.end());
+  if (save_state) {
+    state.add_state(ret);
+  }
+
+  return ret;
+}
 
 }
 

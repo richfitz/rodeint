@@ -7,7 +7,7 @@ test_that("integrate_simple", {
   ## entirely tuning free.
 
   pars <- 0.5
-  ode <- target_r(harmonic.oscillator, pars)
+  ode_r <- target_r(harmonic.oscillator, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -18,12 +18,12 @@ test_that("integrate_simple", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  ## Run with rodent:
-  y1 <- integrate_simple(ode, y0, t0, t1, dt)
+  ## run with rodeint:
+  y1 <- integrate_simple(ode_r, y0, t0, t1, dt)
   expect_that(y1, is_a("numeric"))
   expect_that(y1, equals(cmp, tolerance=1e-5))
 
-  y2 <- integrate_simple(ode, y0, t0, t1, dt, TRUE)
+  y2 <- integrate_simple(ode_r, y0, t0, t1, dt, TRUE)
   expect_that(y2, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
   expect_that(as.numeric(y2), is_identical_to(y1))
   expect_that(names(attributes(y2)), equals(c("steps", "t", "y")))
@@ -51,7 +51,7 @@ test_that("integrate_const", {
   ##   - t1 - t0 not a multiple of dt
   ##   - t1 < t0
   pars <- 0.5
-  ode <- target_r(harmonic.oscillator, pars)
+  ode_r <- target_r(harmonic.oscillator, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -64,11 +64,11 @@ test_that("integrate_const", {
 
   for (type in stepper_controlled_types()) {
     s <- stepper_controlled(type)
-    y1 <- integrate_const(s, ode, y0, t0, t1, dt0)
+    y1 <- integrate_const(s, ode_r, y0, t0, t1, dt0)
     expect_that(y1, is_a("numeric"))
     expect_that(y1, equals(cmp, tolerance=1e-5))
 
-    y2 <- integrate_const(s, ode, y0, t0, t1, dt0, TRUE)
+    y2 <- integrate_const(s, ode_r, y0, t0, t1, dt0, TRUE)
     expect_that(y2, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
     ## This fails for all three, which is extremely surprising...
     ##   expect_that(as.numeric(y2), is_identical_to(y1))
@@ -97,7 +97,7 @@ test_that("integrate_const", {
 test_that("integrate_n_steps", {
   ## TODO: Try negative number of steps
   pars <- 0.5
-  ode <- target_r(harmonic.oscillator, pars)
+  ode_r <- target_r(harmonic.oscillator, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -112,11 +112,11 @@ test_that("integrate_n_steps", {
 
   for (type in stepper_controlled_types()) {
     s <- stepper_controlled(type)
-    y1 <- integrate_n_steps(s, ode, y0, t0, dt0, n)
+    y1 <- integrate_n_steps(s, ode_r, y0, t0, dt0, n)
     expect_that(y1, is_a("numeric"))
     expect_that(y1, equals(cmp, tolerance=1e-5))
 
-    y2 <- integrate_n_steps(s, ode, y0, t0, dt0, n, TRUE)
+    y2 <- integrate_n_steps(s, ode_r, y0, t0, dt0, n, TRUE)
     expect_that(y2, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
     expect_that(names(attributes(y2)), equals(c("steps", "t", "y")))
 
@@ -141,7 +141,7 @@ test_that("integrate_n_steps", {
 test_that("integrate_adaptive", {
   ## TODO: Try zero dt
   pars <- 0.5
-  ode <- target_r(harmonic.oscillator, pars)
+  ode_r <- target_r(harmonic.oscillator, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -156,12 +156,12 @@ test_that("integrate_adaptive", {
   for (type in stepper_controlled_types()) {
     s <- stepper_controlled(type)
 
-    ## Run with rodent:
-    y1 <- integrate_adaptive(s, ode, y0, t0, t1, dt0)
+    ## run with rodeint:
+    y1 <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0)
     expect_that(y1, is_a("numeric"))
     expect_that(y1, equals(cmp, tolerance=1e-5))
 
-    y2 <- integrate_adaptive(s, ode, y0, t0, t1, dt0, TRUE)
+    y2 <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0, TRUE)
     expect_that(y2, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
     expect_that(as.numeric(y2), is_identical_to(y1))
     expect_that(names(attributes(y2)), equals(c("steps", "t", "y")))
@@ -188,7 +188,7 @@ test_that("integrate_adaptive", {
 test_that("integrate_times", {
   ## TODO: check times of length 0, 1, fails
   pars <- 0.5
-  ode <- target_r(harmonic.oscillator, pars)
+  ode_r <- target_r(harmonic.oscillator, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -207,8 +207,8 @@ test_that("integrate_times", {
   for (type in stepper_controlled_types()) {
     s <- stepper_controlled(type)
 
-    ## Run with rodent:
-    y2 <- integrate_times(s, ode, y0, times, dt0)
+    ## run with rodeint:
+    y2 <- integrate_times(s, ode_r, y0, times, dt0)
     expect_that(y2, equals(cmp[nrow(cmp),], tolerance=1e-5,
                            check.attributes=FALSE))
     expect_that(names(attributes(y2)), equals(c("steps", "t", "y")))

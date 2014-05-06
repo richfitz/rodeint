@@ -15,15 +15,27 @@ target_r$methods(initialize = function(derivs, pars) {
 })
 
 target_r$methods(pars = function() {
-  rodeint:::target_r__get_pars(ptr)
+  target_r__get_pars(ptr)
 })
 
 target_r$methods(set_pars = function(pars) {
-  rodeint:::target_r__set_pars(ptr, pars)
+  target_r__set_pars(ptr, pars)
 })
 
 target_r$methods(derivs = function(y, t) {
-  rodeint:::target_r__derivs(ptr, y, t)
+  target_r__derivs(ptr, y, t)
+})
+
+## TODO: I'm going to end up with some major repetition here without
+## getting inheritance working.  Not sure how much that will slow
+## things down though.
+
+## This would be cool, but better would also be to set a stepper.
+## Could follow integrate_simple and just use rk_dopri5 by default?
+target_r$methods(integrate_const =
+                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
+  assert_stepper_controlled(stepper)
+  r_integrate_const_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
 })
 
 ##' Integration targets (documentating coming)

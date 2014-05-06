@@ -23,7 +23,7 @@
 integrate_simple <- function(target, y, t0, t1, dt,
                              save_state=FALSE) {
   assert_target_r(target)
-  r_integrate_simple(target$ptr, y, t0, t1, dt, save_state)
+  r_integrate_simple_r(target$ptr, y, t0, t1, dt, save_state)
 }
 
 ##' Integrate a system of ODEs, taking fixed steps
@@ -44,8 +44,11 @@ integrate_simple <- function(target, y, t0, t1, dt,
 integrate_const <- function(stepper, target, y, t0, t1, dt,
                             save_state=FALSE) {
   assert_stepper_controlled(stepper)
+  ## Need to switch here based on target type.  Or could do
+  ## target$integrate_const, but that might actually be slower.
+  ## Benchmark!
   assert_target_r(target)
-  r_integrate_const(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+  r_integrate_const_r(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
 }
 
 ##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
@@ -67,7 +70,7 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
                               save_state=FALSE) {
   assert_stepper_controlled(stepper)
   assert_target_r(target)
-  r_integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n, save_state)
+  r_integrate_n_steps_r(stepper$ptr, target$ptr, y, t0, dt, n, save_state)
 }
 
 ##' Integrate a system of ODEs adaptively.
@@ -90,7 +93,7 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
                                save_state=FALSE) {
   assert_stepper_controlled(stepper)
   assert_target_r(target)
-  r_integrate_adaptive(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+  r_integrate_adaptive_r(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
 }
 
 ##' Integrate a system of ODEs at fixed times (perhaps adaptively).
@@ -115,5 +118,5 @@ integrate_times <- function(stepper, target, y, times, dt) {
   if (length(times) < 2) {
     stop("Must provide at least two times")
   }
-  r_integrate_times(stepper$ptr, target$ptr, y, times, dt)
+  r_integrate_times_r(stepper$ptr, target$ptr, y, times, dt)
 }
