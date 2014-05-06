@@ -27,26 +27,52 @@
 #include <vector>
 
 namespace rodeint {
+typedef std::vector<double> stepper_state_type;
+
+// 1. Basic stepper types.
+typedef
+boost::numeric::odeint::modified_midpoint<stepper_state_type>
+stepper_basic_modified_midpoint;
+
+typedef
+boost::numeric::odeint::runge_kutta4<stepper_state_type>
+stepper_basic_runge_kutta4;
+
+typedef
+boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type>
+stepper_basic_runge_kutta_cash_karp54;
+
+typedef
+boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type>
+stepper_basic_runge_kutta_fehlberg78;
+
+typedef
+boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type>
+stepper_basic_runge_kutta_dopri5;
+
+// 2. Controlld stepper types
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_cash_karp54<
-    std::vector<double> > >
+  boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type> >
 stepper_controlled_runge_kutta_cash_karp54;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_fehlberg78<
-    std::vector<double> > >
+  boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type> >
 stepper_controlled_runge_kutta_fehlberg78;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_dopri5<
-    std::vector<double> > >
+  boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type> >
 stepper_controlled_runge_kutta_dopri5;
 
 typedef
+boost::numeric::odeint::euler<stepper_state_type>
+stepper_basic_euler;
+
+typedef
 boost::variant<
+  stepper_basic_runge_kutta4,
   stepper_controlled_runge_kutta_cash_karp54,
   stepper_controlled_runge_kutta_fehlberg78,
   stepper_controlled_runge_kutta_dopri5>
@@ -58,6 +84,10 @@ stepper_controlled;
 class stepper_controlled_type_visitor : boost::static_visitor<> {
 public:
   typedef std::string result_type;
+  result_type operator()(const stepper_basic_runge_kutta4&) const {
+    return "runge_kutta4";
+  }
+
   result_type operator()(const stepper_controlled_runge_kutta_cash_karp54&) const {
     return "runge_kutta_cash_karp54";
   }

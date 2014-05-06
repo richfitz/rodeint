@@ -21,7 +21,7 @@ test_that("integrate_const", {
                       pars)[-1,-1])
 
   for (type in stepper_controlled_types()) {
-    s <- stepper_controlled(type)
+    s <- make_stepper_controlled(type)
     y_r <- ode_r$integrate_const(s, y0, t0, t1, dt0)
     expect_that(y_r, is_a("numeric"))
     expect_that(y_r, equals(cmp, tolerance=1e-5))
@@ -87,7 +87,7 @@ test_that("integrate_n_steps", {
                       pars)[-1,-1])
 
   for (type in stepper_controlled_types()) {
-    s <- stepper_controlled(type)
+    s <- make_stepper_controlled(type)
     y_r <- ode_r$integrate_n_steps(s, y0, t0, dt0, n)
     expect_that(y_r, is_a("numeric"))
     expect_that(y_r, equals(cmp, tolerance=1e-5))
@@ -148,7 +148,7 @@ test_that("integrate_adaptive", {
                       pars)[-1,-1])
 
   for (type in stepper_controlled_types()) {
-    s <- stepper_controlled(type)
+    s <- make_stepper_controlled(type)
 
     ## run with rodeint:
     y_r <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0)
@@ -217,7 +217,7 @@ test_that("integrate_times", {
                       pars)[,-1])
 
   for (type in stepper_controlled_types()) {
-    s <- stepper_controlled(type)
+    s <- make_stepper_controlled(type)
 
     ## run with rodeint:
     y_r_s <- ode_r$integrate_times(s, y0, times, dt0)

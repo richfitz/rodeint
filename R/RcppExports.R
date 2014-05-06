@@ -45,6 +45,10 @@ stepper_controlled__ctor <- function(type, eps_abs, eps_rel) {
     .Call('rodeint_stepper_controlled__ctor', PACKAGE = 'rodeint', type, eps_abs, eps_rel)
 }
 
+stepper_basic__ctor <- function(type) {
+    .Call('rodeint_stepper_basic__ctor', PACKAGE = 'rodeint', type)
+}
+
 stepper_controlled__type <- function(s) {
     .Call('rodeint_stepper_controlled__type', PACKAGE = 'rodeint', s)
 }

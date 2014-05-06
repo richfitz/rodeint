@@ -10,9 +10,8 @@ stepper_controlled__ctor(std::string type,
   using boost::numeric::odeint::runge_kutta_fehlberg78;
   using boost::numeric::odeint::runge_kutta_dopri5;
 
-  typedef std::vector<double> state;
-
   rodeint::stepper_controlled ret;
+  typedef rodeint::stepper_state_type state;
 
   if (type == "runge_kutta_cash_karp54") {
     ret = make_controlled<runge_kutta_cash_karp54<state> >(eps_abs, eps_rel);
@@ -24,6 +23,20 @@ stepper_controlled__ctor(std::string type,
     Rcpp::stop("Unknown type: " + type);
   }
 
+  return ret;
+}
+
+// [[Rcpp::export]]
+rodeint::stepper_controlled
+stepper_basic__ctor(std::string type) {
+  rodeint::stepper_controlled ret;
+  typedef rodeint::stepper_state_type state;
+
+  if (type == "runge_kutta4") {
+    ret = boost::numeric::odeint::runge_kutta4<state>();
+  } else {
+    Rcpp::stop("Unknown type: " + type);
+  }
   return ret;
 }
 
