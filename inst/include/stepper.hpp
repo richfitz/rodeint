@@ -66,7 +66,12 @@ stepper_basic_euler;
 
 typedef
 boost::variant<
+  stepper_basic_euler,
+  stepper_basic_modified_midpoint,
   stepper_basic_runge_kutta4,
+  stepper_basic_runge_kutta_cash_karp54,
+  stepper_basic_runge_kutta_fehlberg78,
+  stepper_basic_runge_kutta_dopri5,
   stepper_controlled_runge_kutta_cash_karp54,
   stepper_controlled_runge_kutta_fehlberg78,
   stepper_controlled_runge_kutta_dopri5>
@@ -82,8 +87,23 @@ stepper;
 class stepper_type_visitor : boost::static_visitor<> {
 public:
   typedef std::vector<std::string> result_type;
+  result_type operator()(const stepper_basic_euler&) const {
+    return join_types("basic", "euler");
+  }
+  result_type operator()(const stepper_basic_modified_midpoint&) const {
+    return join_types("basic", "modified_midpoint");
+  }
   result_type operator()(const stepper_basic_runge_kutta4&) const {
     return join_types("basic", "runge_kutta4");
+  }
+  result_type operator()(const stepper_basic_runge_kutta_cash_karp54&) const {
+    return join_types("basic", "runge_kutta_cash_karp54");
+  }
+  result_type operator()(const stepper_basic_runge_kutta_fehlberg78&) const {
+    return join_types("basic", "runge_kutta_fehlberg78");
+  }
+  result_type operator()(const stepper_basic_runge_kutta_dopri5&) const {
+    return join_types("basic", "runge_kutta_dopri5");
   }
 
   result_type operator()(const stepper_controlled_runge_kutta_cash_karp54&) const {

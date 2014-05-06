@@ -12,6 +12,17 @@ context("integrate")
 ## Might be worth getting the analytical solution (Mathematica?) so
 ## that we can compare that too.
 
+## There is more work to do on accuracy later, but for now this is
+## probably enough.  We're not really looking to verify that the
+## integrators work -- that's for odeint to do, and there is a big
+## test suite there.
+expected_tolerance <- function(type) {
+  switch(type,
+         euler=0.03, # such inaccuracy
+         modified_midpoint=1e-4,
+         1e-5)
+}
+
 test_that("integrate_const", {
   ## TODO: A couple of things to try here:
   ##   - t1 - t0 not a multiple of dt
@@ -32,13 +43,15 @@ test_that("integrate_const", {
 
   for (category in c("basic", "controlled")) {
     for (type in stepper_types(category)) {
+      tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
       y_r <- ode_r$integrate_const(s, y0, t0, t1, dt0)
       expect_that(y_r, is_a("numeric"))
-      expect_that(y_r, equals(cmp, tolerance=1e-5))
+      expect_that(y_r, equals(cmp, tolerance=tolerance))
 
       y_r_s <- ode_r$integrate_const(s, y0, t0, t1, dt0, TRUE)
-      expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+      expect_that(y_r_s, equals(cmp, tolerance=tolerance,
+                                check.attributes=FALSE))
       ## This fails for all three, which is extremely surprising...
       ##   expect_that(as.numeric(y_r_s), is_identical_to(y_r))
       ## This is because:
@@ -100,13 +113,15 @@ test_that("integrate_n_steps", {
 
   for (category in c("basic", "controlled")) {
     for (type in stepper_types(category)) {
+      tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
       y_r <- ode_r$integrate_n_steps(s, y0, t0, dt0, n)
       expect_that(y_r, is_a("numeric"))
-      expect_that(y_r, equals(cmp, tolerance=1e-5))
+      expect_that(y_r, equals(cmp, tolerance=tolerance))
 
       y_r_s <- ode_r$integrate_n_steps(s, y0, t0, dt0, n, TRUE)
-      expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+      expect_that(y_r_s, equals(cmp, tolerance=tolerance,
+                                check.attributes=FALSE))
       expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
       steps <- attr(y_r_s, "steps")
@@ -163,15 +178,17 @@ test_that("integrate_adaptive", {
 
   for (category in c("basic", "controlled")) {
     for (type in stepper_types(category)) {
+      tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
 
       ## run with rodeint:
       y_r <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0)
       expect_that(y_r, is_a("numeric"))
-      expect_that(y_r, equals(cmp, tolerance=1e-5))
+      expect_that(y_r, equals(cmp, tolerance=tolerance))
 
       y_r_s <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0, TRUE)
-      expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+      expect_that(y_r_s, equals(cmp, tolerance=tolerance,
+                                check.attributes=FALSE))
       expect_that(as.numeric(y_r_s), is_identical_to(y_r))
       expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
@@ -234,11 +251,12 @@ test_that("integrate_times", {
 
   for (category in c("basic", "controlled")) {
     for (type in stepper_types(category)) {
+      tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
 
       ## run with rodeint:
       y_r_s <- ode_r$integrate_times(s, y0, times, dt0)
-      expect_that(y_r_s, equals(cmp[nrow(cmp),], tolerance=1e-5,
+      expect_that(y_r_s, equals(cmp[nrow(cmp),], tolerance=tolerance,
                                 check.attributes=FALSE))
       expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 
@@ -254,7 +272,7 @@ test_that("integrate_times", {
       expect_that(nrow(yy), equals(length(times)))
 
       expect_that(tt,    is_identical_to(times))
-      expect_that(yy,    equals(cmp, tolerance=1e-5))
+      expect_that(yy,    equals(cmp, tolerance=tolerance))
 
       ## Check the compiled version:
       expect_that(ode_cpp$integrate_times(s, y0, times, dt0),
@@ -283,13 +301,16 @@ test_that("integrate_simple", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
+  tolerance <- expected_tolerance("runge_kutta_dopri5")
+
   ## run with rodeint:
   y_r <- ode_r$integrate_simple(y0, t0, t1, dt)
   expect_that(y_r, is_a("numeric"))
-  expect_that(y_r, equals(cmp, tolerance=1e-5))
+  expect_that(y_r, equals(cmp, tolerance=tolerance))
 
   y_r_s <- ode_r$integrate_simple(y0, t0, t1, dt, TRUE)
-  expect_that(y_r_s, equals(cmp, tolerance=1e-5, check.attributes=FALSE))
+  expect_that(y_r_s, equals(cmp, tolerance=tolerance,
+                            check.attributes=FALSE))
   expect_that(as.numeric(y_r_s), is_identical_to(y_r))
   expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
 

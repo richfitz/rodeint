@@ -32,8 +32,18 @@ stepper_basic__ctor(std::string type) {
   rodeint::stepper ret;
   typedef rodeint::stepper_state_type state;
 
-  if (type == "runge_kutta4") {
+  if (type == "euler") {
+    ret = boost::numeric::odeint::euler<state>();
+  } else if (type == "modified_midpoint") {
+    ret = boost::numeric::odeint::modified_midpoint<state>();
+  } else if (type == "runge_kutta4") {
     ret = boost::numeric::odeint::runge_kutta4<state>();
+  } else if (type == "runge_kutta_cash_karp54") {
+    ret = boost::numeric::odeint::runge_kutta_cash_karp54<state>();
+  } else if (type == "runge_kutta_fehlberg78") {
+    ret = boost::numeric::odeint::runge_kutta_fehlberg78<state>();
+  } else if (type == "runge_kutta_dopri5") {
+    ret = boost::numeric::odeint::runge_kutta_dopri5<state>();
   } else {
     Rcpp::stop("Unknown type: " + type);
   }

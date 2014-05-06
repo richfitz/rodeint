@@ -23,7 +23,7 @@ stepper$methods(initialize=function(category, type, atol, rtol) {
   } else if (category == "controlled") {
     ptr <<- rodeint:::stepper_controlled__ctor(type, atol, rtol)
   } else {
-    stop("Invalid category")
+    stop("Invalid stepper category")
   }
 })
 
@@ -56,13 +56,18 @@ stepper_controlled_types <- function() {
 ##' @export
 ##' @rdname stepper_types
 stepper_basic_types <- function() {
-  ## c("euler",
-  ##   "modified_midpoint",
-  ##   "runge_kutta4",
-  ##   "runge_kutta_cash_karp54",
-  ##   "runge_kutta_fehlberg78",
-  ##   "runge_kutta_dopri5")
-  "runge_kutta4"
+  c("euler",
+    "modified_midpoint",
+    "runge_kutta4",
+    "runge_kutta_cash_karp54",
+    "runge_kutta_fehlberg78",
+    "runge_kutta_dopri5")
+}
+
+##' @export
+##' @rdname stepper_types
+stepper_categories <- function() {
+  c("basic", "controlled")
 }
 
 ##' @rdname stepper
@@ -90,6 +95,6 @@ make_stepper <- function(category, type, ...) {
   make <- switch(category,
                  basic=make_stepper_basic,
                  controlled=make_stepper_controlled,
-                 stop("Invalid category"))
+                 stop("Invalid stepper category"))
   make(type, ...)
 }

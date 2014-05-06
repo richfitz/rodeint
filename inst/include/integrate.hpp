@@ -43,7 +43,22 @@ public:
                           bool save_state_)
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_) {}
+  void operator()(stepper_basic_euler s) {
+    integrate_const(s);
+  }
+  void operator()(stepper_basic_modified_midpoint s) {
+    integrate_const(s);
+  }
   void operator()(stepper_basic_runge_kutta4 s) {
+    integrate_const(s);
+  }
+  void operator()(stepper_basic_runge_kutta_cash_karp54 s) {
+    integrate_const(s);
+  }
+  void operator()(stepper_basic_runge_kutta_fehlberg78 s) {
+    integrate_const(s);
+  }
+  void operator()(stepper_basic_runge_kutta_dopri5 s) {
     integrate_const(s);
   }
 
@@ -102,7 +117,22 @@ public:
                             bool save_state_)
     : target(target_), y(y_), t0(t0_), dt(dt_), n(n_),
       save_state(save_state_) {}
+  void operator()(stepper_basic_euler s) {
+    integrate_n_steps(s);
+  }
+  void operator()(stepper_basic_modified_midpoint s) {
+    integrate_n_steps(s);
+  }
   void operator()(stepper_basic_runge_kutta4 s) {
+    integrate_n_steps(s);
+  }
+  void operator()(stepper_basic_runge_kutta_cash_karp54 s) {
+    integrate_n_steps(s);
+  }
+  void operator()(stepper_basic_runge_kutta_fehlberg78 s) {
+    integrate_n_steps(s);
+  }
+  void operator()(stepper_basic_runge_kutta_dopri5 s) {
     integrate_n_steps(s);
   }
 
@@ -161,7 +191,22 @@ public:
                              bool save_state_)
     : target(target_), y(y_), t0(t0_), t1(t1_), dt(dt_),
       save_state(save_state_) {}
+  void operator()(stepper_basic_euler s) {
+    integrate_adaptive(s);
+  }
+  void operator()(stepper_basic_modified_midpoint s) {
+    integrate_adaptive(s);
+  }
   void operator()(stepper_basic_runge_kutta4 s) {
+    integrate_adaptive(s);
+  }
+  void operator()(stepper_basic_runge_kutta_cash_karp54 s) {
+    integrate_adaptive(s);
+  }
+  void operator()(stepper_basic_runge_kutta_fehlberg78 s) {
+    integrate_adaptive(s);
+  }
+  void operator()(stepper_basic_runge_kutta_dopri5 s) {
     integrate_adaptive(s);
   }
 
@@ -228,7 +273,22 @@ public:
     : target(target_), y(y_),
       times_start(times_start_), times_end(times_end_), dt(dt_),
       save_state(true) {}
+  void operator()(stepper_basic_euler s) {
+    integrate_times(s);
+  }
+  void operator()(stepper_basic_modified_midpoint s) {
+    integrate_times(s);
+  }
   void operator()(stepper_basic_runge_kutta4 s) {
+    integrate_times(s);
+  }
+  void operator()(stepper_basic_runge_kutta_cash_karp54 s) {
+    integrate_times(s);
+  }
+  void operator()(stepper_basic_runge_kutta_fehlberg78 s) {
+    integrate_times(s);
+  }
+  void operator()(stepper_basic_runge_kutta_dopri5 s) {
     integrate_times(s);
   }
 
