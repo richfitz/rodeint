@@ -26,16 +26,34 @@ target_r$methods(derivs = function(y, t) {
   target_r__derivs(ptr, y, t)
 })
 
-## TODO: I'm going to end up with some major repetition here without
-## getting inheritance working.  Not sure how much that will slow
-## things down though.
-
 ## This would be cool, but better would also be to set a stepper.
 ## Could follow integrate_simple and just use rk_dopri5 by default?
+##
+## TODO: confirm that invalid input for stepper is caught without a
+## crash.
 target_r$methods(integrate_const =
                  function(stepper, y, t0, t1, dt, save_state=FALSE) {
   assert_stepper_controlled(stepper)
   r_integrate_const_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
+})
+target_r$methods(integrate_n_steps =
+                 function(stepper, y, t0, dt, n, save_state=FALSE) {
+  assert_stepper_controlled(stepper)
+  r_integrate_n_steps_r(stepper$ptr, ptr, y, t0, dt, n, save_state)
+})
+target_r$methods(integrate_adaptive =
+                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
+  assert_stepper_controlled(stepper)
+  r_integrate_adaptive_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
+})
+target_r$methods(integrate_times =
+                 function(stepper, y, times, dt) {
+  assert_stepper_controlled(stepper)
+  r_integrate_times_r(stepper$ptr, ptr, y, times, dt)
+})
+target_r$methods(integrate_simple =
+                 function(y, t0, t1, dt, save_state=FALSE) {
+  r_integrate_simple_r(ptr, y, t0, t1, dt, save_state)
 })
 
 ##' Integration targets (documentating coming)
@@ -72,4 +90,29 @@ target_cpp$methods(set_pars = function(pars) {
 
 target_cpp$methods(derivs = function(y, t) {
   rodeint:::target_cpp__derivs(ptr, y, t)
+})
+
+target_cpp$methods(integrate_const =
+                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
+  assert_stepper_controlled(stepper)
+  r_integrate_const_cpp(stepper$ptr, ptr, y, t0, t1, dt, save_state)
+})
+target_cpp$methods(integrate_n_steps =
+                 function(stepper, y, t0, dt, n, save_state=FALSE) {
+  assert_stepper_controlled(stepper)
+  r_integrate_n_steps_cpp(stepper$ptr, ptr, y, t0, dt, n, save_state)
+})
+target_cpp$methods(integrate_adaptive =
+                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
+  assert_stepper_controlled(stepper)
+  r_integrate_adaptive_cpp(stepper$ptr, ptr, y, t0, t1, dt, save_state)
+})
+target_cpp$methods(integrate_times =
+                 function(stepper, y, times, dt) {
+  assert_stepper_controlled(stepper)
+  r_integrate_times_cpp(stepper$ptr, ptr, y, times, dt)
+})
+target_cpp$methods(integrate_simple =
+                 function(y, t0, t1, dt, save_state=FALSE) {
+  r_integrate_simple_cpp(ptr, y, t0, t1, dt, save_state)
 })

@@ -6,26 +6,6 @@
 ## these functions.  We will need to update any time the signatures
 ## update anyway.
 
-##' Integrate a system of ordinary differential equations.  This is
-##' just a convenience function (in odeint) and probably should not be
-##' the final function used.
-##'
-##' @title Integrate an ODE System
-##' @param target The target system, created by \code{\link{target_r}}
-##' @param y Initial conditions
-##' @param t0 Time to start the integration
-##' @param t1 Time to finish the integration (not sure if we hit this
-##' one exactly)
-##' @param dt Step size
-##' @param save_state Return information about intermediate points as
-##' @author Rich FitzJohn
-##' @export
-integrate_simple <- function(target, y, t0, t1, dt,
-                             save_state=FALSE) {
-  assert_target_r(target)
-  r_integrate_simple_r(target$ptr, y, t0, t1, dt, save_state)
-}
-
 ##' Integrate a system of ODEs, taking fixed steps
 ##'
 ##' @title Adaptively Integrate an ODE System
@@ -44,11 +24,15 @@ integrate_simple <- function(target, y, t0, t1, dt,
 integrate_const <- function(stepper, target, y, t0, t1, dt,
                             save_state=FALSE) {
   assert_stepper_controlled(stepper)
-  ## Need to switch here based on target type.  Or could do
-  ## target$integrate_const, but that might actually be slower.
-  ## Benchmark!
-  assert_target_r(target)
-  r_integrate_const_r(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+  target$integrate_const(stepper, y, t0, t1, dt, save_state)
+  ## Alternatively:
+  ## if (inherits(target, "target_cpp")) {
+  ##   r_integrate_const_cpp(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+  ## } else if (inherits(target, "target_r")) {
+  ##   r_integrate_const_cpp(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+  ## } else {
+  ##   stop("Invalid target")
+  ## }
 }
 
 ##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
@@ -69,8 +53,7 @@ integrate_const <- function(stepper, target, y, t0, t1, dt,
 integrate_n_steps <- function(stepper, target, y, t0, dt, n,
                               save_state=FALSE) {
   assert_stepper_controlled(stepper)
-  assert_target_r(target)
-  r_integrate_n_steps_r(stepper$ptr, target$ptr, y, t0, dt, n, save_state)
+  target$integrate_n_steps(stepper, y, t0, dt, n, save_state)
 }
 
 ##' Integrate a system of ODEs adaptively.
@@ -92,8 +75,7 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
 integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
                                save_state=FALSE) {
   assert_stepper_controlled(stepper)
-  assert_target_r(target)
-  r_integrate_adaptive_r(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
+  target$integrate_adaptive(stepper, y, t0, t1, dt, save_state)
 }
 
 ##' Integrate a system of ODEs at fixed times (perhaps adaptively).
@@ -114,9 +96,27 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
 ##' @export
 integrate_times <- function(stepper, target, y, times, dt) {
   assert_stepper_controlled(stepper)
-  assert_target_r(target)
   if (length(times) < 2) {
     stop("Must provide at least two times")
   }
-  r_integrate_times_r(stepper$ptr, target$ptr, y, times, dt)
+  target$integrate_times(stepper, y, times, dt)
+}
+
+##' Integrate a system of ordinary differential equations.  This is
+##' just a convenience function (in odeint) and probably should not be
+##' the final function used.
+##'
+##' @title Integrate an ODE System
+##' @param target The target system, created by \code{\link{target_r}}
+##' @param y Initial conditions
+##' @param t0 Time to start the integration
+##' @param t1 Time to finish the integration (not sure if we hit this
+##' one exactly)
+##' @param dt Step size
+##' @param save_state Return information about intermediate points as
+##' @author Rich FitzJohn
+##' @export
+integrate_simple <- function(target, y, t0, t1, dt,
+                             save_state=FALSE) {
+  target$integrate_simple(y, t0, t1, dt, save_state)
 }
