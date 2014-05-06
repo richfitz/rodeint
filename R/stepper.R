@@ -73,12 +73,19 @@ make_stepper_basic <- function(type) {
 
 ##' @rdname stepper
 ##' @export
+##' @param atol Absolute tolerance (see odeint docs for now)
+##' @param rtol Relative tolerance (see odeint docs for now)
 make_stepper_controlled <- function(type, atol=1e-6, rtol=1e-6) {
   stepper$new("controlled", type, atol, rtol)
 }
 
 ##' @rdname stepper
 ##' @export
+##' @param category Either "basic" or "controlled"
+##' @param type The type of stepper (e.g. "runge_kutta4")
+##' @param ... Additional parameters passed from \code{make_stepper}
+##' to either \code{make_stepper_basic} (none allowed) or
+##' \code{mkae_stepper_controlled}.
 make_stepper <- function(category, type, ...) {
   make <- switch(category,
                  basic=make_stepper_basic,
