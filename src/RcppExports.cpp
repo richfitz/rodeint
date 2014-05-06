@@ -243,14 +243,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // stepper__type
-std::string stepper__type(rodeint::stepper s);
+std::vector<std::string> stepper__type(rodeint::stepper s);
 RcppExport SEXP rodeint_stepper__type(SEXP sSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        std::string __result = stepper__type(s);
+        std::vector<std::string> __result = stepper__type(s);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

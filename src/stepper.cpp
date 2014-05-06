@@ -41,6 +41,6 @@ stepper_basic__ctor(std::string type) {
 }
 
 // [[Rcpp::export]]
-std::string stepper__type(rodeint::stepper s) {
+std::vector<std::string> stepper__type(rodeint::stepper s) {
   return boost::apply_visitor(rodeint::stepper_type_visitor(), s);
 }

@@ -34,7 +34,7 @@ test_that("basic steppers", {
 
     ## Test of internal method:
     expect_that(rodeint:::stepper__type(s$ptr),
-                is_identical_to(type))
+                is_identical_to(c("basic", type)))
   }
 })
 
@@ -60,7 +60,7 @@ test_that("construction", {
 
     ## Test of internal method:
     expect_that(rodeint:::stepper__type(s$ptr),
-                is_identical_to(type))
+                is_identical_to(c("controlled", type)))
 
     ## Test setting atol/rtol
     atol <- 1e-10

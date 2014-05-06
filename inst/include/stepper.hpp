@@ -75,21 +75,34 @@ stepper;
 // This is more of a demonstration of how the approach will work more
 // than anything else, really.  Gives a human readable version of the
 // type of the controlled output stepper.
+//
+// An alternative way of doing this would be to have two versions --
+// one for the category, one for the type.  But the information is all
+// stored in the reference class object anyway.
 class stepper_type_visitor : boost::static_visitor<> {
 public:
-  typedef std::string result_type;
+  typedef std::vector<std::string> result_type;
   result_type operator()(const stepper_basic_runge_kutta4&) const {
-    return "runge_kutta4";
+    return join_types("basic", "runge_kutta4");
   }
 
   result_type operator()(const stepper_controlled_runge_kutta_cash_karp54&) const {
-    return "runge_kutta_cash_karp54";
+    return join_types("controlled", "runge_kutta_cash_karp54");
   }
   result_type operator()(const stepper_controlled_runge_kutta_fehlberg78&) const {
-    return "runge_kutta_fehlberg78";
+    return join_types("controlled", "runge_kutta_fehlberg78");
   }
   result_type operator()(const stepper_controlled_runge_kutta_dopri5&) const {
-    return "runge_kutta_dopri5";
+    return join_types("controlled", "runge_kutta_dopri5");
+  }
+
+private:
+  static std::vector<std::string> join_types(const std::string& category,
+                                             const std::string& type) {
+    std::vector<std::string> ret;
+    ret.push_back(category);
+    ret.push_back(type);
+    return ret;
   }
 };
 
