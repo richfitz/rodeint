@@ -11,7 +11,7 @@ target_r$lock(c("derivs.R", "ptr"))
 
 target_r$methods(initialize = function(derivs, pars) {
   derivs.R <<- derivs
-  ptr <<- rodeint:::target_r__ctor(derivs, pars)
+  ptr <<- target_r__ctor(derivs, pars)
 })
 
 target_r$methods(pars = function() {
@@ -72,22 +72,22 @@ target_cpp$methods(initialize = function(generator, pars) {
   ptr <<- generator()
   ## TODO: Does this determine if the class is really a ptr?
   ## TODO: Can I use R class's set_pars(pars) directly?
-  rodeint:::target_cpp__set_pars(ptr, pars)
+  target_cpp__set_pars(ptr, pars)
 })
 
 target_cpp$methods(pars = function() {
-  rodeint:::target_cpp__get_pars(ptr)
+  target_cpp__get_pars(ptr)
 })
 
 ## For this, and for target_r, it would be nice to have a callback
 ## function that verifies the parameters.  A function that takes them
 ## as an argument and throws iff there's a problem would be OK.
 target_cpp$methods(set_pars = function(pars) {
-  rodeint:::target_cpp__set_pars(ptr, pars)
+  target_cpp__set_pars(ptr, pars)
 })
 
 target_cpp$methods(derivs = function(y, t) {
-  rodeint:::target_cpp__derivs(ptr, y, t)
+  target_cpp__derivs(ptr, y, t)
 })
 
 target_cpp$methods(integrate_const =
@@ -134,15 +134,15 @@ target_class$methods(initialize = function(generator, pars) {
 })
 
 target_class$methods(pars = function() {
-  rodeint:::target_class__get_pars(ptr)
+  target_class__get_pars(ptr)
 })
 
 target_class$methods(set_pars = function(pars) {
-  rodeint:::target_class__set_pars(ptr, pars)
+  target_class__set_pars(ptr, pars)
 })
 
 target_class$methods(derivs = function(y, t) {
-  rodeint:::target_class__derivs(ptr, y, t)
+  target_class__derivs(ptr, y, t)
 })
 
 target_class$methods(integrate_const =

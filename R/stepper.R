@@ -5,12 +5,12 @@
 ##' @export stepper
 ##' @export
 stepper <- setRefClass("stepper",
-                                  fields=list(
-                                    category="character",
-                                    type="character",
-                                    atol="numeric",
-                                    rtol="numeric",
-                                    ptr="externalptr"))
+                       fields=list(
+                         category="character",
+                         type="character",
+                         atol="numeric",
+                         rtol="numeric",
+                         ptr="externalptr"))
 stepper$lock(c("category", "type", "atol", "rtol", "ptr"))
 
 stepper$methods(initialize=function(category, type, atol, rtol) {
@@ -19,9 +19,9 @@ stepper$methods(initialize=function(category, type, atol, rtol) {
   atol <<- atol
   rtol <<- rtol
   if (category == "basic") {
-    ptr <<- rodeint:::stepper_basic__ctor(type)
+    ptr <<- stepper_basic__ctor(type)
   } else if (category == "controlled") {
-    ptr <<- rodeint:::stepper_controlled__ctor(type, atol, rtol)
+    ptr <<- stepper_controlled__ctor(type, atol, rtol)
   } else {
     stop("Invalid stepper category")
   }
@@ -73,7 +73,7 @@ stepper_categories <- function() {
 ##' @rdname stepper
 ##' @export
 make_stepper_basic <- function(type) {
-  stepper$new("basic", type, NA_real_, NA_real_)
+  stepper("basic", type, NA_real_, NA_real_)
 }
 
 ##' @rdname stepper
@@ -81,7 +81,7 @@ make_stepper_basic <- function(type) {
 ##' @param atol Absolute tolerance (see odeint docs for now)
 ##' @param rtol Relative tolerance (see odeint docs for now)
 make_stepper_controlled <- function(type, atol=1e-6, rtol=1e-6) {
-  stepper$new("controlled", type, atol, rtol)
+  stepper("controlled", type, atol, rtol)
 }
 
 ##' @rdname stepper

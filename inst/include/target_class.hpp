@@ -14,7 +14,6 @@ namespace rodeint {
 class target_class {
 public:
   typedef std::vector<double> state_type;
-  // typedef std::vector<double> pars_type;
   typedef SEXP pars_type;
   typedef boost::function<void(const state_type&, state_type&, double)> derivs_type;
   typedef boost::function<void(pars_type)>   set_pars_type;
