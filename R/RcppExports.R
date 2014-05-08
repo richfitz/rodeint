@@ -9,12 +9,20 @@ r_integrate_const_cpp <- function(stepper, target, y, t0, t1, dt, save_state) {
     .Call('rodeint_r_integrate_const_cpp', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
 }
 
+r_integrate_const_class <- function(stepper, target, y, t0, t1, dt, save_state) {
+    .Call('rodeint_r_integrate_const_class', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
+}
+
 r_integrate_n_steps_r <- function(stepper, target, y, t0, dt, n, save_state) {
     .Call('rodeint_r_integrate_n_steps_r', PACKAGE = 'rodeint', stepper, target, y, t0, dt, n, save_state)
 }
 
 r_integrate_n_steps_cpp <- function(stepper, target, y, t0, dt, n, save_state) {
     .Call('rodeint_r_integrate_n_steps_cpp', PACKAGE = 'rodeint', stepper, target, y, t0, dt, n, save_state)
+}
+
+r_integrate_n_steps_class <- function(stepper, target, y, t0, dt, n, save_state) {
+    .Call('rodeint_r_integrate_n_steps_class', PACKAGE = 'rodeint', stepper, target, y, t0, dt, n, save_state)
 }
 
 r_integrate_adaptive_r <- function(stepper, target, y, t0, t1, dt, save_state = FALSE) {
@@ -25,6 +33,10 @@ r_integrate_adaptive_cpp <- function(stepper, target, y, t0, t1, dt, save_state 
     .Call('rodeint_r_integrate_adaptive_cpp', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
 }
 
+r_integrate_adaptive_class <- function(stepper, target, y, t0, t1, dt, save_state = FALSE) {
+    .Call('rodeint_r_integrate_adaptive_class', PACKAGE = 'rodeint', stepper, target, y, t0, t1, dt, save_state)
+}
+
 r_integrate_times_r <- function(stepper, target, y, times, dt) {
     .Call('rodeint_r_integrate_times_r', PACKAGE = 'rodeint', stepper, target, y, times, dt)
 }
@@ -33,12 +45,20 @@ r_integrate_times_cpp <- function(stepper, target, y, times, dt) {
     .Call('rodeint_r_integrate_times_cpp', PACKAGE = 'rodeint', stepper, target, y, times, dt)
 }
 
+r_integrate_times_class <- function(stepper, target, y, times, dt) {
+    .Call('rodeint_r_integrate_times_class', PACKAGE = 'rodeint', stepper, target, y, times, dt)
+}
+
 r_integrate_simple_r <- function(target, y, t0, t1, dt, save_state) {
     .Call('rodeint_r_integrate_simple_r', PACKAGE = 'rodeint', target, y, t0, t1, dt, save_state)
 }
 
 r_integrate_simple_cpp <- function(target, y, t0, t1, dt, save_state) {
     .Call('rodeint_r_integrate_simple_cpp', PACKAGE = 'rodeint', target, y, t0, t1, dt, save_state)
+}
+
+r_integrate_simple_class <- function(target, y, t0, t1, dt, save_state) {
+    .Call('rodeint_r_integrate_simple_class', PACKAGE = 'rodeint', target, y, t0, t1, dt, save_state)
 }
 
 stepper_controlled__ctor <- function(type, eps_abs, eps_rel) {

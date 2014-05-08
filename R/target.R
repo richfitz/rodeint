@@ -144,3 +144,28 @@ target_class$methods(set_pars = function(pars) {
 target_class$methods(derivs = function(y, t) {
   rodeint:::target_class__derivs(ptr, y, t)
 })
+
+target_class$methods(integrate_const =
+                     function(stepper, y, t0, t1, dt, save_state=FALSE) {
+  assert_stepper(stepper)
+  r_integrate_const_class(stepper$ptr, ptr, y, t0, t1, dt, save_state)
+})
+target_class$methods(integrate_n_steps =
+                     function(stepper, y, t0, dt, n, save_state=FALSE) {
+  assert_stepper(stepper)
+  r_integrate_n_steps_class(stepper$ptr, ptr, y, t0, dt, n, save_state)
+})
+target_class$methods(integrate_adaptive =
+                     function(stepper, y, t0, t1, dt, save_state=FALSE) {
+  assert_stepper(stepper)
+  r_integrate_adaptive_class(stepper$ptr, ptr, y, t0, t1, dt, save_state)
+})
+target_class$methods(integrate_times =
+                     function(stepper, y, times, dt) {
+  assert_stepper(stepper)
+  r_integrate_times_class(stepper$ptr, ptr, y, times, dt)
+})
+target_class$methods(integrate_simple =
+                     function(y, t0, t1, dt, save_state=FALSE) {
+  r_integrate_simple_class(ptr, y, t0, t1, dt, save_state)
+})

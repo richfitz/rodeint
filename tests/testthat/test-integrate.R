@@ -35,6 +35,7 @@ test_that("integrate_const", {
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -84,6 +85,11 @@ test_that("integrate_const", {
       expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0, TRUE),
                   is_identical_to(y_r_s))
 
+      expect_that(ode_class$integrate_const(s, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(ode_class$integrate_const(s, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
+
       ## Check the alternative syntax:
       expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0),
                   is_identical_to(y_r))
@@ -94,6 +100,11 @@ test_that("integrate_const", {
                   is_identical_to(y_r))
       expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0, TRUE),
                   is_identical_to(y_r_s))
+
+      expect_that(integrate_const(s, ode_class, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(integrate_const(s, ode_class, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
     }
   }
 })
@@ -103,6 +114,7 @@ test_that("integrate_n_steps", {
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -150,6 +162,11 @@ test_that("integrate_n_steps", {
       expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n, TRUE),
                   is_identical_to(y_r_s))
 
+      expect_that(ode_class$integrate_n_steps(s, y0, t0, dt0, n),
+                  is_identical_to(y_r))
+      expect_that(ode_class$integrate_n_steps(s, y0, t0, dt0, n, TRUE),
+                  is_identical_to(y_r_s))
+
       ## Check the alternative syntax:
       expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n),
                   is_identical_to(y_r))
@@ -160,7 +177,12 @@ test_that("integrate_n_steps", {
                   is_identical_to(y_r))
       expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n, TRUE),
                   is_identical_to(y_r_s))
-    }
+
+      expect_that(integrate_n_steps(s, ode_class, y0, t0, dt0, n),
+                  is_identical_to(y_r))
+      expect_that(integrate_n_steps(s, ode_class, y0, t0, dt0, n, TRUE),
+                  is_identical_to(y_r_s))
+}
   }
 })
 
@@ -169,6 +191,7 @@ test_that("integrate_adaptive", {
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -219,6 +242,11 @@ test_that("integrate_adaptive", {
       expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0, TRUE),
                   is_identical_to(y_r_s))
 
+      expect_that(ode_class$integrate_adaptive(s, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(ode_class$integrate_adaptive(s, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
+
       ## Check the alternative syntax:
       expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0),
                   is_identical_to(y_r))
@@ -229,6 +257,11 @@ test_that("integrate_adaptive", {
                   is_identical_to(y_r))
       expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0, TRUE),
                   is_identical_to(y_r_s))
+
+      expect_that(integrate_adaptive(s, ode_class, y0, t0, t1, dt0),
+                  is_identical_to(y_r))
+      expect_that(integrate_adaptive(s, ode_class, y0, t0, t1, dt0, TRUE),
+                  is_identical_to(y_r_s))
     }
   }
 })
@@ -238,6 +271,7 @@ test_that("integrate_times", {
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -281,11 +315,15 @@ test_that("integrate_times", {
       ## Check the compiled version:
       expect_that(ode_cpp$integrate_times(s, y0, times, dt0),
                   is_identical_to(y_r_s))
+      expect_that(ode_class$integrate_times(s, y0, times, dt0),
+                  is_identical_to(y_r_s))
 
       ## Check the alternative syntax:
       expect_that(integrate_times(s, ode_r, y0, times, dt0),
                   is_identical_to(y_r_s))
       expect_that(integrate_times(s, ode_cpp, y0, times, dt0),
+                  is_identical_to(y_r_s))
+      expect_that(integrate_times(s, ode_class, y0, times, dt0),
                   is_identical_to(y_r_s))
     }
   }
@@ -295,6 +333,7 @@ test_that("integrate_simple", {
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -341,6 +380,11 @@ test_that("integrate_simple", {
   expect_that(ode_cpp$integrate_simple(y0, t0, t1, dt, TRUE),
               is_identical_to(y_r_s))
 
+  expect_that(ode_class$integrate_simple(y0, t0, t1, dt),
+              is_identical_to(y_r))
+  expect_that(ode_class$integrate_simple(y0, t0, t1, dt, TRUE),
+              is_identical_to(y_r_s))
+
   ## Check the alternative syntax:
   expect_that(integrate_simple(ode_r, y0, t0, t1, dt),
               is_identical_to(y_r))
@@ -350,5 +394,10 @@ test_that("integrate_simple", {
   expect_that(integrate_simple(ode_cpp, y0, t0, t1, dt),
               is_identical_to(y_r))
   expect_that(integrate_simple(ode_cpp, y0, t0, t1, dt, TRUE),
+              is_identical_to(y_r_s))
+
+  expect_that(integrate_simple(ode_class, y0, t0, t1, dt),
+              is_identical_to(y_r))
+  expect_that(integrate_simple(ode_class, y0, t0, t1, dt, TRUE),
               is_identical_to(y_r_s))
 })

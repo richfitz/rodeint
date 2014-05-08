@@ -48,6 +48,27 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// r_integrate_const_class
+Rcpp::NumericVector r_integrate_const_class(rodeint::stepper stepper, rodeint::target_class target, rodeint::target_class::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_r_integrate_const_class(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::stepper >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
+        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
+        Rcpp::NumericVector __result = r_integrate_const_class(stepper, target, y, t0, t1, dt, save_state);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // r_integrate_n_steps_r
 Rcpp::NumericVector r_integrate_n_steps_r(rodeint::stepper stepper, rodeint::target_r target, rodeint::target_r::state_type y, double t0, double dt, size_t n, bool save_state);
 RcppExport SEXP rodeint_r_integrate_n_steps_r(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
@@ -84,6 +105,27 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< size_t >::type n(nSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
         Rcpp::NumericVector __result = r_integrate_n_steps_cpp(stepper, target, y, t0, dt, n, save_state);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// r_integrate_n_steps_class
+Rcpp::NumericVector r_integrate_n_steps_class(rodeint::stepper stepper, rodeint::target_class target, rodeint::target_class::state_type y, double t0, double dt, size_t n, bool save_state);
+RcppExport SEXP rodeint_r_integrate_n_steps_class(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::stepper >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::traits::input_parameter< size_t >::type n(nSEXP );
+        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
+        Rcpp::NumericVector __result = r_integrate_n_steps_class(stepper, target, y, t0, dt, n, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -132,6 +174,27 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// r_integrate_adaptive_class
+Rcpp::NumericVector r_integrate_adaptive_class(rodeint::stepper stepper, rodeint::target_class target, rodeint::target_class::state_type y, double t0, double t1, double dt, bool save_state = false);
+RcppExport SEXP rodeint_r_integrate_adaptive_class(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::stepper >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
+        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
+        Rcpp::NumericVector __result = r_integrate_adaptive_class(stepper, target, y, t0, t1, dt, save_state);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // r_integrate_times_r
 Rcpp::NumericVector r_integrate_times_r(rodeint::stepper stepper, rodeint::target_r target, rodeint::target_r::state_type y, std::vector<double> times, double dt);
 RcppExport SEXP rodeint_r_integrate_times_r(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
@@ -164,6 +227,25 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::NumericVector __result = r_integrate_times_cpp(stepper, target, y, times, dt);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// r_integrate_times_class
+Rcpp::NumericVector r_integrate_times_class(rodeint::stepper stepper, rodeint::target_class target, rodeint::target_class::state_type y, std::vector<double> times, double dt);
+RcppExport SEXP rodeint_r_integrate_times_class(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::stepper >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::NumericVector __result = r_integrate_times_class(stepper, target, y, times, dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -204,6 +286,26 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
         Rcpp::NumericVector __result = r_integrate_simple_cpp(target, y, t0, t1, dt, save_state);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// r_integrate_simple_class
+Rcpp::NumericVector r_integrate_simple_class(rodeint::target_class target, rodeint::target_class::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_r_integrate_simple_class(SEXP targetSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::target_class >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
+        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
+        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
+        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
+        Rcpp::NumericVector __result = r_integrate_simple_class(target, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
