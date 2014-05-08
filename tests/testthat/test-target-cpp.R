@@ -4,7 +4,7 @@ context("target_cpp")
 
 test_that("construction", {
   pars <- 0.5
-  obj <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  obj <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
   expect_that(obj, is_a("target_cpp"))
   expect_that(obj$ptr <- obj$ptr,
               throws_error("read-only"))
@@ -12,7 +12,7 @@ test_that("construction", {
 
 test_that("derivatives", {
   pars <- 0.5
-  obj <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  obj <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
   y0 <- c(0, 1)
   t0 <- 0.0
   expect_that(obj$derivs(y0, t0),
@@ -21,7 +21,7 @@ test_that("derivatives", {
 
 test_that("parameters", {
   pars <- 0.5
-  obj <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  obj <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
   expect_that(obj$pars(), is_identical_to(pars))
   ## In contrast with target_r, this will throw:
   pars2 <- list(a=1, b=2)

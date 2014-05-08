@@ -67,13 +67,11 @@ target_cpp <- setRefClass("target_cpp",
                           "ptr"="externalptr"))
 target_cpp$lock(c("generator", "ptr"))
 
-## TODO: This is going to change once we can look up function pointers
-## by name.
 target_cpp$methods(initialize = function(generator, pars) {
   generator <<- generator
   ptr <<- generator()
   ## TODO: Does this determine if the class is really a ptr?
-  ## TODO: Can I use set_pars(pars) directly?
+  ## TODO: Can I use R class's set_pars(pars) directly?
   rodeint:::target_cpp__set_pars(ptr, pars)
 })
 
@@ -115,4 +113,34 @@ target_cpp$methods(integrate_times =
 target_cpp$methods(integrate_simple =
                  function(y, t0, t1, dt, save_state=FALSE) {
   r_integrate_simple_cpp(ptr, y, t0, t1, dt, save_state)
+})
+
+##' Integration targets (documentating coming)
+##' @title Integration Target
+##' @aliases target_class
+##' @export target_class
+##' @export
+target_class <- setRefClass("target_class",
+                            fields=list(
+                              "generator"="function",
+                              "ptr"="externalptr"))
+target_class$lock(c("generator", "ptr"))
+
+target_class$methods(initialize = function(generator, pars) {
+  generator <<- generator
+  ## TODO: Backport this style to the cpp version?
+  ptr <<- generator(pars)
+  ## TODO: Does this determine if the class is really a ptr?
+})
+
+target_class$methods(pars = function() {
+  rodeint:::target_class__get_pars(ptr)
+})
+
+target_class$methods(set_pars = function(pars) {
+  rodeint:::target_class__set_pars(ptr, pars)
+})
+
+target_class$methods(derivs = function(y, t) {
+  rodeint:::target_class__derivs(ptr, y, t)
 })

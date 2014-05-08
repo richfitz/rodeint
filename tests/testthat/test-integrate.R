@@ -11,6 +11,10 @@ context("integrate")
 ##
 ## Might be worth getting the analytical solution (Mathematica?) so
 ## that we can compare that too.
+##
+## OK, especially as we now have *three* target types, and as almost
+## all the actual testing is spent in this file we might have to break
+## this up into five functions - one for each integration type.
 
 ## There is more work to do on accuracy later, but for now this is
 ## probably enough.  We're not really looking to verify that the
@@ -30,7 +34,7 @@ test_that("integrate_const", {
   ##   - less obscure message if dt is stats::dt (or other wrong type)
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -98,7 +102,7 @@ test_that("integrate_n_steps", {
   ## TODO: Try negative number of steps
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -164,7 +168,7 @@ test_that("integrate_adaptive", {
   ## TODO: Try zero dt
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -233,7 +237,7 @@ test_that("integrate_times", {
   ## TODO: check times of length 0, 1, fails
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -290,7 +294,7 @@ test_that("integrate_times", {
 test_that("integrate_simple", {
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator, pars)
+  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 0

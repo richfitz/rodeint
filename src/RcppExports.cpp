@@ -257,6 +257,51 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// target_class__get_pars
+rodeint::target_class::pars_type target_class__get_pars(Rcpp::XPtr<rodeint::target_class> target);
+RcppExport SEXP rodeint_target_class__get_pars(SEXP targetSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_class> >::type target(targetSEXP );
+        rodeint::target_class::pars_type __result = target_class__get_pars(target);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// target_class__set_pars
+void target_class__set_pars(Rcpp::XPtr<rodeint::target_class> target, rodeint::target_class::pars_type pars);
+RcppExport SEXP rodeint_target_class__set_pars(SEXP targetSEXP, SEXP parsSEXP) {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_class> >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::pars_type >::type pars(parsSEXP );
+        target_class__set_pars(target, pars);
+    }
+    return R_NilValue;
+END_RCPP
+}
+// target_class__derivs
+rodeint::target_class::state_type target_class__derivs(Rcpp::XPtr<rodeint::target_class> target, rodeint::target_class::state_type y, double t);
+RcppExport SEXP rodeint_target_class__derivs(SEXP targetSEXP, SEXP ySEXP, SEXP tSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::target_class> >::type target(targetSEXP );
+        Rcpp::traits::input_parameter< rodeint::target_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t(tSEXP );
+        rodeint::target_class::state_type __result = target_class__derivs(target, y, t);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // target_cpp__derivs
 rodeint::target_cpp::state_type target_cpp__derivs(Rcpp::XPtr<rodeint::target_cpp> target, rodeint::target_cpp::state_type y, double t);
 RcppExport SEXP rodeint_target_cpp__derivs(SEXP targetSEXP, SEXP ySEXP, SEXP tSEXP) {
@@ -363,14 +408,29 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// test_harmonic_oscillator
-rodeint::target_cpp test_harmonic_oscillator();
-RcppExport SEXP rodeint_test_harmonic_oscillator() {
+// test_harmonic_oscillator_cpp
+rodeint::target_cpp test_harmonic_oscillator_cpp();
+RcppExport SEXP rodeint_test_harmonic_oscillator_cpp() {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        rodeint::target_cpp __result = test_harmonic_oscillator();
+        rodeint::target_cpp __result = test_harmonic_oscillator_cpp();
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// test_harmonic_oscillator_class
+rodeint::target_class test_harmonic_oscillator_class(double p);
+RcppExport SEXP rodeint_test_harmonic_oscillator_class(SEXP pSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< double >::type p(pSEXP );
+        rodeint::target_class __result = test_harmonic_oscillator_class(p);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

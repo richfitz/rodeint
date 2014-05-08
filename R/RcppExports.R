@@ -53,6 +53,18 @@ stepper__type <- function(s) {
     .Call('rodeint_stepper__type', PACKAGE = 'rodeint', s)
 }
 
+target_class__get_pars <- function(target) {
+    .Call('rodeint_target_class__get_pars', PACKAGE = 'rodeint', target)
+}
+
+target_class__set_pars <- function(target, pars) {
+    invisible(.Call('rodeint_target_class__set_pars', PACKAGE = 'rodeint', target, pars))
+}
+
+target_class__derivs <- function(target, y, t) {
+    .Call('rodeint_target_class__derivs', PACKAGE = 'rodeint', target, y, t)
+}
+
 target_cpp__derivs <- function(target, y, t) {
     .Call('rodeint_target_cpp__derivs', PACKAGE = 'rodeint', target, y, t)
 }
@@ -81,7 +93,11 @@ target_r__set_pars <- function(target, pars) {
     invisible(.Call('rodeint_target_r__set_pars', PACKAGE = 'rodeint', target, pars))
 }
 
-test_harmonic_oscillator <- function() {
-    .Call('rodeint_test_harmonic_oscillator', PACKAGE = 'rodeint')
+test_harmonic_oscillator_cpp <- function() {
+    .Call('rodeint_test_harmonic_oscillator_cpp', PACKAGE = 'rodeint')
+}
+
+test_harmonic_oscillator_class <- function(p) {
+    .Call('rodeint_test_harmonic_oscillator_class', PACKAGE = 'rodeint', p)
 }
 
