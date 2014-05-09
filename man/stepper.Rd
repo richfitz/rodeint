@@ -24,7 +24,7 @@ make_stepper(category, type, ...)
 
   \item{...}{Additional parameters passed from
   \code{make_stepper} to either \code{make_stepper_basic}
-  (none allowed) or \code{mkae_stepper_controlled}.}
+  (none allowed) or \code{make_stepper_controlled}.}
 }
 \description{
 Stepper (documentation coming)

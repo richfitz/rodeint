@@ -28,8 +28,9 @@ target_r$methods(derivs = function(y, t) {
 
 target_r$methods(deSolve_func = function() {
   ## TODO: This will change if the argument lists do.
-  function(t, y, pars) { # we never allow extra args
-    list(derivs.R(t, y, pars))
+  target_pars <- pars()
+  function(t, y, ignored) { # we never allow extra args
+    list(derivs.R(t, y, target_pars))
   }
 })
 

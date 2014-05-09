@@ -1,0 +1,34 @@
+\docType{class}
+\name{stepper_deSolve-class}
+\alias{make_stepper_deSolve}
+\alias{make_stepper_deSolve_basic}
+\alias{make_stepper_deSolve_controlled}
+\alias{stepper_deSolve}
+\alias{stepper_deSolve-class}
+\title{Stepper (deSolve wrappers)}
+\usage{
+make_stepper_deSolve(category, type, ...)
+
+make_stepper_deSolve_basic(type)
+
+make_stepper_deSolve_controlled(type, atol = 1e-06, rtol = 1e-06)
+}
+\arguments{
+  \item{category}{Either "basic" or "controlled"}
+
+  \item{type}{The type of stepper (e.g. "runge_kutta4")}
+
+  \item{...}{Additional parameters passed from
+  \code{make_stepper} to either \code{make_stepper_basic}
+  (none allowed) or \code{make_stepper_controlled}.}
+
+  \item{atol}{Absolute tolerance (see deSolve docs for
+  now)}
+
+  \item{rtol}{Relative tolerance (see deSolve docs for
+  now)}
+}
+\description{
+Stepper (documentation coming)
+}
+

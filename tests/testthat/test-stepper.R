@@ -37,7 +37,7 @@ test_that("corner cases", {
 
 test_that("basic steppers", {
   for (type in stepper_basic_types()) {
-    s <- rodeint:::make_stepper_basic(type)
+    s <- make_stepper_basic(type)
     expect_that(s, is_a("stepper"))
 
     expect_that(s$ptr, is_a("externalptr"))

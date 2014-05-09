@@ -19,20 +19,21 @@ test_that("deSolve", {
   info_cpp <- ode_cpp$deSolve_info()
   info_class <- ode_class$deSolve_info()
 
+  fakepars <- NULL # totally ignored.
   res_r <- lsoda(y0, c(t0, t1),
-                 parms=pars,
+                 parms=fakepars,
                  func=info_r$func,
                  dllname=info_r$dllname,
                  initfunc=info_r$initfunc,
                  initpar=info_r$initpar)
   res_cpp <- lsoda(y0, c(t0, t1),
-                   pars=pars,
+                   pars=fakepars,
                    func=info_cpp$func,
                    dllname=info_cpp$dllname,
                    initfunc=info_cpp$initfunc,
                    initpar=info_cpp$initpar)
   res_class <- lsoda(y0, c(t0, t1),
-                     pars=pars,
+                     pars=fakepars,
                      func=info_class$func,
                      dllname=info_class$dllname,
                      initfunc=info_class$initfunc,
