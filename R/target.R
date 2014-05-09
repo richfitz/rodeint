@@ -26,6 +26,18 @@ target_r$methods(derivs = function(y, t) {
   target_r__derivs(ptr, y, t)
 })
 
+target_r$methods(deSolve_func = function() {
+  ## TODO: This will change if the argument lists do.
+  function(t, y, pars) { # we never allow extra args
+    list(derivs.R(t, y, pars))
+  }
+})
+
+target_r$methods(deSolve_info = function() {
+  list(func=deSolve_func(), dllname=NULL,
+       initfunc=NULL, initpar=NULL)
+})
+
 ## This would be cool, but better would also be to set a stepper.
 ## Could follow integrate_simple and just use rk_dopri5 by default?
 ##
@@ -90,6 +102,11 @@ target_cpp$methods(derivs = function(y, t) {
   target_cpp__derivs(ptr, y, t)
 })
 
+target_cpp$methods(deSolve_info = function() {
+  list(func="deSolve_func_target_cpp", dllname="rodeint",
+       initfunc="deSolve_initfunc", initpar=ptr)
+})
+
 target_cpp$methods(integrate_const =
                  function(stepper, y, t0, t1, dt, save_state=FALSE) {
   assert_stepper(stepper)
@@ -143,6 +160,11 @@ target_class$methods(set_pars = function(pars) {
 
 target_class$methods(derivs = function(y, t) {
   target_class__derivs(ptr, y, t)
+})
+
+target_class$methods(deSolve_info = function() {
+  list(func="deSolve_func_target_class", dllname="rodeint",
+       initfunc="deSolve_initfunc", initpar=ptr)
 })
 
 target_class$methods(integrate_const =

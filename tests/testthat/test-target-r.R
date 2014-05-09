@@ -30,3 +30,20 @@ test_that("parameters", {
   obj$set_pars(pars2)
   expect_that(obj$pars(), is_identical_to(pars2))
 })
+
+test_that("deSolve interface", {
+  pars <- 0.5
+  obj <- target_r(harmonic.oscillator, pars)
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  expect_that(obj$deSolve_func()(t0, y0, pars),
+              is_identical_to(wrap.deSolve(harmonic.oscillator)(t0, y0, pars)))
+
+  info <- obj$deSolve_info()
+  expect_that(names(info),
+              is_identical_to(c("func", "dllname", "initfunc", "initpar")))
+  expect_that(info$func,     is_a("function"))
+  expect_that(info$dllname,  is_identical_to(NULL))
+  expect_that(info$initfunc, is_identical_to(NULL))
+  expect_that(info$initpar,  is_identical_to(NULL))
+})

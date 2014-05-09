@@ -31,6 +31,19 @@ test_that("parameters", {
   expect_that(obj$set_pars(numeric(0)),   throws_error())
 })
 
+test_that("deSolve interface", {
+  pars <- 0.5
+  obj <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  info <- obj$deSolve_info()
+  expect_that(names(info),
+              is_identical_to(c("func", "dllname", "initfunc", "initpar")))
+  expect_that(info$func,     is_identical_to("deSolve_func_target_cpp"))
+  expect_that(info$dllname,  is_identical_to("rodeint"))
+  expect_that(info$initfunc, is_identical_to("deSolve_initfunc"))
+  expect_that(info$initpar,  is_a("externalptr"))
+})
 
 ## Disabled for now, because sourceCpp seems poorly behaved during R
 ## CMD check.  Not sure why...

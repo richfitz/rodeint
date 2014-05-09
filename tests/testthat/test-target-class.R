@@ -30,3 +30,18 @@ test_that("parameters", {
   expect_that(obj$set_pars(rep(pars, 2)), throws_error())
   expect_that(obj$set_pars(numeric(0)),   throws_error())
 })
+
+
+test_that("deSolve interface", {
+  pars <- 0.5
+  obj <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  info <- obj$deSolve_info()
+  expect_that(names(info),
+              is_identical_to(c("func", "dllname", "initfunc", "initpar")))
+  expect_that(info$func,     is_identical_to("deSolve_func_target_class"))
+  expect_that(info$dllname,  is_identical_to("rodeint"))
+  expect_that(info$initfunc, is_identical_to("deSolve_initfunc"))
+  expect_that(info$initpar,  is_a("externalptr"))
+})
