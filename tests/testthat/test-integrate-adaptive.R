@@ -20,11 +20,8 @@ test_that("Time ends at multiple of dt", {
       expect_that(y_r, is_a("numeric"))
 
       y_r_s <- integrate_adaptive(s, target, y0, t0, t1, dt, TRUE)
-      if (category == "basic") {
-        expect_that(as.numeric(y_r_s), is_identical_to(y_r))
-      } else {
-        expect_that(as.numeric(y_r_s), equals(y_r, tolerance=1e-6))
-      }
+      ## NOTE: In contrast with integrate_const()
+      expect_that(as.numeric(y_r_s), is_identical_to(y_r))
 
       if (category == "basic") {
         t_expected <- seq(t0, t1, by=dt)
@@ -63,9 +60,6 @@ test_that("Time ends in the middle of a step", {
       yy_r_s_2 <- attr(y_r_s_2, "y")
 
       if (category == "controlled") {
-        yy_r_s_1 <- attr(y_r_s_1, "y")
-        yy_r_s_2 <- attr(y_r_s_2, "y")
-
         expect_that(nrow(yy_r_s_1), equals(attr(y_r_s_1, "steps") + 1))
         expect_that(nrow(yy_r_s_2), equals(attr(y_r_s_2, "steps") + 1))
 
