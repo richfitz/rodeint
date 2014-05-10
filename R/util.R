@@ -46,7 +46,7 @@ assert_named <- function(x, empty_can_be_unnamed=TRUE,
                          name=deparse(substitute(x))) {
   if (is.null(names(x)) || any(names(x) == "")) {
     if (length(x) > 0 || !empty_can_be_unnamed) {
-      stop(sprintf("%s must be named", named))
+      stop(sprintf("%s must be named", name))
     }
   }
 }
