@@ -1,17 +1,21 @@
 #ifndef _RODEINT_STEPPER_HPP_
 #define _RODEINT_STEPPER_HPP_
 
+// Following advice here
+//   http://www.boost.org/doc/libs/1_55_0/libs/numeric/odeint/doc/html/boost_numeric_odeint/getting_started/usage__compilation__headers.html
+// though I suspect we use so much of odeint that it's a lost cause.
+#ifdef ODEINT_INCLUDE_EVERYTHING
 #include <boost/numeric/odeint.hpp>
-
-// In theory, including just the required headers speeds things up --
-// in practice this is about a 20% speedup, which seems a small reward
-// for a lot of potential fragility.
-//
-//   #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
-//   #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
-//   #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
-//   #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
-//   #include <boost/numeric/odeint/stepper/generation.hpp>
+#else
+#include <boost/numeric/odeint/stepper/euler.hpp>
+#include <boost/numeric/odeint/stepper/modified_midpoint.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta4.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
+#include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+#include <boost/numeric/odeint/stepper/generation.hpp>
+#endif
 
 // Holding everything together with Boost.Variant - that way we can
 // export a single type to R and still have compile time

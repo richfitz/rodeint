@@ -1,4 +1,4 @@
-#include "util.hpp"
+#include <rodeint/util.hpp>
 
 namespace rodeint {
 

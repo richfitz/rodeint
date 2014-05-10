@@ -1,4 +1,4 @@
-#include "stepper.hpp"
+#include <rodeint/stepper.hpp>
 #include <Rcpp.h> // Rcpp::stop
 
 // [[Rcpp::export]]

@@ -13,7 +13,7 @@ public:
     : derivs(derivs_), pars(pars_) {}
   void operator()(const state_type& y, state_type &dydt,
                   const double t) {
-    const state_type ret = 
+    const state_type ret =
       Rcpp::as<state_type>(derivs(Rcpp::wrap(y), Rcpp::wrap(t), pars));
     std::copy(ret.begin(), ret.end(), dydt.begin());
   }

@@ -1,6 +1,4 @@
-#include "target_cpp.hpp"
-#include "target_class.hpp"
-#include <Rcpp.h> // Rcpp::as, Rcpp::wrap
+#include <rodeint_target.h>
 
 namespace rodeint {
 namespace test {

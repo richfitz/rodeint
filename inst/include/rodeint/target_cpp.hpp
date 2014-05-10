@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <Rcpp.h>
-#include "util.hpp"
+#include <rodeint/util.hpp>
 
 namespace rodeint {
 

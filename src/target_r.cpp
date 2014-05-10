@@ -1,5 +1,4 @@
-#include "target_r.hpp"
-#include <boost/numeric/odeint.hpp>
+#include <rodeint/target_r.hpp>
 
 // [[Rcpp::export]]
 rodeint::target_r target_r__ctor(Rcpp::Function derivs,

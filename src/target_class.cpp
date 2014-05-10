@@ -1,4 +1,4 @@
-#include "target_class.hpp"
+#include <rodeint/target_class.hpp>
 #include <Rcpp.h>
 
 // [[Rcpp::export]]

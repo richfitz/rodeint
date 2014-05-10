@@ -1,11 +1,8 @@
-#include "integrate.hpp"
-#include <boost/numeric/odeint.hpp>
-#include "target_r.hpp"
-#include "target_cpp.hpp"
-#include "target_class.hpp"
-#include "observers.hpp"
-#include "stepper.hpp"
-#include "util.hpp"
+#include <rodeint/integrate.hpp>
+
+#include <rodeint/target_r.hpp>
+#include <rodeint/target_cpp.hpp>
+#include <rodeint/target_class.hpp>
 
 // TODO: This file would be substantially easier to look after with
 // code generation -- at least for the different target types, but

@@ -3,7 +3,7 @@
 
 // This organises loading all full class definitions, and the as/wrap
 // prototypes
-#include "rodeint.h"
+#include <rodeint.h>
 
 namespace Rcpp {
 // 'wrap' definitions for each class:

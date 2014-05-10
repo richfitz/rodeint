@@ -1,13 +1,23 @@
 #ifndef _RODEINT_INTEGRATE_HPP_
 #define _RODEINT_INTEGRATE_HPP_
 
+#ifdef ODEINT_INCLUDE_EVERYTHING
 #include <boost/numeric/odeint.hpp>
+#else
+#include <boost/numeric/odeint/integrate/integrate_const.hpp>
+#include <boost/numeric/odeint/integrate/integrate_n_steps.hpp>
+#include <boost/numeric/odeint/integrate/integrate_adaptive.hpp>
+#include <boost/numeric/odeint/integrate/integrate_times.hpp>
+#include <boost/numeric/odeint/integrate/integrate.hpp>
+#endif
+
 #include <boost/variant.hpp>
 #include <vector>
 #include <Rcpp.h>
-#include "observers.hpp"
-#include "stepper.hpp"
-#include "util.hpp"
+
+#include <rodeint/observers.hpp>
+#include <rodeint/stepper.hpp>
+#include <rodeint/util.hpp>
 
 namespace rodeint {
 
