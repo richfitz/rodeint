@@ -29,7 +29,6 @@ expected_tolerance <- function(type) {
 
 test_that("integrate_const", {
   ## TODO: A couple of things to try here:
-  ##   - t1 < t0
   ##   - less obscure message if dt is stats::dt (or other wrong type)
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
@@ -49,11 +48,11 @@ test_that("integrate_const", {
     for (type in stepper_types(category)) {
       tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
-      y_r <- ode_r$integrate_const(s, y0, t0, t1, dt0)
+      y_r <- integrate_const(s, ode_r, y0, t0, t1, dt0)
       expect_that(y_r, is_a("numeric"))
       expect_that(y_r, equals(cmp, tolerance=tolerance))
 
-      y_r_s <- ode_r$integrate_const(s, y0, t0, t1, dt0, TRUE)
+      y_r_s <- integrate_const(s, ode_r, y0, t0, t1, dt0, TRUE)
       expect_that(y_r_s, equals(cmp, tolerance=tolerance,
                                 check.attributes=FALSE))
       ## This fails for all three, which is extremely surprising...
@@ -79,22 +78,6 @@ test_that("integrate_const", {
       expect_that(yy[steps + 1,], is_identical_to(as.numeric(y_r_s)))
 
       ## Check the compiled version:
-      expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0),
-                  is_identical_to(y_r))
-      expect_that(ode_cpp$integrate_const(s, y0, t0, t1, dt0, TRUE),
-                  is_identical_to(y_r_s))
-
-      expect_that(ode_class$integrate_const(s, y0, t0, t1, dt0),
-                  is_identical_to(y_r))
-      expect_that(ode_class$integrate_const(s, y0, t0, t1, dt0, TRUE),
-                  is_identical_to(y_r_s))
-
-      ## Check the alternative syntax:
-      expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0),
-                  is_identical_to(y_r))
-      expect_that(integrate_const(s, ode_r, y0, t0, t1, dt0, TRUE),
-                  is_identical_to(y_r_s))
-
       expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0),
                   is_identical_to(y_r))
       expect_that(integrate_const(s, ode_cpp, y0, t0, t1, dt0, TRUE),
@@ -130,11 +113,11 @@ test_that("integrate_n_steps", {
     for (type in stepper_types(category)) {
       tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
-      y_r <- ode_r$integrate_n_steps(s, y0, t0, dt0, n)
+      y_r <- integrate_n_steps(s, ode_r, y0, t0, dt0, n)
       expect_that(y_r, is_a("numeric"))
       expect_that(y_r, equals(cmp, tolerance=tolerance))
 
-      y_r_s <- ode_r$integrate_n_steps(s, y0, t0, dt0, n, TRUE)
+      y_r_s <- integrate_n_steps(s, ode_r, y0, t0, dt0, n, TRUE)
       expect_that(y_r_s, equals(cmp, tolerance=tolerance,
                                 check.attributes=FALSE))
       expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
@@ -156,22 +139,6 @@ test_that("integrate_n_steps", {
       expect_that(yy[steps + 1,], is_identical_to(as.numeric(y_r_s)))
 
       ## Check the compiled version:
-      expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n),
-                  is_identical_to(y_r))
-      expect_that(ode_cpp$integrate_n_steps(s, y0, t0, dt0, n, TRUE),
-                  is_identical_to(y_r_s))
-
-      expect_that(ode_class$integrate_n_steps(s, y0, t0, dt0, n),
-                  is_identical_to(y_r))
-      expect_that(ode_class$integrate_n_steps(s, y0, t0, dt0, n, TRUE),
-                  is_identical_to(y_r_s))
-
-      ## Check the alternative syntax:
-      expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n),
-                  is_identical_to(y_r))
-      expect_that(integrate_n_steps(s, ode_r, y0, t0, dt0, n, TRUE),
-                  is_identical_to(y_r_s))
-
       expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n),
                   is_identical_to(y_r))
       expect_that(integrate_n_steps(s, ode_cpp, y0, t0, dt0, n, TRUE),
@@ -181,7 +148,7 @@ test_that("integrate_n_steps", {
                   is_identical_to(y_r))
       expect_that(integrate_n_steps(s, ode_class, y0, t0, dt0, n, TRUE),
                   is_identical_to(y_r_s))
-}
+    }
   }
 })
 
@@ -208,11 +175,11 @@ test_that("integrate_adaptive", {
       s <- make_stepper(category, type)
 
       ## run with rodeint:
-      y_r <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0)
+      y_r <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0)
       expect_that(y_r, is_a("numeric"))
       expect_that(y_r, equals(cmp, tolerance=tolerance))
 
-      y_r_s <- ode_r$integrate_adaptive(s, y0, t0, t1, dt0, TRUE)
+      y_r_s <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0, TRUE)
       expect_that(y_r_s, equals(cmp, tolerance=tolerance,
                                 check.attributes=FALSE))
       expect_that(as.numeric(y_r_s), is_identical_to(y_r))
@@ -236,22 +203,6 @@ test_that("integrate_adaptive", {
       expect_that(yy[steps + 1,], is_identical_to(y_r))
 
       ## Check the compiled version:
-      expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0),
-                  is_identical_to(y_r))
-      expect_that(ode_cpp$integrate_adaptive(s, y0, t0, t1, dt0, TRUE),
-                  is_identical_to(y_r_s))
-
-      expect_that(ode_class$integrate_adaptive(s, y0, t0, t1, dt0),
-                  is_identical_to(y_r))
-      expect_that(ode_class$integrate_adaptive(s, y0, t0, t1, dt0, TRUE),
-                  is_identical_to(y_r_s))
-
-      ## Check the alternative syntax:
-      expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0),
-                  is_identical_to(y_r))
-      expect_that(integrate_adaptive(s, ode_r, y0, t0, t1, dt0, TRUE),
-                  is_identical_to(y_r_s))
-
       expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0),
                   is_identical_to(y_r))
       expect_that(integrate_adaptive(s, ode_cpp, y0, t0, t1, dt0, TRUE),
@@ -292,7 +243,7 @@ test_that("integrate_times", {
       s <- make_stepper(category, type)
 
       ## run with rodeint:
-      y_r_s <- ode_r$integrate_times(s, y0, times, dt0)
+      y_r_s <- integrate_times(s, ode_r, y0, times, dt0)
       expect_that(y_r_s, equals(cmp[nrow(cmp),], tolerance=tolerance,
                                 check.attributes=FALSE))
       expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
@@ -312,14 +263,6 @@ test_that("integrate_times", {
       expect_that(yy,    equals(cmp, tolerance=tolerance))
 
       ## Check the compiled version:
-      expect_that(ode_cpp$integrate_times(s, y0, times, dt0),
-                  is_identical_to(y_r_s))
-      expect_that(ode_class$integrate_times(s, y0, times, dt0),
-                  is_identical_to(y_r_s))
-
-      ## Check the alternative syntax:
-      expect_that(integrate_times(s, ode_r, y0, times, dt0),
-                  is_identical_to(y_r_s))
       expect_that(integrate_times(s, ode_cpp, y0, times, dt0),
                   is_identical_to(y_r_s))
       expect_that(integrate_times(s, ode_class, y0, times, dt0),
@@ -346,11 +289,11 @@ test_that("integrate_simple", {
   tolerance <- expected_tolerance("runge_kutta_dopri5")
 
   ## run with rodeint:
-  y_r <- ode_r$integrate_simple(y0, t0, t1, dt)
+  y_r <- integrate_simple(ode_r, y0, t0, t1, dt)
   expect_that(y_r, is_a("numeric"))
   expect_that(y_r, equals(cmp, tolerance=tolerance))
 
-  y_r_s <- ode_r$integrate_simple(y0, t0, t1, dt, TRUE)
+  y_r_s <- integrate_simple(ode_r, y0, t0, t1, dt, TRUE)
   expect_that(y_r_s, equals(cmp, tolerance=tolerance,
                             check.attributes=FALSE))
   expect_that(as.numeric(y_r_s), is_identical_to(y_r))
@@ -374,22 +317,6 @@ test_that("integrate_simple", {
   expect_that(yy[steps + 1,], is_identical_to(y_r))
 
   ## Check the compiled version
-  expect_that(ode_cpp$integrate_simple(y0, t0, t1, dt),
-              is_identical_to(y_r))
-  expect_that(ode_cpp$integrate_simple(y0, t0, t1, dt, TRUE),
-              is_identical_to(y_r_s))
-
-  expect_that(ode_class$integrate_simple(y0, t0, t1, dt),
-              is_identical_to(y_r))
-  expect_that(ode_class$integrate_simple(y0, t0, t1, dt, TRUE),
-              is_identical_to(y_r_s))
-
-  ## Check the alternative syntax:
-  expect_that(integrate_simple(ode_r, y0, t0, t1, dt),
-              is_identical_to(y_r))
-  expect_that(integrate_simple(ode_r, y0, t0, t1, dt, TRUE),
-              is_identical_to(y_r_s))
-
   expect_that(integrate_simple(ode_cpp, y0, t0, t1, dt),
               is_identical_to(y_r))
   expect_that(integrate_simple(ode_cpp, y0, t0, t1, dt, TRUE),

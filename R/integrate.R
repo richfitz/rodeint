@@ -1,10 +1,16 @@
-## NOTE: There's a bit of a hassle here because Rcpp attributes builds
-## the R functions for us -- but I want to do a tiny bit of checking
-## and pass in different classes than it's expecting.  I've exported
-## the functions as 'r_<foo>'.  However, it'd actually be very easy to
-## just skip the exported functions entirely and use the .Call in
-## these functions.  We will need to update any time the signatures
-## update anyway.
+## TODO: Document these all on one page?  Lots of duplicated
+## documentation otherwise.
+
+## NOTE: These functions also form the basis of *generating* functions
+## we could have another set of functions
+##   make_integrate_const(stepper, target, y, t0, t1, dt, save_state)
+## that could set all provided arguments as defaults, arrange for
+## checking of the remainder and return a function.  That means we can
+## really easily turn a system of ODEs into a set of equations!
+##
+## Lifting the checking from within the function to the generator
+## would be harder though, unless it *always* runs through the
+## generator.
 
 ##' Integrate a system of ODEs, taking fixed steps
 ##'
@@ -23,16 +29,16 @@
 ##' @export
 integrate_const <- function(stepper, target, y, t0, t1, dt,
                             save_state=FALSE) {
+  ## This is a bit insane, but needs to be done or error messages from
+  ## the underlying rodeint_integrate function are indecipherable.
   assert_stepper(stepper)
-  target$integrate_const(stepper, y, t0, t1, dt, save_state)
-  ## Alternatively:
-  ## if (inherits(target, "target_cpp")) {
-  ##   r_integrate_const_cpp(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
-  ## } else if (inherits(target, "target_r")) {
-  ##   r_integrate_const_cpp(stepper$ptr, target$ptr, y, t0, t1, dt, save_state)
-  ## } else {
-  ##   stop("Invalid target")
-  ## }
+  assert_target(target)
+  assert_numeric(y)
+  assert_scalar_numeric(t0)
+  assert_scalar_numeric(t1)
+  assert_scalar_numeric(dt)
+  target$odeint_integrate_const(stepper$ptr, target$ptr, y, t0, t1, dt,
+                                save_state)
 }
 
 ##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
@@ -53,7 +59,13 @@ integrate_const <- function(stepper, target, y, t0, t1, dt,
 integrate_n_steps <- function(stepper, target, y, t0, dt, n,
                               save_state=FALSE) {
   assert_stepper(stepper)
-  target$integrate_n_steps(stepper, y, t0, dt, n, save_state)
+  assert_target(target)
+  assert_numeric(y)
+  assert_scalar_numeric(t0)
+  assert_scalar_numeric(dt)
+  assert_scalar(n) # TODO: also check interish ness
+  target$odeint_integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n,
+                                  save_state)
 }
 
 ##' Integrate a system of ODEs adaptively.
@@ -75,7 +87,13 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
 integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
                                save_state=FALSE) {
   assert_stepper(stepper)
-  target$integrate_adaptive(stepper, y, t0, t1, dt, save_state)
+  assert_target(target)
+  assert_numeric(y)
+  assert_scalar_numeric(t0)
+  assert_scalar_numeric(t1)
+  assert_scalar_numeric(dt)
+  target$odeint_integrate_adaptive(stepper$ptr, target$ptr, y, t0, t1, dt,
+                                   save_state)
 }
 
 ##' Integrate a system of ODEs at fixed times (perhaps adaptively).
@@ -96,10 +114,14 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
 ##' @export
 integrate_times <- function(stepper, target, y, times, dt) {
   assert_stepper(stepper)
+  assert_target(target)
+  assert_numeric(y)
+  assert_numeric(times) # TODO: check sorted
   if (length(times) < 2) {
     stop("Must provide at least two times")
   }
-  target$integrate_times(stepper, y, times, dt)
+  assert_scalar_numeric(dt)
+  target$odeint_integrate_times(stepper$ptr, target$ptr, y, times, dt)
 }
 
 ##' Integrate a system of ordinary differential equations.  This is
@@ -118,5 +140,11 @@ integrate_times <- function(stepper, target, y, times, dt) {
 ##' @export
 integrate_simple <- function(target, y, t0, t1, dt,
                              save_state=FALSE) {
-  target$integrate_simple(y, t0, t1, dt, save_state)
+  assert_target(target)
+  assert_numeric(y)
+  assert_scalar_numeric(t0)
+  assert_scalar_numeric(t1)
+  assert_scalar_numeric(dt)
+  target$odeint_integrate_simple(target$ptr, y, t0, t1, dt,
+                                 save_state)
 }

@@ -39,35 +39,18 @@ target_r$methods(deSolve_info = function() {
        initfunc=NULL, initpar=NULL)
 })
 
-## This would be cool, but better would also be to set a stepper.
-## Could follow integrate_simple and just use rk_dopri5 by default?
-##
-## TODO: confirm that invalid input for stepper is caught without a
-## crash.
-target_r$methods(integrate_const =
-                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_const_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
-})
-target_r$methods(integrate_n_steps =
-                 function(stepper, y, t0, dt, n, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_n_steps_r(stepper$ptr, ptr, y, t0, dt, n, save_state)
-})
-target_r$methods(integrate_adaptive =
-                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_adaptive_r(stepper$ptr, ptr, y, t0, t1, dt, save_state)
-})
-target_r$methods(integrate_times =
-                 function(stepper, y, times, dt) {
-  assert_stepper(stepper)
-  r_integrate_times_r(stepper$ptr, ptr, y, times, dt)
-})
-target_r$methods(integrate_simple =
-                 function(y, t0, t1, dt, save_state=FALSE) {
-  r_integrate_simple_r(ptr, y, t0, t1, dt, save_state)
-})
+## TODO: Perhaps use the new partial application code here to
+## partially apply the target into the function?:
+##   partially_apply(r_integrate_const_r, target=ptr)
+## Or is there an equivalent of a *static* method for the class that
+## might be less cluttered?  Doing this at the same time as setting a
+## stepper is the way forward I think, and then returning *copy* of
+## the target.
+target_r$methods(odeint_integrate_const    = r_integrate_const_r)
+target_r$methods(odeint_integrate_n_steps  = r_integrate_n_steps_r)
+target_r$methods(odeint_integrate_adaptive = r_integrate_adaptive_r)
+target_r$methods(odeint_integrate_times    = r_integrate_times_r)
+target_r$methods(odeint_integrate_simple   = r_integrate_simple_r)
 
 ##' Integration targets (documentating coming)
 ##' @title Integration Target
@@ -108,30 +91,11 @@ target_cpp$methods(deSolve_info = function() {
        initfunc="deSolve_initfunc", initpar=ptr)
 })
 
-target_cpp$methods(integrate_const =
-                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_const_cpp(stepper$ptr, ptr, y, t0, t1, dt, save_state)
-})
-target_cpp$methods(integrate_n_steps =
-                 function(stepper, y, t0, dt, n, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_n_steps_cpp(stepper$ptr, ptr, y, t0, dt, n, save_state)
-})
-target_cpp$methods(integrate_adaptive =
-                 function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_adaptive_cpp(stepper$ptr, ptr, y, t0, t1, dt, save_state)
-})
-target_cpp$methods(integrate_times =
-                 function(stepper, y, times, dt) {
-  assert_stepper(stepper)
-  r_integrate_times_cpp(stepper$ptr, ptr, y, times, dt)
-})
-target_cpp$methods(integrate_simple =
-                 function(y, t0, t1, dt, save_state=FALSE) {
-  r_integrate_simple_cpp(ptr, y, t0, t1, dt, save_state)
-})
+target_cpp$methods(odeint_integrate_const    = r_integrate_const_cpp)
+target_cpp$methods(odeint_integrate_n_steps  = r_integrate_n_steps_cpp)
+target_cpp$methods(odeint_integrate_adaptive = r_integrate_adaptive_cpp)
+target_cpp$methods(odeint_integrate_times    = r_integrate_times_cpp)
+target_cpp$methods(odeint_integrate_simple   = r_integrate_simple_cpp)
 
 ##' Integration targets (documentating coming)
 ##' @title Integration Target
@@ -168,27 +132,8 @@ target_class$methods(deSolve_info = function() {
        initfunc="deSolve_initfunc", initpar=ptr)
 })
 
-target_class$methods(integrate_const =
-                     function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_const_class(stepper$ptr, ptr, y, t0, t1, dt, save_state)
-})
-target_class$methods(integrate_n_steps =
-                     function(stepper, y, t0, dt, n, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_n_steps_class(stepper$ptr, ptr, y, t0, dt, n, save_state)
-})
-target_class$methods(integrate_adaptive =
-                     function(stepper, y, t0, t1, dt, save_state=FALSE) {
-  assert_stepper(stepper)
-  r_integrate_adaptive_class(stepper$ptr, ptr, y, t0, t1, dt, save_state)
-})
-target_class$methods(integrate_times =
-                     function(stepper, y, times, dt) {
-  assert_stepper(stepper)
-  r_integrate_times_class(stepper$ptr, ptr, y, times, dt)
-})
-target_class$methods(integrate_simple =
-                     function(y, t0, t1, dt, save_state=FALSE) {
-  r_integrate_simple_class(ptr, y, t0, t1, dt, save_state)
-})
+target_class$methods(odeint_integrate_const    = r_integrate_const_class)
+target_class$methods(odeint_integrate_n_steps  = r_integrate_n_steps_class)
+target_class$methods(odeint_integrate_adaptive = r_integrate_adaptive_class)
+target_class$methods(odeint_integrate_times    = r_integrate_times_class)
+target_class$methods(odeint_integrate_simple   = r_integrate_simple_class)

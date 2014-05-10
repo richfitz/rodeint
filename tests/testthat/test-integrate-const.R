@@ -17,10 +17,10 @@ test_that("Basic stepper, time ends at multiple of dt", {
   for (type in stepper_types(category)) {
     s <- make_stepper(category, type)
 
-    y_r <- target$integrate_const(s, y0, t0, t1, dt)
+    y_r <- integrate_const(s, target, y0, t0, t1, dt)
     expect_that(y_r, is_a("numeric"))
 
-    y_r_s <- target$integrate_const(s, y0, t0, t1, dt, TRUE)
+    y_r_s <- integrate_const(s, target, y0, t0, t1, dt, TRUE)
     expect_that(as.numeric(y_r_s), is_identical_to(y_r))
 
     t_expected <- seq(t0, t1, by=dt)
@@ -43,12 +43,12 @@ test_that("Basic stepper, time ends in the middle of a step", {
   for (type in stepper_types(category)) {
     s <- make_stepper(category, type)
 
-    y_r <- target$integrate_const(s, y0, t0, t1, dt)
+    y_r <- integrate_const(s, target, y0, t0, t1, dt)
     expect_that(y_r, is_a("numeric"))
 
     ## Run the observed stepper out to t1, and then also dt *past* t1:
-    y_r_s_1 <- target$integrate_const(s, y0, t0, t1,    dt, TRUE)
-    y_r_s_2 <- target$integrate_const(s, y0, t0, t1+dt, dt, TRUE)
+    y_r_s_1 <- integrate_const(s, target, y0, t0, t1,    dt, TRUE)
+    y_r_s_2 <- integrate_const(s, target, y0, t0, t1+dt, dt, TRUE)
 
     t_expected <- seq(t0, t1, by=dt)
     expect_that(attr(y_r_s_1, "t"), is_identical_to(t_expected))
@@ -92,9 +92,9 @@ test_that("Basic stepper, time runs backwards", {
   for (type in stepper_types(category)) {
     s <- make_stepper(category, type)
 
-    y_r <- target$integrate_const(s, y0, t0, t1, dt)
-    y_r_s_1 <- target$integrate_const(s, y0, t0, t1,    dt, TRUE)
-    y_r_s_2 <- target$integrate_const(s, y0, t0, t1+dt, dt, TRUE)
+    y_r <- integrate_const(s, target, y0, t0, t1, dt)
+    y_r_s_1 <- integrate_const(s, target, y0, t0, t1,    dt, TRUE)
+    y_r_s_2 <- integrate_const(s, target, y0, t0, t1+dt, dt, TRUE)
 
     if (interactive()) {
       matplot(attr(y_r_s_2, "t"), attr(y_r_s_2, "y"), type="o",
@@ -106,24 +106,24 @@ test_that("Basic stepper, time runs backwards", {
 
     ## Check the corner cases -- running time in the wrong direction
     ## for [t0, t1] is an error.
-    expect_that(target$integrate_const(s, y0, t0, t1, -dt),
+    expect_that(integrate_const(s, target, y0, t0, t1, -dt),
                 throws_error("dt has the wrong sign"))
-    expect_that(target$integrate_const(s, y0, t1, t0, dt),
+    expect_that(integrate_const(s, target, y0, t1, t0, dt),
                 throws_error("dt has the wrong sign"))
 
     ## More corner cases: when t0 = t1, the sign of dt does not matter
-    expect_that(target$integrate_const(s, y0, t0, t0, dt),
+    expect_that(integrate_const(s, target, y0, t0, t0, dt),
                 is_identical_to(y0))
-    expect_that(target$integrate_const(s, y0, t0, t0, -dt),
+    expect_that(integrate_const(s, target, y0, t0, t0, -dt),
                 is_identical_to(y0))
 
     ## More corner cases: when dt = 0 it is always an error,
     ## regardless of the sign of t0 / t1
-    expect_that(target$integrate_const(s, y0, t0, t1, 0),
+    expect_that(integrate_const(s, target, y0, t0, t1, 0),
                 throws_error("dt cannot be zero"))
-    expect_that(target$integrate_const(s, y0, t1, t0, 0),
+    expect_that(integrate_const(s, target, y0, t1, t0, 0),
                 throws_error("dt cannot be zero"))
-    expect_that(target$integrate_const(s, y0, t0, t0, 0),
+    expect_that(integrate_const(s, target, y0, t0, t0, 0),
                 throws_error("dt cannot be zero"))
   }
 })
