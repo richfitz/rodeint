@@ -2,20 +2,6 @@ source("helper-rodeint.R")
 
 context("integrate")
 
-## Once we get the non-adaptive integrators working here, there's
-## potentially a bunch more to work on -- they do have slightly
-## different behaviours.
-##
-## Also we'll need to tune tolerances for different algorithms --
-## euler won't do as well as rk4, for example!
-##
-## Might be worth getting the analytical solution (Mathematica?) so
-## that we can compare that too.
-##
-## OK, especially as we now have *three* target types, and as almost
-## all the actual testing is spent in this file we might have to break
-## this up into five functions - one for each integration type.
-
 ## There is more work to do on accuracy later, but for now this is
 ## probably enough.  We're not really looking to verify that the
 ## integrators work -- that's for odeint to do, and there is a big

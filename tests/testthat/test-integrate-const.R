@@ -3,7 +3,7 @@ source("helper-rodeint.R")
 
 context("integrate_const")
 
-test_that("Basic stepper, time ends at multiple of dt", {
+test_that("Time ends at multiple of dt", {
   pars <- 0.5
   target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
@@ -34,7 +34,7 @@ test_that("Basic stepper, time ends at multiple of dt", {
   }
 })
 
-test_that("Basic stepper, time ends in the middle of a step", {
+test_that("Time ends in the middle of a step", {
   pars <- 0.5
   target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
@@ -78,11 +78,12 @@ test_that("Basic stepper, time ends in the middle of a step", {
 })
 
 ## There are two ways that time can run "backwards", though I'm not
-## sure whether this always makes sense.
-##
+## sure whether this always makes sense.  Details are in src/util.cpp
+## for now, but need adding to the documentation.  The behaviours
+## should be unsurprising.
 ##
 ## tl;dr sign(t1 - t0) == sign(dt) or world of pain
-test_that("Basic stepper, time runs backwards", {
+test_that("Time runs backwards", {
   pars <- 0.5
   target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
 
