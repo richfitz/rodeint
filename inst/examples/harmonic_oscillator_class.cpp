@@ -30,9 +30,8 @@ private:
 
 // [[Rcpp::export]]
 rodeint::target_class example_harmonic_oscillator_class(double pars) {
-  using examples::harmonic_oscillator;
-  harmonic_oscillator obj(pars);
-  return rodeint::wrapper<harmonic_oscillator>::make_target(obj);
+  examples::harmonic_oscillator obj(pars);
+  return rodeint::wrapper<examples::harmonic_oscillator>::make_target(obj);
 }
 
 /*** R

@@ -26,7 +26,7 @@ test:
 	./check.sh
 	make -C tests/testthat
 
-run_examples:
+run_examples: install
 	make -C inst/examples
 
 .PHONY: attributes document install clean build check
