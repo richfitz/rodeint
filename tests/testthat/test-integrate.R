@@ -76,7 +76,6 @@ test_that("integrate_const", {
 })
 
 test_that("integrate_n_steps", {
-  ## TODO: Try negative number of steps
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
@@ -137,7 +136,6 @@ test_that("integrate_n_steps", {
 })
 
 test_that("integrate_adaptive", {
-  ## TODO: Try zero dt
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)

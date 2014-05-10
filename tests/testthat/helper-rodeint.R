@@ -13,6 +13,9 @@ harmonic.oscillator <- function(t, y, pars) {
 ## compatible ones.
 wrap.deSolve <- function(f) function(...) list(f(...))
 
+last <- function(x) {
+  x[[length(x)]]
+}
 last_row <- function(m) {
   m[nrow(m),]
 }

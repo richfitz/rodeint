@@ -324,8 +324,14 @@ Rcpp::NumericMatrix
 r_integrate_times(stepper stepper, Target target,
                   typename Target::state_type y,
                   std::vector<double> times, double dt) {
-  // TODO: Check if times are not sorted!
   check_dt(times.front(), times.back(), dt);
+  if (!util::is_sorted(times.begin(), times.end(), dt > 0)) {
+    if (times.front() != times.back()) { // corner case :-/
+      std::string msg = "Times must be sorted ";
+      Rcpp::stop(msg + (dt > 0 ? "(increasing)" : "(decreasing)"));
+    }
+  }
+
   stepper_integrate_times<Target>
     vis(target, y, times.begin(), times.end(), dt);
   boost::apply_visitor(vis, stepper);

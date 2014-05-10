@@ -11,7 +11,7 @@ void check_dt(double t0, double t1, double dt);
 
 namespace util {
 
-Rcpp::NumericMatrix 
+Rcpp::NumericMatrix
 to_rcpp_matrix_by_col(const std::vector< std::vector<double> >& x);
 Rcpp::NumericMatrix
 to_rcpp_matrix_by_row(const std::vector< std::vector<double> >& x);
@@ -26,6 +26,25 @@ std::string to_string(T x) {
 }
 
 size_t safe_size_t_from_r(int n);
+
+// Based on
+//   http://www.cplusplus.com/reference/algorithm/is_sorted/
+// but allows increasing/decreasing checking.
+template <class ForwardIterator>
+bool is_sorted(ForwardIterator first, ForwardIterator last,
+               bool increasing) {
+  if (first == last) {
+    return true;
+  }
+  ForwardIterator next = first;
+  while (++next!=last) {
+    if (*next < *first == increasing) {
+      return false;
+    }
+    ++first;
+  }
+  return true;
+}
 
 }
 }
