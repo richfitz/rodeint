@@ -12,7 +12,7 @@ install:
   - ./travis-tool.sh install_deps
 script:
   - ./travis-tool.sh run_tests
-  - make run_examples
+#  - make run_examples
 
 after_failure:
   - ./travis-tool.sh dump_logs
