@@ -1,5 +1,5 @@
-#ifndef _RODEINT_TARGET_CLASS_HPP_
-#define _RODEINT_TARGET_CLASS_HPP_
+#ifndef _RODEINT_ODE_SYSTEM_CLASS_HPP_
+#define _RODEINT_ODE_SYSTEM_CLASS_HPP_
 
 #include <vector>
 #include <boost/function.hpp>

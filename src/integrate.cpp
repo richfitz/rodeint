@@ -1,11 +1,11 @@
 #include <rodeint/integrate.hpp>
 
-#include <rodeint/target_r.hpp>
-#include <rodeint/target_cpp.hpp>
-#include <rodeint/target_class.hpp>
+#include <rodeint/ode_system_r.hpp>
+#include <rodeint/ode_system_cpp.hpp>
+#include <rodeint/ode_system_class.hpp>
 
 // TODO: This file would be substantially easier to look after with
-// code generation -- at least for the different target types, but
+// code generation -- at least for the different ode_system types, but
 // possibly also for the different intgration types, which differ in
 // easy to catalogue ways.
 

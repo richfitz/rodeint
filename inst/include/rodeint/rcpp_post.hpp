@@ -43,7 +43,7 @@ inline rodeint::target_r as(SEXP obj) {
   return *xp;
 }
 
-#ifndef RODEINT_TARGET_ONLY
+#ifndef RODEINT_ODE_SYSTEM_ONLY
 // 'wrap' definitions for each class:
 template<>
 inline SEXP wrap(const rodeint::stepper& obj) {

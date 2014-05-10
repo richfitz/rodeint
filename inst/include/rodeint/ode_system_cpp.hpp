@@ -1,5 +1,5 @@
-#ifndef _RODEINT_TARGET_CPP_HPP_
-#define _RODEINT_TARGET_CPP_HPP_
+#ifndef _RODEINT_ODE_SYSTEM_CPP_HPP_
+#define _RODEINT_ODE_SYSTEM_CPP_HPP_
 
 #include <vector>
 #include <Rcpp.h>

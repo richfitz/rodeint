@@ -1,4 +1,4 @@
-#include <rodeint/target_class.hpp>
+#include <rodeint/ode_system_class.hpp>
 #include <Rcpp.h>
 
 // [[Rcpp::export]]

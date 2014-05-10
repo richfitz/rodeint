@@ -31,7 +31,7 @@ template<> rodeint::target_class as(SEXP);
 template<> rodeint::target_cpp as(SEXP);
 template<> rodeint::target_r as(SEXP);
 
-#ifndef RODEINT_TARGET_ONLY
+#ifndef RODEINT_ODE_SYSTEM_ONLY
 template<> SEXP wrap(const rodeint::stepper&);
 template<> rodeint::stepper as(SEXP);
 #endif

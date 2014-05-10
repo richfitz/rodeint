@@ -1,4 +1,4 @@
-#include <rodeint/target_r.hpp>
+#include <rodeint/ode_system_r.hpp>
 
 // [[Rcpp::export]]
 rodeint::target_r target_r__ctor(Rcpp::Function derivs,
@@ -7,9 +7,9 @@ rodeint::target_r target_r__ctor(Rcpp::Function derivs,
 }
 
 // [[Rcpp::export]]
-rodeint::target_r::state_type 
+rodeint::target_r::state_type
 target_r__derivs(Rcpp::XPtr<rodeint::target_r> target,
-                 rodeint::target_r::state_type y, 
+                 rodeint::target_r::state_type y,
                  double t) {
   rodeint::target_r::state_type dydt(y.size());
   (*target)(y, dydt, t);

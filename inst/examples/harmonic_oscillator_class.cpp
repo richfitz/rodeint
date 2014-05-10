@@ -4,7 +4,7 @@
 //   Rcpp::sourceCpp("harmonic_oscillator_cpp.cpp", embeddedR=FALSE)
 
 // [[Rcpp::depends(rodeint)]]
-#include <rodeint_target.h>
+#include <rodeint_ode_system.h>
 
 namespace examples {
 

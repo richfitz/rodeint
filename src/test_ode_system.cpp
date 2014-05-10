@@ -1,4 +1,4 @@
-#include <rodeint_target.h>
+#include <rodeint_ode_system.h>
 
 namespace rodeint {
 namespace test {

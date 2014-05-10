@@ -7,12 +7,12 @@
 // The next two lines tell Rcpp Attributes to set up the appropriate
 // include paths, and to actually include the rodeint headers.
 //
-// Using the "smaller" header file "rodeint_target.h" that includes
-// *only* the information needed to build the target is much faster
+// Using the "smaller" header file "rodeint_ode_system.h" that includes
+// *only* the information needed to build the ode_system is much faster
 // than loading the full header file "rodeint.h"
 
 // [[Rcpp::depends(rodeint)]]
-#include <rodeint_target.h>
+#include <rodeint_ode_system.h>
 
 // #include <rodeint.h> // slower, but also OK
 
