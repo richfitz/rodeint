@@ -26,6 +26,20 @@ target_r$methods(derivs = function(y, t) {
   target_r__derivs(ptr, y, t)
 })
 
+## Depending on how useful they might be, and how sensible the
+## reference class driven approach is, the following might be useful:
+##   target_r$methods(make_integrate = function(...) {
+##     make_integrate(.self, ...)
+##   })
+##   target_r$methods(make_integrate_pars = function(...) {
+##     make_integrate_pars(.self, ...)
+##   })
+##   target_r$methods(integrate = function(...) {
+##     make_integrate(...)()
+##   })
+## but I suspect that the generic approach might be more familiar, and
+## more useful generally?
+
 target_r$methods(copy=function() {
   target_r$new(derivs.R, pars())
 })

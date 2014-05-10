@@ -325,3 +325,63 @@ test_that("integrate_simple", {
   expect_that(integrate_simple(ode_class, y0, t0, t1, dt, TRUE),
               is_identical_to(y_r_s))
 })
+
+test_that("make_integrate", {
+  pars <- 0.5
+  ode_r <- target_r(harmonic.oscillator, pars)
+  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+
+  y0 <- c(0, 1)
+  t0 <- 0
+  t1 <- 1
+  dt0 <- 0.05
+
+  ## Same as the default
+  s1 <- make_stepper_controlled("runge_kutta_dopri5")
+  s2 <- make_stepper_basic("runge_kutta4")
+
+  for (target in list(ode_r, ode_cpp, ode_class)) {
+    ## First, make my favourite thing about this -- converting f'(y, t)
+    ## to f(y, t):
+    f0 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE)
+    f1 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE,
+                         stepper=s1, integrate=integrate_adaptive)
+    f2 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE,
+                         stepper=s2)
+    ## And f'(y, t, pars) to f(pars)(y, t)
+    g0 <- make_integrate_pars(target, t0=0, dt=dt0, save_state=FALSE)
+    g1 <- make_integrate_pars(target, t0=0, dt=dt0, save_state=FALSE,
+                              stepper=s1, integrate=integrate_adaptive)
+    g2 <- make_integrate_pars(target, t0=0, dt=dt0, save_state=FALSE,
+                              stepper=s2)
+
+    expect_that(names(formals(f0)), equals(c("y", "t1")))
+
+    cmp <- integrate_adaptive(s1, target, y0, t0, t1, dt0)
+    expect_that(f0(y0, t1), is_identical_to(cmp))
+    expect_that(f1(y0, t1), is_identical_to(cmp))
+    expect_that(f2(y0, t1), not(is_identical_to(cmp)))
+    expect_that(f2(y0, t1), equals(cmp, tolerance=3e-6))
+
+    ## Check that changing parameters in underlying thing doesn't affect
+    ## the generated function.
+    pars2 <- pi
+    target$set_pars(pars2)
+    cmp2 <- integrate_adaptive(s1, target, y0, t0, t1, dt0)
+    f3 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE)
+    expect_that(f0(y0, t1), is_identical_to(cmp))
+    expect_that(f3(y0, t1), is_identical_to(cmp2))
+
+    expect_that(g0(pars), is_a("function"))
+    expect_that(names(formals(g0(pars))), equals(c("y", "t1")))
+
+    expect_that(g0(pars)(y0, t1), is_identical_to(cmp))
+    expect_that(g1(pars)(y0, t1), is_identical_to(cmp))
+    expect_that(g2(pars)(y0, t1), not(is_identical_to(cmp)))
+    expect_that(g2(pars)(y0, t1), equals(cmp, tolerance=1e-6))
+
+    ## This is easier to use than the above (f3) when parameters change:
+    expect_that(g0(pars2)(y0, t1), is_identical_to(cmp2))
+  }
+})
