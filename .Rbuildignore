@@ -3,3 +3,4 @@ Makefile
 ignore
 .travis.yml
 extra
+check.sh

@@ -23,6 +23,7 @@ check: build
 	@rm -rf rodeint.Rcheck
 
 test:
+	./check.sh
 	make -C tests/testthat
 
 .PHONY: attributes document install clean build check
