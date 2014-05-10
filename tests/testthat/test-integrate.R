@@ -28,8 +28,6 @@ expected_tolerance <- function(type) {
 }
 
 test_that("integrate_const", {
-  ## TODO: A couple of things to try here:
-  ##   - less obscure message if dt is stats::dt (or other wrong type)
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
@@ -44,7 +42,7 @@ test_that("integrate_const", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (category in c("basic", "controlled")) {
+  for (category in stepper_categories()) {
     for (type in stepper_types(category)) {
       tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
@@ -109,7 +107,7 @@ test_that("integrate_n_steps", {
                       wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (category in c("basic", "controlled")) {
+  for (category in stepper_categories()) {
     for (type in stepper_types(category)) {
       tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
@@ -169,7 +167,7 @@ test_that("integrate_adaptive", {
   cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
                       pars)[-1,-1])
 
-  for (category in c("basic", "controlled")) {
+  for (category in stepper_categories()) {
     for (type in stepper_types(category)) {
       tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
@@ -237,7 +235,7 @@ test_that("integrate_times", {
   cmp <- unname(lsoda(y0, times, wrap.deSolve(harmonic.oscillator),
                       pars)[,-1])
 
-  for (category in c("basic", "controlled")) {
+  for (category in stepper_categories()) {
     for (type in stepper_types(category)) {
       tolerance <- expected_tolerance(type)
       s <- make_stepper(category, type)
