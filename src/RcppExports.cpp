@@ -196,7 +196,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // r_integrate_times_r
-Rcpp::NumericVector r_integrate_times_r(rodeint::stepper stepper, rodeint::target_r target, rodeint::target_r::state_type y, std::vector<double> times, double dt);
+Rcpp::NumericMatrix r_integrate_times_r(rodeint::stepper stepper, rodeint::target_r target, rodeint::target_r::state_type y, std::vector<double> times, double dt);
 RcppExport SEXP rodeint_r_integrate_times_r(SEXP stepperSEXP, SEXP targetSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
@@ -207,7 +207,7 @@ BEGIN_RCPP
         Rcpp::traits::input_parameter< rodeint::target_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::NumericVector __result = r_integrate_times_r(stepper, target, y, times, dt);
+        Rcpp::NumericMatrix __result = r_integrate_times_r(stepper, target, y, times, dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

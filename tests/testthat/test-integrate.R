@@ -216,6 +216,9 @@ test_that("integrate_adaptive", {
 
 test_that("integrate_times", {
   ## TODO: check times of length 0, 1, fails
+  ## TODO: check unsorted times
+  ## TODO: check decreasing times (with +ve and -ve dt)
+  ## TODO: check duplicated times
   pars <- 0.5
   ode_r <- target_r(harmonic.oscillator, pars)
   ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
@@ -242,9 +245,15 @@ test_that("integrate_times", {
 
       ## run with rodeint:
       y_r_s <- integrate_times(s, ode_r, y0, times, dt0)
-      expect_that(y_r_s, equals(cmp[nrow(cmp),], tolerance=tolerance,
+      ## NOTE: different to above!
+      expect_that(y_r_s, is_a("matrix"))
+      expect_that(y_r_s, equals(cmp, tolerance=tolerance,
                                 check.attributes=FALSE))
-      expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
+      expect_that(dim(y_r_s), equals(dim(cmp)))
+      expect_that(nrow(y_r_s), equals(length(times)))
+
+      expect_that(names(attributes(y_r_s)),
+                  equals(c("dim", "steps", "t", "y")))
 
       steps <- attr(y_r_s, "steps")
       tt    <- attr(y_r_s, "t")
@@ -252,13 +261,12 @@ test_that("integrate_times", {
 
       expect_that(steps, is_a("numeric"))
       expect_that(tt,    is_a("numeric"))
-      expect_that(yy,    is_a("matrix"))
+      expect_that(yy,    is_a("numeric"))
 
       expect_that(steps, is_more_than(length(tt) - 1))
-      expect_that(nrow(yy), equals(length(times)))
 
       expect_that(tt,    is_identical_to(times))
-      expect_that(yy,    equals(cmp, tolerance=tolerance))
+      expect_that(yy,    equals(cmp[nrow(cmp),], tolerance=tolerance))
 
       ## Check the compiled version:
       expect_that(integrate_times(s, ode_cpp, y0, times, dt0),

@@ -112,14 +112,13 @@ r_integrate_adaptive_class(rodeint::stepper stepper,
 }
 
 // [[Rcpp::export]]
-Rcpp::NumericVector
+Rcpp::NumericMatrix
 r_integrate_times_r(rodeint::stepper stepper,
                     rodeint::target_r target,
                     rodeint::target_r::state_type y,
                     std::vector<double> times,
                     double dt) {
-  return rodeint::r_integrate_times(stepper, target, y,
-                                    times, dt);
+  return rodeint::r_integrate_times(stepper, target, y, times, dt);
 }
 
 // [[Rcpp::export]]

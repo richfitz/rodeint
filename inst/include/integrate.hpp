@@ -253,6 +253,10 @@ r_integrate_adaptive(stepper stepper, Target target,
 // std::vector<double>::iterator types anyway.
 //
 // NOTE: In this case, state is *always* saved.
+//
+// NOTE: In this case the output format is different with the main
+// returned thing being the matrix of times, and the final state 'y'
+// now an attribute.
 template <typename Target>
 class stepper_integrate_times : boost::static_visitor<> {
   typedef std::vector<double>::const_iterator Iterator;
@@ -308,8 +312,12 @@ private:
   }
 };
 
+// NOTE: (again) that the return type here is different to all other
+// integrate functions.  save_state is always true, we always want 'y'
+// at the intermediate times, so the primary output is the matrix of
+// 'y' with the final state saved as an attribute "y".
 template <typename Target>
-Rcpp::NumericVector
+Rcpp::NumericMatrix
 r_integrate_times(stepper stepper, Target target,
                   typename Target::state_type y,
                   std::vector<double> times, double dt) {
@@ -318,7 +326,12 @@ r_integrate_times(stepper stepper, Target target,
   stepper_integrate_times<Target>
     vis(target, y, times.begin(), times.end(), dt);
   boost::apply_visitor(vis, stepper);
-  return integration_state(y, vis.state, true);
+
+  Rcpp::NumericMatrix ret = util::to_rcpp_matrix_by_row(vis.state.y);
+  ret.attr("steps") = vis.state.steps;
+  ret.attr("t")     = vis.state.t;
+  ret.attr("y")     = Rcpp::NumericVector(y.begin(), y.end());
+  return ret;
 }
 
 // 5. Convenience function
