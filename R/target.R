@@ -8,16 +8,25 @@ target <- setRefClass("target",
                           generator="function",
                           type="character",
                           ptr="externalptr",
-                          # This section is a hack
+                          # See explanation below
                           .get_pars="function",
                           .set_pars="function",
                           .derivs="function",
-                          # This is actually how it *should* be done.
+                          # These seem OK though
                           integrate_const="function",
                           integrate_n_steps="function",
                           integrate_adaptive="function",
                           integrate_times="function",
                           integrate_simple="function"))
+
+## An explanation: I'd like to have the get_pars/set_pars/derivs
+## methods dispatch fairly effiently to one of the three possible
+## functions.  However, the branching only needs to be done at
+## initialisation and after that things can't change (all fields are
+## locked).  So the guts of the three functions is set into a field
+## name beginning with a dot, which is initialised during
+## initialize().  The actual method just passes the parameter to this
+## function.
 
 ## Lock all fields:
 target$lock(names(target$fields()))
@@ -28,41 +37,25 @@ target$methods(initialize = function(generator, pars, deSolve_style=FALSE) {
   type      <<- obj$type
   ptr       <<- obj$ptr
 
-  ## NOTE: This is all so predictable that it could be done with
-  ## runtime function lookup during initialise.
-  if (type == "target_r") {
-    .get_pars <<- target_r__get_pars
-    .set_pars <<- target_r__set_pars
-    .derivs   <<- target_r__derivs
-    integrate_const    <<- r_integrate_const_r
-    integrate_n_steps  <<- r_integrate_n_steps_r
-    integrate_adaptive <<- r_integrate_adaptive_r
-    integrate_times    <<- r_integrate_times_r
-    integrate_simple   <<- r_integrate_simple_r
-  } else if (type == "target_cpp") {
-    .get_pars <<- target_cpp__get_pars
-    .set_pars <<- target_cpp__set_pars
-    .derivs   <<- target_cpp__derivs
-    integrate_const    <<- r_integrate_const_cpp
-    integrate_n_steps  <<- r_integrate_n_steps_cpp
-    integrate_adaptive <<- r_integrate_adaptive_cpp
-    integrate_times    <<- r_integrate_times_cpp
-    integrate_simple   <<- r_integrate_simple_cpp
-  } else if (type == "target_class") {
-    .get_pars <<- target_class__get_pars
-    .set_pars <<- target_class__set_pars
-    .derivs   <<- target_class__derivs
-    integrate_const    <<- r_integrate_const_class
-    integrate_n_steps  <<- r_integrate_n_steps_class
-    integrate_adaptive <<- r_integrate_adaptive_class
-    integrate_times    <<- r_integrate_times_class
-    integrate_simple   <<- r_integrate_simple_class
-  } else {
-    stop("Unsupported type (how did you even get here?)")
+  ## Becaue all the functions are named consistently, I'm using get()
+  ## over a big if/else list.  It's nicer to look at, though is
+  ## possibly a touch slower.
+  get_rodeint <- function(...) {
+    get(paste0(...), environment(target), mode="function", inherits=FALSE)
   }
+
+  .get_pars <<- get_rodeint(type, "__get_pars")
+  .set_pars <<- get_rodeint(type, "__set_pars")
+  .derivs   <<- get_rodeint(type, "__derivs")
+
+  ty <- sub("target_", "", type) # Abbrviated type :)
+  integrate_const    <<- get_rodeint("integrate_const_",    ty)
+  integrate_n_steps  <<- get_rodeint("integrate_n_steps_",  ty)
+  integrate_adaptive <<- get_rodeint("integrate_adaptive_", ty)
+  integrate_times    <<- get_rodeint("integrate_times_",    ty)
+  integrate_simple   <<- get_rodeint("integrate_simple_",   ty)
 })
 
-## This is related to the hack above
 target$methods(get_pars = function()     .get_pars(ptr))
 target$methods(set_pars = function(pars) .set_pars(ptr, pars))
 target$methods(derivs   = function(y, t) .derivs(ptr, y, t))
