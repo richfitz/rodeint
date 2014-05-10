@@ -58,7 +58,7 @@ rodeint::target_cpp example_harmonic_oscillator_cpp(std::vector<double> pars) {
     ##   Rcpp::sourceCpp("harmonic_oscillator_cpp.cpp", embeddedR=FALSE)
     library(rodeint)
 
-    obj <- target_cpp(example_harmonic_oscillator_cpp, 0.5)
+    obj <- target(example_harmonic_oscillator_cpp, 0.5)
     f <- make_integrate(obj, t0=0, dt=0.01)
     y <- c(0, 1)
 

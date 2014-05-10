@@ -10,7 +10,7 @@ integrate_n_steps(stepper, target, y, t0, dt, n, save_state = FALSE)
   soon).}
 
   \item{target}{The target system, created by
-  \code{\link{target_r}}}
+  \code{\link{target}}}
 
   \item{y}{Initial conditions}
 

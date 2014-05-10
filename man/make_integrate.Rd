@@ -8,8 +8,7 @@ make_integrate(target, ..., stepper = NULL, integrate = integrate_adaptive)
 make_integrate_pars(target, ...)
 }
 \arguments{
-  \item{target}{A target function (\code{\link{target_r}},
-  \code{\link{target_cpp}} or \code{\link{target_class}}).}
+  \item{target}{A target function (\code{\link{target}}).}
 
   \item{...}{Additional arguments to bind.  Setting
   \code{t0} when a system is time independent means

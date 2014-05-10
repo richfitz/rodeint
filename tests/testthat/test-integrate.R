@@ -15,9 +15,9 @@ expected_tolerance <- function(type) {
 
 test_that("integrate_const", {
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -77,9 +77,9 @@ test_that("integrate_const", {
 
 test_that("integrate_n_steps", {
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -137,9 +137,9 @@ test_that("integrate_n_steps", {
 
 test_that("integrate_adaptive", {
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -204,9 +204,9 @@ test_that("integrate_times", {
   ## TODO: check decreasing times (with +ve and -ve dt)
   ## TODO: check duplicated times
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -263,9 +263,9 @@ test_that("integrate_times", {
 
 test_that("integrate_simple", {
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -320,9 +320,9 @@ test_that("integrate_simple", {
 
 test_that("make_integrate", {
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0

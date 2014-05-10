@@ -6,7 +6,7 @@ integrate_simple(target, y, t0, t1, dt, save_state = FALSE)
 }
 \arguments{
   \item{target}{The target system, created by
-  \code{\link{target_r}}}
+  \code{\link{target}}}
 
   \item{y}{Initial conditions}
 

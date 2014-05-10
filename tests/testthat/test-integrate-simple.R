@@ -4,7 +4,7 @@ context("integrate_simple")
 
 test_that("Time ends at multiple of dt", {
   pars <- 0.5
-  target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  target <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 1
@@ -26,7 +26,7 @@ test_that("Time ends at multiple of dt", {
 
 test_that("Time ends in the middle of a step", {
   pars <- 0.5
-  target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  target <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 1
@@ -66,7 +66,7 @@ test_that("Time ends in the middle of a step", {
 ## tl;dr sign(t1 - t0) == sign(dt) or world of pain
 test_that("Time runs backwards", {
   pars <- 0.5
-  target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  target <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 1
@@ -112,7 +112,7 @@ test_that("Time runs backwards", {
 
 test_that("Argument handling for errored input", {
   pars <- 0.5
-  target <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
+  target <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
 
   y0 <- c(0, 1)
   t0 <- 1

@@ -56,7 +56,7 @@ test_that("copying", {
 
 test_that("deSolve interface", {
   pars <- 0.5
-  obj <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  obj <- target(rodeint:::test_harmonic_oscillator_class, pars)
   y0 <- c(0, 1)
   t0 <- 0.0
   info <- obj$deSolve_info()

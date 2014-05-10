@@ -39,7 +39,7 @@ rodeint::target_class example_harmonic_oscillator_class(double pars) {
     ##   Rcpp::sourceCpp("harmonic_oscillator_class.cpp")
     library(rodeint)
 
-    obj <- target_class(example_harmonic_oscillator_class, 0.5)
+    obj <- target(example_harmonic_oscillator_class, 0.5)
     f <- make_integrate(obj, t0=0, dt=0.01)
     y <- c(0, 1)
 

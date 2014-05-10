@@ -18,7 +18,7 @@
 ##' @param stepper A \code{stepper} object, created by
 ##' \code{\link{stepper}} (other types will be supported
 ##' soon).
-##' @param target The target system, created by \code{\link{target_r}}
+##' @param target The target system, created by \code{\link{target}}
 ##' @param y Initial conditions
 ##' @param t0 Time to start the integration
 ##' @param t1 Time to finish the integration
@@ -37,8 +37,8 @@ integrate_const <- function(stepper, target, y, t0, t1, dt,
   assert_scalar_numeric(t0)
   assert_scalar_numeric(t1)
   assert_scalar_numeric(dt)
-  target$odeint_integrate_const(stepper$ptr, target$ptr, y, t0, t1, dt,
-                                save_state)
+  target$integrate_const(stepper$ptr, target$ptr, y, t0, t1, dt,
+                         save_state)
 }
 
 ##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
@@ -47,7 +47,7 @@ integrate_const <- function(stepper, target, y, t0, t1, dt,
 ##' @param stepper A \code{stepper} object, created by
 ##' \code{\link{stepper}} (other types will be supported
 ##' soon).
-##' @param target The target system, created by \code{\link{target_r}}
+##' @param target The target system, created by \code{\link{target}}
 ##' @param y Initial conditions
 ##' @param t0 Time to start the integration
 ##' @param dt Step size
@@ -64,8 +64,8 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
   assert_scalar_numeric(t0)
   assert_scalar_numeric(dt)
   assert_scalar_size(n)
-  target$odeint_integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n,
-                                  save_state)
+  target$integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n,
+                           save_state)
 }
 
 ##' Integrate a system of ODEs adaptively.
@@ -74,7 +74,7 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
 ##' @param stepper A \code{stepper} object, created by
 ##' \code{\link{stepper}} (other types will be supported
 ##' soon).
-##' @param target The target system, created by \code{\link{target_r}}
+##' @param target The target system, created by \code{\link{target}}
 ##' @param y Initial conditions
 ##' @param t0 Time to start the integration
 ##' @param t1 Time to finish the integration
@@ -92,8 +92,8 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
   assert_scalar_numeric(t0)
   assert_scalar_numeric(t1)
   assert_scalar_numeric(dt)
-  target$odeint_integrate_adaptive(stepper$ptr, target$ptr, y, t0, t1, dt,
-                                   save_state)
+  target$integrate_adaptive(stepper$ptr, target$ptr, y, t0, t1, dt,
+                            save_state)
 }
 
 ##' Integrate a system of ODEs at fixed times (perhaps adaptively).
@@ -104,7 +104,7 @@ integrate_adaptive <- function(stepper, target, y, t0, t1, dt,
 ##' @param stepper A \code{stepper} object, created by
 ##' \code{\link{stepper}} (other types will be supported
 ##' soon).
-##' @param target The target system, created by \code{\link{target_r}}
+##' @param target The target system, created by \code{\link{target}}
 ##' @param y Initial conditions
 ##' @param times Vector of times.  First time is start time, last time
 ##' is end time.
@@ -121,7 +121,7 @@ integrate_times <- function(stepper, target, y, times, dt) {
     stop("Must provide at least two times")
   }
   assert_scalar_numeric(dt)
-  target$odeint_integrate_times(stepper$ptr, target$ptr, y, times, dt)
+  target$integrate_times(stepper$ptr, target$ptr, y, times, dt)
 }
 
 ##' Integrate a system of ordinary differential equations.  This is
@@ -129,7 +129,7 @@ integrate_times <- function(stepper, target, y, times, dt) {
 ##' the final function used.
 ##'
 ##' @title Integrate an ODE System
-##' @param target The target system, created by \code{\link{target_r}}
+##' @param target The target system, created by \code{\link{target}}
 ##' @param y Initial conditions
 ##' @param t0 Time to start the integration
 ##' @param t1 Time to finish the integration (not sure if we hit this
@@ -145,8 +145,7 @@ integrate_simple <- function(target, y, t0, t1, dt,
   assert_scalar_numeric(t0)
   assert_scalar_numeric(t1)
   assert_scalar_numeric(dt)
-  target$odeint_integrate_simple(target$ptr, y, t0, t1, dt,
-                                 save_state)
+  target$integrate_simple(target$ptr, y, t0, t1, dt, save_state)
 }
 
 ##' Helper function for binding targets, steppers and integration
@@ -158,8 +157,7 @@ integrate_simple <- function(target, y, t0, t1, dt,
 ##' \code{odeint}.
 ##'
 ##' @title Make Integration Function
-##' @param target A target function (\code{\link{target_r}},
-##' \code{\link{target_cpp}} or \code{\link{target_class}}).
+##' @param target A target function (\code{\link{target}}).
 ##' @param ... Additional arguments to bind.  Setting \code{t0} when a
 ##' system is time independent means \code{t1} will be a function of
 ##' elapsed time, which can be useful.  All integrate functions take a

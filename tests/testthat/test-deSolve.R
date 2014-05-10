@@ -4,9 +4,9 @@ context("deSolve interface")
 
 test_that("deSolve", {
   pars <- 0.5
-  ode_r <- target_r(harmonic.oscillator, pars)
-  ode_cpp <- target_cpp(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- target(harmonic.oscillator, pars)
+  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
+  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0

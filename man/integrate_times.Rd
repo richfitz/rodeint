@@ -10,7 +10,7 @@ integrate_times(stepper, target, y, times, dt)
   soon).}
 
   \item{target}{The target system, created by
-  \code{\link{target_r}}}
+  \code{\link{target}}}
 
   \item{y}{Initial conditions}
 
