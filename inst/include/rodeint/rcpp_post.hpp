@@ -10,16 +10,19 @@ namespace Rcpp {
 template<>
 inline SEXP wrap(const rodeint::target_class& obj) {
   XPtr<rodeint::target_class> ret(new rodeint::target_class(obj), true);
+  ret.attr("type") = "target_class";
   return wrap(ret);
 }
 template<>
 inline SEXP wrap(const rodeint::target_cpp& obj) {
   XPtr<rodeint::target_cpp> ret(new rodeint::target_cpp(obj), true);
+  ret.attr("type") = "target_cpp";
   return wrap(ret);
 }
 template<>
 inline SEXP wrap(const rodeint::target_r& obj) {
   XPtr<rodeint::target_r> ret(new rodeint::target_r(obj), true);
+  ret.attr("type") = "target_r";
   return wrap(ret);
 }
 

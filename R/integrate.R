@@ -183,6 +183,7 @@ make_integrate <- function(target, ..., stepper=NULL,
   assert_stepper(stepper)
   assert_target(target)
   target <- target$copy()
+  ## TODO: Option to rewrite t1 -> t if t0 = 0?
   partially_apply(integrate, stepper=stepper, target=target, ...)
 }
 
