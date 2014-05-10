@@ -12,3 +12,19 @@ harmonic.oscillator <- function(t, y, pars) {
 ## Wrapper to turn functions like harmonic.oscillator into deSolve
 ## compatible ones.
 wrap.deSolve <- function(f) function(...) list(f(...))
+
+last_row <- function(m) {
+  m[nrow(m),]
+}
+
+is_in_range <- function(a, b) {
+  collapse <- function(x) {
+    if (length(x) == 1) paste(x) else
+    sprintf("{%s}", paste(x, collapse=", "))
+  }
+  function(x) {
+    ok <- sign(x - a) == sign(b - x)
+    expectation(all(ok), sprintf("is not in range [%s, %s]",
+                                 collapse(a), collapse(b)))
+  }
+}
