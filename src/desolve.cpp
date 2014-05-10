@@ -1,4 +1,4 @@
-#include "rodeint_target.h"
+#include "rodeint.h"
 #include <R_ext/Rdynload.h>
 
 namespace rodeint {

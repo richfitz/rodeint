@@ -14,15 +14,27 @@
 
 #include <RcppCommon.h>
 
-// The target_r and target_cpp definitions are done elsewhere
-#include "rcpp_as_wrap_pre_target.hpp"
+// Forward declare a list of classes to expose, all within the rodeint
+// namespace (not needed for files included before this one in
+// rodeint.h)
+namespace rodeint {
+class target_class;
+class target_cpp;
+class target_r;
+}
 
 namespace Rcpp {
-// A 'wrap' prototype for each class:
-template<> SEXP wrap(const rodeint::stepper&);
+template<> SEXP wrap(const rodeint::target_class&);
+template<> SEXP wrap(const rodeint::target_cpp&);
+template<> SEXP wrap(const rodeint::target_r&);
+template<> rodeint::target_class as(SEXP);
+template<> rodeint::target_cpp as(SEXP);
+template<> rodeint::target_r as(SEXP);
 
-// An 'as' prototype for each class:
+#ifndef RODEINT_TARGET_ONLY
+template<> SEXP wrap(const rodeint::stepper&);
 template<> rodeint::stepper as(SEXP);
+#endif
 }
 
 #endif

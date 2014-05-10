@@ -5,13 +5,42 @@
 // prototypes
 #include "rodeint.h"
 
-// Now it should be safe to include Rcpp.h
-#include <Rcpp.h>
-
-// The target_r and target_cpp definitions are done elsewhere
-#include "rcpp_as_wrap_post_target.hpp"
-
 namespace Rcpp {
+// 'wrap' definitions for each class:
+template<>
+inline SEXP wrap(const rodeint::target_class& obj) {
+  XPtr<rodeint::target_class> ret(new rodeint::target_class(obj), true);
+  return wrap(ret);
+}
+template<>
+inline SEXP wrap(const rodeint::target_cpp& obj) {
+  XPtr<rodeint::target_cpp> ret(new rodeint::target_cpp(obj), true);
+  return wrap(ret);
+}
+template<>
+inline SEXP wrap(const rodeint::target_r& obj) {
+  XPtr<rodeint::target_r> ret(new rodeint::target_r(obj), true);
+  return wrap(ret);
+}
+
+// 'as' definitions for each class:
+template<>
+inline rodeint::target_class as(SEXP obj) {
+  XPtr<rodeint::target_class> xp(obj);
+  return *xp;
+}
+template<>
+inline rodeint::target_cpp as(SEXP obj) {
+  XPtr<rodeint::target_cpp> xp(obj);
+  return *xp;
+}
+template<>
+inline rodeint::target_r as(SEXP obj) {
+  XPtr<rodeint::target_r> xp(obj);
+  return *xp;
+}
+
+#ifndef RODEINT_TARGET_ONLY
 // 'wrap' definitions for each class:
 template<>
 inline SEXP wrap(const rodeint::stepper& obj) {
@@ -22,10 +51,12 @@ inline SEXP wrap(const rodeint::stepper& obj) {
 
 // 'as' definitions for each class:
 template<>
-rodeint::stepper as(SEXP obj) {
+inline rodeint::stepper as(SEXP obj) {
   XPtr<rodeint::stepper> xp(obj);
   return *xp;
 }
+#endif
+
 }
 
 #endif
