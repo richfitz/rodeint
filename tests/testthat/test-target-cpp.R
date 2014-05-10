@@ -77,7 +77,7 @@ test_that("deSolve interface", {
 ##   ## because it can't find BH, if the BH version is set.  We *do*
 ##   ## depend on (>= 1.54.0-1), and that should follow BH.  For now I've
 ##   ## stripped the version dependency, but this looks like a Rcpp bug.
-##   file.cpp <- system.file("examples/harmonic_oscillator.cpp",
+##   file.cpp <- system.file("examples/harmonic_oscillator_functions.cpp",
 ##                           package="rodeint")
 ##   Rcpp::sourceCpp(code=paste(readLines(file.cpp), collapse="\n"))
 ##   pars <- 0.5

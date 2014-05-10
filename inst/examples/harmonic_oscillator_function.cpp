@@ -33,11 +33,14 @@ void harmonic_oscillator(const std::vector<double>& y,
 // attributes.  As such, it must follow the rules set by Rcpp
 // attributes (fully qualified return type, not in a namespace, etc).
 //
-// The 'pars' vector is initialised to the expected length -- that
-// will be used to indicate the required length.
+// Can do parameter checking here -- in particular the size of the
+// first-given parameter set is assumed always to be the correct size,
+// so validate it here.
 
 // [[Rcpp::export]]
-rodeint::target_cpp example_harmonic_oscillator() {
-  rodeint::target_cpp::pars_type pars(1); // establishes required length
+rodeint::target_cpp example_harmonic_oscillator(std::vector<double> pars) {
+  if (pars.size() != 1) {
+    Rcpp::stop("Expected single parameter");
+  }
   return rodeint::target_cpp(&examples::harmonic_oscillator, pars);
 }

@@ -113,11 +113,11 @@ target_r__set_pars <- function(target, pars) {
     invisible(.Call('rodeint_target_r__set_pars', PACKAGE = 'rodeint', target, pars))
 }
 
-test_harmonic_oscillator_cpp <- function() {
-    .Call('rodeint_test_harmonic_oscillator_cpp', PACKAGE = 'rodeint')
+test_harmonic_oscillator_cpp <- function(pars) {
+    .Call('rodeint_test_harmonic_oscillator_cpp', PACKAGE = 'rodeint', pars)
 }
 
-test_harmonic_oscillator_class <- function(p) {
-    .Call('rodeint_test_harmonic_oscillator_class', PACKAGE = 'rodeint', p)
+test_harmonic_oscillator_class <- function(pars) {
+    .Call('rodeint_test_harmonic_oscillator_class', PACKAGE = 'rodeint', pars)
 }
 

@@ -511,13 +511,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_harmonic_oscillator_cpp
-rodeint::target_cpp test_harmonic_oscillator_cpp();
-RcppExport SEXP rodeint_test_harmonic_oscillator_cpp() {
+rodeint::target_cpp test_harmonic_oscillator_cpp(std::vector<double> pars);
+RcppExport SEXP rodeint_test_harmonic_oscillator_cpp(SEXP parsSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        rodeint::target_cpp __result = test_harmonic_oscillator_cpp();
+        Rcpp::traits::input_parameter< std::vector<double> >::type pars(parsSEXP );
+        rodeint::target_cpp __result = test_harmonic_oscillator_cpp(pars);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -525,14 +526,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // test_harmonic_oscillator_class
-rodeint::target_class test_harmonic_oscillator_class(double p);
-RcppExport SEXP rodeint_test_harmonic_oscillator_class(SEXP pSEXP) {
+rodeint::target_class test_harmonic_oscillator_class(double pars);
+RcppExport SEXP rodeint_test_harmonic_oscillator_class(SEXP parsSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< double >::type p(pSEXP );
-        rodeint::target_class __result = test_harmonic_oscillator_class(p);
+        Rcpp::traits::input_parameter< double >::type pars(parsSEXP );
+        rodeint::target_class __result = test_harmonic_oscillator_class(pars);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

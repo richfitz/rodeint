@@ -83,10 +83,7 @@ target_cpp$lock(c("generator", "ptr"))
 
 target_cpp$methods(initialize = function(generator, pars) {
   generator <<- generator
-  ptr <<- generator()
-  ## TODO: Does this determine if the class is really a ptr?
-  ## TODO: Can I use R class's set_pars(pars) directly?
-  target_cpp__set_pars(ptr, pars)
+  ptr <<- generator(pars)
 })
 
 target_cpp$methods(pars = function() {
@@ -132,7 +129,6 @@ target_class$lock(c("generator", "ptr"))
 
 target_class$methods(initialize = function(generator, pars) {
   generator <<- generator
-  ## TODO: Backport this style to the cpp version?
   ptr <<- generator(pars)
   ## TODO: Does this determine if the class is really a ptr?
 })
