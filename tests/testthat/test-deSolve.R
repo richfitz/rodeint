@@ -13,7 +13,7 @@ test_that("deSolve", {
   t1 <- 1
   dt0 <- 0.05
 
-  cmp <- lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator), pars)
+  cmp <- lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve, pars)
 
   info_r <- ode_r$deSolve_info()
   info_cpp <- ode_cpp$deSolve_info()

@@ -25,7 +25,7 @@ test_that("integrate_const", {
   dt0 <- 0.05
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
+  cmp <- unname(lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve,
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
@@ -89,7 +89,7 @@ test_that("integrate_n_steps", {
 
   ## Here is the solution from deSolve, using lsoda:
   cmp <- unname(lsoda(y0, c(t0, t1),
-                      wrap.deSolve(harmonic.oscillator),
+                      harmonic.oscillator.deSolve,
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
@@ -148,7 +148,7 @@ test_that("integrate_adaptive", {
   tol <- 1e-6
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
+  cmp <- unname(lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve,
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
@@ -219,7 +219,7 @@ test_that("integrate_times", {
   times <- sort(c(t0, t1, runif(5, t0, t1)))
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, times, wrap.deSolve(harmonic.oscillator),
+  cmp <- unname(lsoda(y0, times, harmonic.oscillator.deSolve,
                       pars)[,-1])
 
   for (category in stepper_categories()) {
@@ -273,7 +273,7 @@ test_that("integrate_simple", {
   dt <- 0.1
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), wrap.deSolve(harmonic.oscillator),
+  cmp <- unname(lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve,
                       pars)[-1,-1])
 
   tolerance <- expected_tolerance("runge_kutta_dopri5")

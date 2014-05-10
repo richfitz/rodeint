@@ -16,7 +16,7 @@ test_that("derivatives", {
   y0 <- c(0, 1)
   t0 <- 0.0
   expect_that(obj$derivs(y0, t0),
-              is_identical_to(harmonic.oscillator(t0, y0, pars)))
+              is_identical_to(harmonic.oscillator(y0, t0, pars)))
 })
 
 test_that("parameters", {

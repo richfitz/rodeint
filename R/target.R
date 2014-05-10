@@ -5,13 +5,19 @@
 ##' @export
 target_r <- setRefClass("target_r",
                         fields=list(
-                          derivs.R="function",
+                          derivs_R="function",
                           ptr="externalptr"))
-target_r$lock(c("derivs.R", "ptr"))
+target_r$lock(c("derivs_R", "ptr"))
 
-target_r$methods(initialize = function(derivs, pars) {
-  derivs.R <<- derivs
-  ptr <<- target_r__ctor(derivs, pars)
+target_r$methods(initialize = function(derivs, pars, deSolve_style=FALSE) {
+  if (deSolve_style) {
+    derivs_deSolve <- derivs
+    derivs <- function(y, t, pars) {
+      derivs_deSolve(t, y, pars)[[1]]
+    }
+  }
+  derivs_R <<- derivs
+  ptr <<- target_r__ctor(derivs_R, pars)
 })
 
 target_r$methods(pars = function() {
@@ -41,14 +47,13 @@ target_r$methods(derivs = function(y, t) {
 ## more useful generally?
 
 target_r$methods(copy=function() {
-  target_r$new(derivs.R, pars())
+  target_r$new(derivs_R, pars())
 })
 
 target_r$methods(deSolve_func = function() {
-  ## TODO: This will change if the argument lists do.
   target_pars <- pars()
   function(t, y, ignored) { # we never allow extra args
-    list(derivs.R(t, y, target_pars))
+    list(derivs_R(y, t, target_pars))
   }
 })
 
@@ -57,13 +62,6 @@ target_r$methods(deSolve_info = function() {
        initfunc=NULL, initpar=NULL)
 })
 
-## TODO: Perhaps use the new partial application code here to
-## partially apply the target into the function?:
-##   partially_apply(r_integrate_const_r, target=ptr)
-## Or is there an equivalent of a *static* method for the class that
-## might be less cluttered?  Doing this at the same time as setting a
-## stepper is the way forward I think, and then returning *copy* of
-## the target.
 target_r$methods(odeint_integrate_const    = r_integrate_const_r)
 target_r$methods(odeint_integrate_n_steps  = r_integrate_n_steps_r)
 target_r$methods(odeint_integrate_adaptive = r_integrate_adaptive_r)
@@ -130,7 +128,6 @@ target_class$lock(c("generator", "ptr"))
 target_class$methods(initialize = function(generator, pars) {
   generator <<- generator
   ptr <<- generator(pars)
-  ## TODO: Does this determine if the class is really a ptr?
 })
 
 target_class$methods(pars = function() {

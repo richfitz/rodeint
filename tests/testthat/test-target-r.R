@@ -6,7 +6,7 @@ test_that("construction", {
   pars <- 0.5
   obj <- target_r(harmonic.oscillator, pars)
   expect_that(obj, is_a("target_r"))
-  expect_that(obj$derivs.R <- harmonic.oscillator,
+  expect_that(obj$derivs_R <- harmonic.oscillator,
               throws_error("read-only"))
   expect_that(obj$ptr <- obj$ptr,
               throws_error("read-only"))
@@ -18,7 +18,19 @@ test_that("derivatives", {
   y0 <- c(0, 1)
   t0 <- 0.0
   expect_that(obj$derivs(y0, t0),
-              is_identical_to(harmonic.oscillator(t0, y0, pars)))
+              is_identical_to(harmonic.oscillator(y0, t0, pars)))
+})
+
+test_that("construction from deSolve type", {
+  pars <- 0.5
+  obj <- target_r(harmonic.oscillator.deSolve, pars, TRUE)
+  expect_that(obj, is_a("target_r"))
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  expect_that(obj$derivs(y0, t0),
+              is_identical_to(harmonic.oscillator(y0, t0, pars)))
+  expect_that(obj$deSolve_func()(t0, y0, ignored),
+              is_identical_to(harmonic.oscillator.deSolve(t0, y0, pars)))
 })
 
 test_that("parameters", {
@@ -59,7 +71,7 @@ test_that("deSolve interface", {
   y0 <- c(0, 1)
   t0 <- 0.0
   expect_that(obj$deSolve_func()(t0, y0, pars),
-              is_identical_to(wrap.deSolve(harmonic.oscillator)(t0, y0, pars)))
+              is_identical_to(harmonic.oscillator.deSolve(t0, y0, pars)))
 
   info <- obj$deSolve_info()
   expect_that(names(info),
