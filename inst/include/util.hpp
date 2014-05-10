@@ -15,7 +15,6 @@ Rcpp::NumericMatrix
 to_rcpp_matrix_by_col(const std::vector< std::vector<double> >& x);
 Rcpp::NumericMatrix
 to_rcpp_matrix_by_row(const std::vector< std::vector<double> >& x);
-void check_length(size_t received, size_t expected);
 
 template<typename T>
 std::string to_string(T x) {
@@ -44,6 +43,13 @@ bool is_sorted(ForwardIterator first, ForwardIterator last,
     ++first;
   }
   return true;
+}
+
+inline void check_length(size_t recieved, size_t expected) {
+  if (expected != recieved)
+    Rcpp::stop("Incorrect length input; expected " +
+               to_string(expected) + ", recieved " +
+               to_string(recieved));
 }
 
 }

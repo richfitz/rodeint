@@ -61,13 +61,6 @@ to_rcpp_matrix_by_row(const std::vector< std::vector<double> >& x) {
   return ret;
 }
 
-void check_length(size_t received, size_t expected) {
-  if (expected != received)
-    Rcpp::stop("Incorrect length input; expected " +
-               to_string(expected) + ", received " +
-               to_string(received));
-}
-
 size_t safe_size_t_from_r(int n) {
   if (n < 0) {
     Rcpp::stop("Required a non-negative value");

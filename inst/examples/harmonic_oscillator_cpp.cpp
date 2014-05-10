@@ -47,9 +47,7 @@ void harmonic_oscillator(const std::vector<double>& y,
 
 // [[Rcpp::export]]
 rodeint::target_cpp example_harmonic_oscillator_cpp(std::vector<double> pars) {
-  if (pars.size() != 1) {
-    Rcpp::stop("Expected single parameter");
-  }
+  rodeint::util::check_length(pars.size(), 1);
   return rodeint::target_cpp(&examples::harmonic_oscillator, pars);
 }
 
