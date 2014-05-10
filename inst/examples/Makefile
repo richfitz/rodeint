@@ -1,0 +1,2 @@
+all:
+	Rscript "run.R"
