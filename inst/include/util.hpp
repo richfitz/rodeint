@@ -25,6 +25,8 @@ std::string to_string(T x) {
   return o.str();
 }
 
+size_t safe_size_t_from_r(int n);
+
 }
 }
 

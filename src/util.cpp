@@ -68,6 +68,13 @@ void check_length(size_t received, size_t expected) {
                to_string(received));
 }
 
+size_t safe_size_t_from_r(int n) {
+  if (n < 0) {
+    Rcpp::stop("Required a non-negative value");
+  }
+  return static_cast<size_t>(n);
+}
+
 }
 
 }

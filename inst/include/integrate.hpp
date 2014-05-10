@@ -168,7 +168,10 @@ Rcpp::NumericVector
 r_integrate_n_steps(stepper stepper, Target target,
                     typename Target::state_type y,
                     double t0, double dt, size_t n, bool save_state) {
-  // No need to check dt here
+  // Different check on dt here, compared with the (t0, t1) integrators.
+  if (dt == 0.0) {
+    Rcpp::stop("dt cannot be zero");
+  }
   stepper_integrate_n_steps<Target>
     vis(target, y, t0, dt, n, save_state);
   boost::apply_visitor(vis, stepper);

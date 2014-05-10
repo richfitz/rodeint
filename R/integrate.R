@@ -63,7 +63,7 @@ integrate_n_steps <- function(stepper, target, y, t0, dt, n,
   assert_numeric(y)
   assert_scalar_numeric(t0)
   assert_scalar_numeric(dt)
-  assert_scalar(n) # TODO: also check interish ness
+  assert_scalar_size(n)
   target$odeint_integrate_n_steps(stepper$ptr, target$ptr, y, t0, dt, n,
                                   save_state)
 }

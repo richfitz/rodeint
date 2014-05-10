@@ -103,6 +103,9 @@ test_that("Time runs backwards", {
       y_r_s_1 <- integrate_const(s, target, y0, t0, t1,    dt, TRUE)
       y_r_s_2 <- integrate_const(s, target, y0, t0, t1+dt, dt, TRUE)
 
+      expect_that(attr(y_r_s_1, "t"),
+                  equals(seq(t0, t1, by=dt)))
+
       if (interactive()) {
         matplot(attr(y_r_s_2, "t"), attr(y_r_s_2, "y"), type="o",
                 pch=1, cex=.5, xlab="t", ylab="y",
