@@ -95,6 +95,7 @@ Rcpp::NumericVector
 r_integrate_const(stepper stepper, Target target,
                   typename Target::state_type y,
                   double t0, double t1, double dt, bool save_state) {
+  check_dt(t0, t1, dt);
   stepper_integrate_const<Target>
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
@@ -167,6 +168,7 @@ Rcpp::NumericVector
 r_integrate_n_steps(stepper stepper, Target target,
                     typename Target::state_type y,
                     double t0, double dt, size_t n, bool save_state) {
+  // No need to check dt here
   stepper_integrate_n_steps<Target>
     vis(target, y, t0, dt, n, save_state);
   boost::apply_visitor(vis, stepper);
@@ -237,6 +239,7 @@ Rcpp::NumericVector
 r_integrate_adaptive(stepper stepper, Target target,
                      typename Target::state_type y,
                      double t0, double t1, double dt, bool save_state) {
+  check_dt(t0, t1, dt);
   stepper_integrate_adaptive<Target>
     vis(target, y, t0, t1, dt, save_state);
   boost::apply_visitor(vis, stepper);
@@ -310,6 +313,8 @@ Rcpp::NumericVector
 r_integrate_times(stepper stepper, Target target,
                   typename Target::state_type y,
                   std::vector<double> times, double dt) {
+  // TODO: Check if times are not sorted!
+  check_dt(times.front(), times.back(), dt);
   stepper_integrate_times<Target>
     vis(target, y, times.begin(), times.end(), dt);
   boost::apply_visitor(vis, stepper);
@@ -324,8 +329,9 @@ r_integrate_simple(Target target,
                    double t0, double t1, double dt,
                    bool save_state=false) {
   using boost::numeric::odeint::integrate;
-  state_saver<typename Target::state_type> state;
+  check_dt(t0, t1, dt);
 
+  state_saver<typename Target::state_type> state;
   if (save_state) {
     state.steps = integrate(target, y, t0, t1, dt, state.obs);
   } else {

@@ -6,6 +6,9 @@
 #include <sstream> // std::stringstream
 
 namespace rodeint {
+
+void check_dt(double t0, double t1, double dt);
+
 namespace util {
 
 Rcpp::NumericMatrix 
