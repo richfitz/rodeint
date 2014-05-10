@@ -66,3 +66,10 @@ test_that("deSolve interface", {
   expect_that(info$initfunc, is_identical_to("deSolve_initfunc"))
   expect_that(info$initpar,  is_a("externalptr"))
 })
+
+test_that("construction from deSolve type", {
+  pars <- 0.5
+  ## This would be the wrong generator anyway...
+  expect_that(target(rodeint:::test_harmonic_oscillator_cpp, pars, TRUE),
+              throws_error("Not yet supported"))
+})

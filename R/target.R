@@ -182,24 +182,11 @@ target <- setRefClass("target",
 ## Lock all fields:
 target$lock(names(target$fields()))
 
-target$methods(initialize = function(generator, pars) {
-  generator <<- generator
-
-  ## First step is to look at the provided function.  A single
-  ## parameter function is assumed to be a generator.  A three
-  ## parameter function is assumed to be a target function.
-  ##
-  ## TODO: factor this out as ptr_from_generator.
-  if (length(formals(generator)) == 3) { # R function
-    ptr <<- target_r__ctor(generator, pars)
-  } else if (length(formals(generator)) == 1) {
-    ptr <<- generator(pars)
-  }
-
-  type <<- attr(ptr, "type")
-  if (is.null(type)) {
-    stop("Did not recieve a valid generator type")
-  }
+target$methods(initialize = function(generator, pars, deSolve_style=FALSE) {
+  obj <- generator_init(generator, pars, deSolve_style)
+  generator <<- obj$generator
+  type      <<- obj$type
+  ptr       <<- obj$ptr
 
   ## NOTE: This is all so predictable that it could be done with
   ## runtime function lookup during initialise.
@@ -261,3 +248,30 @@ target$methods(deSolve_info = function() {
   }
   list(func=func, dllname=dllname, initfunc=initfunc, initpar=initpar)
 })
+
+generator_init <- function(generator, pars, deSolve_style) {
+  ## First step is to look at the provided function.  A single
+  ## parameter function is assumed to be a generator.  A three
+  ## parameter function is assumed to be a target function.
+  if (length(formals(generator)) == 3) {
+    if (deSolve_style) {
+      derivs_deSolve <- generator
+      generator <- function(y, t, pars) {
+        derivs_deSolve(t, y, pars)[[1]]
+      }
+    }
+    ptr <<- target_r__ctor(generator, pars)
+  } else if (length(formals(generator)) == 1) {
+    if (deSolve_style) {
+      stop("Not yet supported")
+    }
+    ptr <<- generator(pars)
+  }
+
+  type=attr(ptr, "type")
+  if (is.null(type)) {
+    stop("Did not recieve a valid generator type")
+  }
+
+  list(type=type, generator=generator, ptr=ptr)
+}
