@@ -5,8 +5,8 @@
 ##' @export
 target_r <- setRefClass("target_r",
                         fields=list(
-                          "derivs.R"="function",
-                          "ptr"="externalptr"))
+                          derivs.R="function",
+                          ptr="externalptr"))
 target_r$lock(c("derivs.R", "ptr"))
 
 target_r$methods(initialize = function(derivs, pars) {
@@ -24,6 +24,10 @@ target_r$methods(set_pars = function(pars) {
 
 target_r$methods(derivs = function(y, t) {
   target_r__derivs(ptr, y, t)
+})
+
+target_r$methods(copy=function() {
+  target_r$new(derivs.R, pars())
 })
 
 target_r$methods(deSolve_func = function() {
@@ -59,8 +63,8 @@ target_r$methods(odeint_integrate_simple   = r_integrate_simple_r)
 ##' @export
 target_cpp <- setRefClass("target_cpp",
                         fields=list(
-                          "generator"="function",
-                          "ptr"="externalptr"))
+                          generator="function",
+                          ptr="externalptr"))
 target_cpp$lock(c("generator", "ptr"))
 
 target_cpp$methods(initialize = function(generator, pars) {
@@ -86,6 +90,10 @@ target_cpp$methods(derivs = function(y, t) {
   target_cpp__derivs(ptr, y, t)
 })
 
+target_cpp$methods(copy=function() {
+  target_cpp$new(generator, pars())
+})
+
 target_cpp$methods(deSolve_info = function() {
   list(func="deSolve_func_target_cpp", dllname="rodeint",
        initfunc="deSolve_initfunc", initpar=ptr)
@@ -104,8 +112,8 @@ target_cpp$methods(odeint_integrate_simple   = r_integrate_simple_cpp)
 ##' @export
 target_class <- setRefClass("target_class",
                             fields=list(
-                              "generator"="function",
-                              "ptr"="externalptr"))
+                              generator="function",
+                              ptr="externalptr"))
 target_class$lock(c("generator", "ptr"))
 
 target_class$methods(initialize = function(generator, pars) {
@@ -125,6 +133,10 @@ target_class$methods(set_pars = function(pars) {
 
 target_class$methods(derivs = function(y, t) {
   target_class__derivs(ptr, y, t)
+})
+
+target_class$methods(copy=function() {
+  target_class$new(generator, pars())
 })
 
 target_class$methods(deSolve_info = function() {

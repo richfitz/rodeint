@@ -28,3 +28,12 @@ is_in_range <- function(a, b) {
                                  collapse(a), collapse(b)))
   }
 }
+
+is_same_pointer <- function(ptr) {
+  name <- deparse(substitute(ptr))
+  function(x) {
+    expectation(identical(x, ptr),
+                paste("is not the same pointer as", name),
+                paste("is the same pointer as", name))
+  }
+}

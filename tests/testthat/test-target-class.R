@@ -31,6 +31,27 @@ test_that("parameters", {
   expect_that(obj$set_pars(numeric(0)),   throws_error())
 })
 
+test_that("copying", {
+  pars <- 0.5
+  obj <- target_class(rodeint:::test_harmonic_oscillator_class, pars)
+  expect_that(obj$pars(), is_identical_to(pars))
+
+  obj.same <- obj        # not a copy
+  obj.copy <- obj$copy() # is a copy
+
+  expect_that(obj.same$ptr, is_same_pointer(obj$ptr))
+  expect_that(obj.copy$ptr, not(is_same_pointer(obj$ptr)))
+
+  pars2 <- pi
+  obj$set_pars(pars2)
+  expect_that(obj.same$pars(), is_identical_to(pars2))
+  expect_that(obj.copy$pars(), not(is_identical_to(pars2)))
+
+  pars3 <- exp(1)
+  obj.copy$set_pars(pars3)
+  expect_that(obj.same$pars(), is_identical_to(pars2))
+  expect_that(obj.copy$pars(), is_identical_to(pars3))
+})
 
 test_that("deSolve interface", {
   pars <- 0.5
