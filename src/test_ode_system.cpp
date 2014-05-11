@@ -34,13 +34,16 @@ private:
 }
 
 // [[Rcpp::export]]
-rodeint::target_cpp test_harmonic_oscillator_cpp(std::vector<double> pars) {
-  return rodeint::target_cpp(&rodeint::test::harmonic_oscillator_derivs, pars);
+rodeint::ode_system_cpp
+test_harmonic_oscillator_cpp(std::vector<double> pars) {
+  using rodeint::test::harmonic_oscillator_derivs;
+  return rodeint::ode_system_cpp(&harmonic_oscillator_derivs, pars);
 }
 
 // [[Rcpp::export]]
-rodeint::target_class test_harmonic_oscillator_class(double pars) {
+rodeint::ode_system_class
+test_harmonic_oscillator_class(double pars) {
   using rodeint::test::harmonic_oscillator;
   harmonic_oscillator obj(pars);
-  return rodeint::wrapper<harmonic_oscillator>::make_target(obj);
+  return rodeint::wrapper<harmonic_oscillator>::make_ode_system(obj);
 }

@@ -8,38 +8,38 @@
 namespace Rcpp {
 // 'wrap' definitions for each class:
 template<>
-inline SEXP wrap(const rodeint::target_class& obj) {
-  XPtr<rodeint::target_class> ret(new rodeint::target_class(obj), true);
-  ret.attr("type") = "target_class";
+inline SEXP wrap(const rodeint::ode_system_r& obj) {
+  XPtr<rodeint::ode_system_r> ret(new rodeint::ode_system_r(obj), true);
+  ret.attr("type") = "ode_system_r";
   return wrap(ret);
 }
 template<>
-inline SEXP wrap(const rodeint::target_cpp& obj) {
-  XPtr<rodeint::target_cpp> ret(new rodeint::target_cpp(obj), true);
-  ret.attr("type") = "target_cpp";
+inline SEXP wrap(const rodeint::ode_system_cpp& obj) {
+  XPtr<rodeint::ode_system_cpp> ret(new rodeint::ode_system_cpp(obj), true);
+  ret.attr("type") = "ode_system_cpp";
   return wrap(ret);
 }
 template<>
-inline SEXP wrap(const rodeint::target_r& obj) {
-  XPtr<rodeint::target_r> ret(new rodeint::target_r(obj), true);
-  ret.attr("type") = "target_r";
+inline SEXP wrap(const rodeint::ode_system_class& obj) {
+  XPtr<rodeint::ode_system_class> ret(new rodeint::ode_system_class(obj), true);
+  ret.attr("type") = "ode_system_class";
   return wrap(ret);
 }
 
 // 'as' definitions for each class:
 template<>
-inline rodeint::target_class as(SEXP obj) {
-  XPtr<rodeint::target_class> xp(obj);
+inline rodeint::ode_system_class as(SEXP obj) {
+  XPtr<rodeint::ode_system_class> xp(obj);
   return *xp;
 }
 template<>
-inline rodeint::target_cpp as(SEXP obj) {
-  XPtr<rodeint::target_cpp> xp(obj);
+inline rodeint::ode_system_cpp as(SEXP obj) {
+  XPtr<rodeint::ode_system_cpp> xp(obj);
   return *xp;
 }
 template<>
-inline rodeint::target_r as(SEXP obj) {
-  XPtr<rodeint::target_r> xp(obj);
+inline rodeint::ode_system_r as(SEXP obj) {
+  XPtr<rodeint::ode_system_r> xp(obj);
   return *xp;
 }
 

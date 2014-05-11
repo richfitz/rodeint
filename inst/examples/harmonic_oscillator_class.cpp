@@ -29,9 +29,10 @@ private:
 }
 
 // [[Rcpp::export]]
-rodeint::target_class example_harmonic_oscillator_class(double pars) {
+rodeint::ode_system_class
+example_harmonic_oscillator_class(double pars) {
   examples::harmonic_oscillator obj(pars);
-  return rodeint::wrapper<examples::harmonic_oscillator>::make_target(obj);
+  return rodeint::wrapper<examples::harmonic_oscillator>::make_ode_system(obj);
 }
 
 /*** R
@@ -39,7 +40,7 @@ rodeint::target_class example_harmonic_oscillator_class(double pars) {
     ##   Rcpp::sourceCpp("harmonic_oscillator_class.cpp")
     library(rodeint)
 
-    obj <- target(example_harmonic_oscillator_class, 0.5)
+    obj <- ode_system(example_harmonic_oscillator_class, 0.5)
     f <- make_integrate(obj, t0=0, dt=0.01)
     y <- c(0, 1)
 

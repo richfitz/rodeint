@@ -2,15 +2,15 @@
 \alias{integrate_times}
 \title{Adaptively Integrate an ODE System}
 \usage{
-integrate_times(stepper, target, y, times, dt)
+integrate_times(stepper, ode_system, y, times, dt)
 }
 \arguments{
   \item{stepper}{A \code{stepper} object, created by
   \code{\link{stepper}} (other types will be supported
   soon).}
 
-  \item{target}{The target system, created by
-  \code{\link{target}}}
+  \item{ode_system}{The ode_system system, created by
+  \code{\link{ode_system}}}
 
   \item{y}{Initial conditions}
 

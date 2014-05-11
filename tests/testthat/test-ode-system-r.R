@@ -1,28 +1,28 @@
 source("helper-rodeint.R")
 
-context("target (r)")
+context("ode_system (r)")
 
 test_that("construction", {
   pars <- 0.5
-  obj <- target(harmonic.oscillator, pars)
-  expect_that(obj, is_a("target"))
-  expect_that(obj$type, is_identical_to("target_r"))
+  obj <- ode_system(harmonic_oscillator_r, pars)
+  expect_that(obj, is_a("ode_system"))
+  expect_that(obj$type, is_identical_to("ode_system_r"))
   expect_that(obj$ptr <- obj$ptr,
               throws_error("read-only"))
 })
 
 test_that("derivatives", {
   pars <- 0.5
-  obj <- target(harmonic.oscillator, pars)
+  obj <- ode_system(harmonic_oscillator_r, pars)
   y0 <- c(0, 1)
   t0 <- 0.0
   expect_that(obj$derivs(y0, t0),
-              is_identical_to(harmonic.oscillator(y0, t0, pars)))
+              is_identical_to(harmonic_oscillator_r(y0, t0, pars)))
 })
 
 test_that("parameters", {
   pars <- 0.5
-  obj <- target(harmonic.oscillator, pars)
+  obj <- ode_system(harmonic_oscillator_r, pars)
   expect_that(obj$get_pars(), is_identical_to(pars))
   ## Can hapilly set nonsense:
   pars2 <- list(a=1, b=2)
@@ -32,7 +32,7 @@ test_that("parameters", {
 
 test_that("copying", {
   pars <- 0.5
-  obj <- target(harmonic.oscillator, pars)
+  obj <- ode_system(harmonic_oscillator_r, pars)
   expect_that(obj$get_pars(), is_identical_to(pars))
 
   obj.same <- obj        # not a copy
@@ -54,7 +54,7 @@ test_that("copying", {
 
 test_that("deSolve interface", {
   pars <- 0.5
-  obj <- target(harmonic.oscillator, pars)
+  obj <- ode_system(harmonic_oscillator_r, pars)
   y0 <- c(0, 1)
   t0 <- 0.0
 
@@ -67,18 +67,18 @@ test_that("deSolve interface", {
   expect_that(info$initpar,  is_identical_to(NULL))
 
   expect_that(info$func(t0, y0, pars),
-              is_identical_to(harmonic.oscillator.deSolve(t0, y0, pars)))
+              is_identical_to(harmonic_oscillator_deSolve(t0, y0, pars)))
 
 })
 
 test_that("construction from deSolve type", {
   pars <- 0.5
-  obj <- target(harmonic.oscillator.deSolve, pars, TRUE)
-  expect_that(obj, is_a("target"))
+  obj <- ode_system(harmonic_oscillator_deSolve, pars, TRUE)
+  expect_that(obj, is_a("ode_system"))
   y0 <- c(0, 1)
   t0 <- 0.0
   expect_that(obj$derivs(y0, t0),
-              is_identical_to(harmonic.oscillator(y0, t0, pars)))
+              is_identical_to(harmonic_oscillator_r(y0, t0, pars)))
   expect_that(obj$deSolve_info()$func(t0, y0, ignored),
-              is_identical_to(harmonic.oscillator.deSolve(t0, y0, pars)))
+              is_identical_to(harmonic_oscillator_deSolve(t0, y0, pars)))
 })

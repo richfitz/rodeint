@@ -7,13 +7,13 @@
 
 namespace rodeint {
 
-class target_cpp {
+class ode_system_cpp {
 public:
   typedef std::vector<double> state_type;
   typedef std::vector<double> pars_type;
   typedef void (*derivs_type)(const state_type&, state_type&, const double,
                               const pars_type&);
-  target_cpp(derivs_type derivs_, pars_type pars_)
+  ode_system_cpp(derivs_type derivs_, pars_type pars_)
     : derivs(derivs_), pars(pars_) {}
   void operator()(const state_type& y, state_type &dydt,
                   const double t) {

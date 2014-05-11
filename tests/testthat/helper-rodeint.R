@@ -2,14 +2,13 @@ library(rodeint)
 library(testthat)
 library(deSolve) # for comparisons
 
-## This is the same example as in odeint's harmonic_oscillator.cpp.
-harmonic.oscillator <- function(y, t, pars) {
-  m.gam <- pars
-  c(y[[2]], -y[[1]] - m.gam * y[[2]])
-}
+## From rodeint, for testing
+harmonic_oscillator_r     <- rodeint:::test_harmonic_oscillator_r
+harmonic_oscillator_cpp   <- rodeint:::test_harmonic_oscillator_cpp
+harmonic_oscillator_class <- rodeint:::test_harmonic_oscillator_class
 
-harmonic.oscillator.deSolve <- function(t, y, pars) {
-  list(harmonic.oscillator(y, t, pars))
+harmonic_oscillator_deSolve <- function(t, y, pars) {
+  list(harmonic_oscillator_r(y, t, pars))
 }
 
 last <- function(x) {

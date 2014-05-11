@@ -5,11 +5,11 @@
 #include <Rcpp.h>
 
 namespace rodeint {
-class target_r {
+class ode_system_r {
 public:
   typedef std::vector<double> state_type;
   typedef SEXP pars_type;
-  target_r(Rcpp::Function derivs_, pars_type pars_)
+  ode_system_r(Rcpp::Function derivs_, pars_type pars_)
     : derivs(derivs_), pars(pars_) {}
   void operator()(const state_type& y, state_type &dydt,
                   const double t) {

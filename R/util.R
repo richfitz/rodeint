@@ -15,8 +15,8 @@ assert_stepper <- function(x, name=deparse(substitute(x))) {
   assert_inherits(x, "stepper", name)
 }
 
-assert_target <- function(x, name=deparse(substitute(x))) {
-  assert_inherits(x, "target", name)
+assert_ode_system <- function(x, name=deparse(substitute(x))) {
+  assert_inherits(x, "ode_system", name)
 }
 
 assert_nonnegative <- function(x, name=deparse(substitute(x))) {

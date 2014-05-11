@@ -4,16 +4,16 @@ context("deSolve interface")
 
 test_that("deSolve", {
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
   t1 <- 1
   dt0 <- 0.05
 
-  cmp <- lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve, pars)
+  cmp <- lsoda(y0, c(t0, t1), harmonic_oscillator_deSolve, pars)
 
   info_r <- ode_r$deSolve_info()
   info_cpp <- ode_cpp$deSolve_info()

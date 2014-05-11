@@ -2,11 +2,11 @@
 \alias{integrate_simple}
 \title{Integrate an ODE System}
 \usage{
-integrate_simple(target, y, t0, t1, dt, save_state = FALSE)
+integrate_simple(ode_system, y, t0, t1, dt, save_state = FALSE)
 }
 \arguments{
-  \item{target}{The target system, created by
-  \code{\link{target}}}
+  \item{ode_system}{The ode_system system, created by
+  \code{\link{ode_system}}}
 
   \item{y}{Initial conditions}
 

@@ -15,9 +15,9 @@ expected_tolerance <- function(type) {
 
 test_that("integrate_const", {
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -25,7 +25,7 @@ test_that("integrate_const", {
   dt0 <- 0.05
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve,
+  cmp <- unname(lsoda(y0, c(t0, t1), harmonic_oscillator_deSolve,
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
@@ -77,9 +77,9 @@ test_that("integrate_const", {
 
 test_that("integrate_n_steps", {
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -89,7 +89,7 @@ test_that("integrate_n_steps", {
 
   ## Here is the solution from deSolve, using lsoda:
   cmp <- unname(lsoda(y0, c(t0, t1),
-                      harmonic.oscillator.deSolve,
+                      harmonic_oscillator_deSolve,
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
@@ -137,9 +137,9 @@ test_that("integrate_n_steps", {
 
 test_that("integrate_adaptive", {
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -148,7 +148,7 @@ test_that("integrate_adaptive", {
   tol <- 1e-6
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve,
+  cmp <- unname(lsoda(y0, c(t0, t1), harmonic_oscillator_deSolve,
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
@@ -204,9 +204,9 @@ test_that("integrate_times", {
   ## TODO: check decreasing times (with +ve and -ve dt)
   ## TODO: check duplicated times
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -219,7 +219,7 @@ test_that("integrate_times", {
   times <- sort(c(t0, t1, runif(5, t0, t1)))
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, times, harmonic.oscillator.deSolve,
+  cmp <- unname(lsoda(y0, times, harmonic_oscillator_deSolve,
                       pars)[,-1])
 
   for (category in stepper_categories()) {
@@ -263,9 +263,9 @@ test_that("integrate_times", {
 
 test_that("integrate_simple", {
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -273,7 +273,7 @@ test_that("integrate_simple", {
   dt <- 0.1
 
   ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), harmonic.oscillator.deSolve,
+  cmp <- unname(lsoda(y0, c(t0, t1), harmonic_oscillator_deSolve,
                       pars)[-1,-1])
 
   tolerance <- expected_tolerance("runge_kutta_dopri5")
@@ -320,9 +320,9 @@ test_that("integrate_simple", {
 
 test_that("make_integrate", {
   pars <- 0.5
-  ode_r <- target(harmonic.oscillator, pars)
-  ode_cpp <- target(rodeint:::test_harmonic_oscillator_cpp, pars)
-  ode_class <- target(rodeint:::test_harmonic_oscillator_class, pars)
+  ode_r <- ode_system(harmonic_oscillator_r, pars)
+  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
+  ode_class <- ode_system(harmonic_oscillator_class, pars)
 
   y0 <- c(0, 1)
   t0 <- 0
@@ -333,24 +333,24 @@ test_that("make_integrate", {
   s1 <- make_stepper_controlled("runge_kutta_dopri5")
   s2 <- make_stepper_basic("runge_kutta4")
 
-  for (target in list(ode_r, ode_cpp, ode_class)) {
+  for (ode_system in list(ode_r, ode_cpp, ode_class)) {
     ## First, make my favourite thing about this -- converting f'(y, t)
     ## to f(y, t):
-    f0 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE)
-    f1 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE,
+    f0 <- make_integrate(ode_system, t0=0, dt=dt0, save_state=FALSE)
+    f1 <- make_integrate(ode_system, t0=0, dt=dt0, save_state=FALSE,
                          stepper=s1, integrate=integrate_adaptive)
-    f2 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE,
+    f2 <- make_integrate(ode_system, t0=0, dt=dt0, save_state=FALSE,
                          stepper=s2)
     ## And f'(y, t, pars) to f(pars)(y, t)
-    g0 <- make_integrate_pars(target, t0=0, dt=dt0, save_state=FALSE)
-    g1 <- make_integrate_pars(target, t0=0, dt=dt0, save_state=FALSE,
+    g0 <- make_integrate_pars(ode_system, t0=0, dt=dt0, save_state=FALSE)
+    g1 <- make_integrate_pars(ode_system, t0=0, dt=dt0, save_state=FALSE,
                               stepper=s1, integrate=integrate_adaptive)
-    g2 <- make_integrate_pars(target, t0=0, dt=dt0, save_state=FALSE,
+    g2 <- make_integrate_pars(ode_system, t0=0, dt=dt0, save_state=FALSE,
                               stepper=s2)
 
     expect_that(names(formals(f0)), equals(c("y", "t1")))
 
-    cmp <- integrate_adaptive(s1, target, y0, t0, t1, dt0)
+    cmp <- integrate_adaptive(s1, ode_system, y0, t0, t1, dt0)
     expect_that(f0(y0, t1), is_identical_to(cmp))
     expect_that(f1(y0, t1), is_identical_to(cmp))
     expect_that(f2(y0, t1), not(is_identical_to(cmp)))
@@ -359,9 +359,9 @@ test_that("make_integrate", {
     ## Check that changing parameters in underlying thing doesn't affect
     ## the generated function.
     pars2 <- pi
-    target$set_pars(pars2)
-    cmp2 <- integrate_adaptive(s1, target, y0, t0, t1, dt0)
-    f3 <- make_integrate(target, t0=0, dt=dt0, save_state=FALSE)
+    ode_system$set_pars(pars2)
+    cmp2 <- integrate_adaptive(s1, ode_system, y0, t0, t1, dt0)
+    f3 <- make_integrate(ode_system, t0=0, dt=dt0, save_state=FALSE)
     expect_that(f0(y0, t1), is_identical_to(cmp))
     expect_that(f3(y0, t1), is_identical_to(cmp2))
 

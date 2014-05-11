@@ -3,12 +3,14 @@
 \alias{make_integrate_pars}
 \title{Make Integration Function}
 \usage{
-make_integrate(target, ..., stepper = NULL, integrate = integrate_adaptive)
+make_integrate(ode_system, ..., stepper = NULL,
+  integrate = integrate_adaptive)
 
-make_integrate_pars(target, ...)
+make_integrate_pars(ode_system, ...)
 }
 \arguments{
-  \item{target}{A target function (\code{\link{target}}).}
+  \item{ode_system}{A ode_system function
+  (\code{\link{ode_system}}).}
 
   \item{...}{Additional arguments to bind.  Setting
   \code{t0} when a system is time independent means
@@ -16,8 +18,8 @@ make_integrate_pars(target, ...)
   be useful.  All integrate functions take a \code{dt}
   argument, so that's useful to bind too.  You can also
   pass in \code{set_as_defaults=TRUE} and the arguments,
-  including \code{stepper} and \code{target} will simply be
-  set as defaults allowing some tuning later.}
+  including \code{stepper} and \code{ode_system} will
+  simply be set as defaults allowing some tuning later.}
 
   \item{stepper}{A stepper object. By default the
   controlled \code{runge_kutta_dopri} stepper is used with
@@ -28,13 +30,13 @@ make_integrate_pars(target, ...)
   default is \code{\link{integrate_adaptive}}.}
 }
 \description{
-Helper function for binding targets, steppers and
+Helper function for binding ode_systems, steppers and
 integration functions together.  This can be used to create
 a function \code{f(y0, t)} from your system of
 \code{f\'(y0, t)}.
 }
 \details{
-Note the opposite ordering of the \code{target} and
+Note the opposite ordering of the \code{ode_system} and
 \code{stepper} arguments here compared with the rest of the
 package (following \code{odeint}.
 }

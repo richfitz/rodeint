@@ -1,28 +1,28 @@
 #include <rodeint/ode_system_r.hpp>
 
 // [[Rcpp::export]]
-rodeint::target_r target_r__ctor(Rcpp::Function derivs,
-                                 SEXP pars_type) {
-  return rodeint::target_r(derivs, pars_type);
+rodeint::ode_system_r ode_system_r__ctor(Rcpp::Function derivs,
+                                         SEXP pars_type) {
+  return rodeint::ode_system_r(derivs, pars_type);
 }
 
 // [[Rcpp::export]]
-rodeint::target_r::state_type
-target_r__derivs(Rcpp::XPtr<rodeint::target_r> target,
-                 rodeint::target_r::state_type y,
-                 double t) {
-  rodeint::target_r::state_type dydt(y.size());
-  (*target)(y, dydt, t);
+rodeint::ode_system_r::state_type
+ode_system_r__derivs(Rcpp::XPtr<rodeint::ode_system_r> ode_system,
+                     rodeint::ode_system_r::state_type y,
+                     double t) {
+  rodeint::ode_system_r::state_type dydt(y.size());
+  (*ode_system)(y, dydt, t);
   return dydt;
 }
 
 // [[Rcpp::export]]
-SEXP target_r__get_pars(Rcpp::XPtr<rodeint::target_r> target) {
-  return target->get_pars();
+SEXP ode_system_r__get_pars(Rcpp::XPtr<rodeint::ode_system_r> ode_system) {
+  return ode_system->get_pars();
 }
 
 // [[Rcpp::export]]
-void target_r__set_pars(Rcpp::XPtr<rodeint::target_r> target,
-                        SEXP pars) {
-  target->set_pars(pars);
+void ode_system_r__set_pars(Rcpp::XPtr<rodeint::ode_system_r> ode_system,
+                            SEXP pars) {
+  ode_system->set_pars(pars);
 }

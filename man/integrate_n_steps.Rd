@@ -2,15 +2,15 @@
 \alias{integrate_n_steps}
 \title{Adaptively Integrate an ODE System}
 \usage{
-integrate_n_steps(stepper, target, y, t0, dt, n, save_state = FALSE)
+integrate_n_steps(stepper, ode_system, y, t0, dt, n, save_state = FALSE)
 }
 \arguments{
   \item{stepper}{A \code{stepper} object, created by
   \code{\link{stepper}} (other types will be supported
   soon).}
 
-  \item{target}{The target system, created by
-  \code{\link{target}}}
+  \item{ode_system}{The ode_system system, created by
+  \code{\link{ode_system}}}
 
   \item{y}{Initial conditions}
 

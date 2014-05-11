@@ -18,18 +18,18 @@
 // namespace (not needed for files included before this one in
 // rodeint.h)
 namespace rodeint {
-class target_class;
-class target_cpp;
-class target_r;
+class ode_system_class;
+class ode_system_cpp;
+class ode_system_r;
 }
 
 namespace Rcpp {
-template<> SEXP wrap(const rodeint::target_class&);
-template<> SEXP wrap(const rodeint::target_cpp&);
-template<> SEXP wrap(const rodeint::target_r&);
-template<> rodeint::target_class as(SEXP);
-template<> rodeint::target_cpp as(SEXP);
-template<> rodeint::target_r as(SEXP);
+template<> SEXP wrap(const rodeint::ode_system_class&);
+template<> SEXP wrap(const rodeint::ode_system_cpp&);
+template<> SEXP wrap(const rodeint::ode_system_r&);
+template<> rodeint::ode_system_class as(SEXP);
+template<> rodeint::ode_system_cpp as(SEXP);
+template<> rodeint::ode_system_r as(SEXP);
 
 #ifndef RODEINT_ODE_SYSTEM_ONLY
 template<> SEXP wrap(const rodeint::stepper&);

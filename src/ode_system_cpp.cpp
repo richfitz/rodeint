@@ -1,25 +1,28 @@
 #include <rodeint/ode_system_cpp.hpp>
 
-// Note that this is actually the same as the target_r version, and we
-// can get this done with a variant type I think.
+// TODO: The wrappers around derivs, get_pars and set_pars are
+// identical, and we can just template the repetition somewhere and
+// have much shorter functions here (like with integrate).
+
 // [[Rcpp::export]]
-rodeint::target_cpp::state_type
-target_cpp__derivs(Rcpp::XPtr<rodeint::target_cpp> target,
-                   rodeint::target_cpp::state_type y,
-                   double t) {
-  rodeint::target_cpp::state_type dydt(y.size());
-  (*target)(y, dydt, t);
+rodeint::ode_system_cpp::state_type
+ode_system_cpp__derivs(Rcpp::XPtr<rodeint::ode_system_cpp> ode_system,
+                       rodeint::ode_system_cpp::state_type y,
+                       double t) {
+  rodeint::ode_system_cpp::state_type dydt(y.size());
+  (*ode_system)(y, dydt, t);
   return dydt;
 }
 
 // [[Rcpp::export]]
-rodeint::target_cpp::pars_type
-target_cpp__get_pars(Rcpp::XPtr<rodeint::target_cpp> target) {
-  return target->get_pars();
+rodeint::ode_system_cpp::pars_type
+ode_system_cpp__get_pars(Rcpp::XPtr<rodeint::ode_system_cpp> ode_system) {
+  return ode_system->get_pars();
 }
 
 // [[Rcpp::export]]
-void target_cpp__set_pars(Rcpp::XPtr<rodeint::target_cpp> target,
-                          rodeint::target_cpp::pars_type pars) {
-  target->set_pars(pars);
+void
+ode_system_cpp__set_pars(Rcpp::XPtr<rodeint::ode_system_cpp> ode_system,
+                         rodeint::ode_system_cpp::pars_type pars) {
+  ode_system->set_pars(pars);
 }

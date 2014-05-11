@@ -7,9 +7,9 @@
 // The next two lines tell Rcpp Attributes to set up the appropriate
 // include paths, and to actually include the rodeint headers.
 //
-// Using the "smaller" header file "rodeint_ode_system.h" that includes
-// *only* the information needed to build the ode_system is much faster
-// than loading the full header file "rodeint.h"
+// Using the "smaller" header file "rodeint_ode_system.h" that
+// includes *only* the information needed to build the ode_system is
+// much faster than loading the full header file "rodeint.h"
 
 // [[Rcpp::depends(rodeint)]]
 #include <rodeint_ode_system.h>
@@ -37,8 +37,8 @@ void harmonic_oscillator(const std::vector<double>& y,
 
 }
 
-// This one here actually makes the target available to R via the Rcpp
-// attributes.  As such, it must follow the rules set by Rcpp
+// This one here actually makes the ode_system available to R via the
+// Rcpp attributes.  As such, it must follow the rules set by Rcpp
 // attributes (fully qualified return type, not in a namespace, etc).
 //
 // Can do parameter checking here -- in particular the size of the
@@ -46,9 +46,10 @@ void harmonic_oscillator(const std::vector<double>& y,
 // so validate it here.
 
 // [[Rcpp::export]]
-rodeint::target_cpp example_harmonic_oscillator_cpp(std::vector<double> pars) {
+rodeint::ode_system_cpp
+example_harmonic_oscillator_cpp(std::vector<double> pars) {
   rodeint::util::check_length(pars.size(), 1);
-  return rodeint::target_cpp(&examples::harmonic_oscillator, pars);
+  return rodeint::ode_system_cpp(&examples::harmonic_oscillator, pars);
 }
 
 /*** R
@@ -58,7 +59,7 @@ rodeint::target_cpp example_harmonic_oscillator_cpp(std::vector<double> pars) {
     ##   Rcpp::sourceCpp("harmonic_oscillator_cpp.cpp", embeddedR=FALSE)
     library(rodeint)
 
-    obj <- target(example_harmonic_oscillator_cpp, 0.5)
+    obj <- ode_system(example_harmonic_oscillator_cpp, 0.5)
     f <- make_integrate(obj, t0=0, dt=0.01)
     y <- c(0, 1)
 
