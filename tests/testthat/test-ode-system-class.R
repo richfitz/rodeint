@@ -102,8 +102,36 @@ test_that("deSolve interface", {
 
 test_that("construction from deSolve type", {
   pars <- 0.5
+  obj <- ode_system(harmonic_oscillator_deSolve_c, pars)
+  expect_that(obj, is_a("ode_system"))
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  expect_that(obj$derivs(y0, t0),
+              is_identical_to(harmonic_oscillator_r(y0, t0, pars)))
+
+  ## Parameters are set quite differently so quick check here:
+  pars2 <- pi
+  obj$set_pars(pars2)
+  expect_that(obj$get_pars(), is_identical_to(pars2))
+  expect_that(obj$derivs(y0, t0),
+              is_identical_to(harmonic_oscillator_r(y0, t0, pars2)))
+
+  expect_that(obj$set_pars(c(1, 2)),
+              throws_error("Incorrect length"))
+  expect_that(obj$set_pars(numeric(0)),
+              throws_error("Incorrect length"))
+  expect_that(obj$set_pars(NULL),
+              throws_error("not compatible"))
+
+  expect_that(obj$get_pars(), is_identical_to(pars2))
+  expect_that(obj$derivs(y0, t0),
+              is_identical_to(harmonic_oscillator_r(y0, t0, pars2)))
+})
+
+test_that("invalid construction from deSolve type", {
+  pars <- 0.5
   ## This would be the wrong generator anyway...
   expect_that(ode_system(harmonic_oscillator_cpp, pars,
                          deSolve_style=TRUE),
-              throws_error("Not yet supported"))
+              throws_error("Only meaningful for R functions"))
 })

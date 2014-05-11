@@ -28,6 +28,19 @@ private:
   double p;
 };
 
+// Same system in deSolve style -- here is the system.
+static double test_harmonic_oscillator_parms[1];
+void test_harmonic_oscillator_deSolve_func(int*    /* neq  */,
+                                           double* /* t    */,
+                                           double*    y,
+                                           double*    dydt,
+                                           double* /* yout */,
+                                           int*    /* ip   */) {
+  double p = test_harmonic_oscillator_parms[0];
+  dydt[0] =  y[1];
+  dydt[1] = -y[0] - p * y[1];
+}
+
 }
 }
 
@@ -43,4 +56,14 @@ rodeint::ode_system_class
 test_harmonic_oscillator_class(double pars) {
   using rodeint::test::harmonic_oscillator;
   return rodeint::ode_system_class_generator<harmonic_oscillator>(pars);
+}
+
+// [[Rcpp::export]]
+rodeint::ode_system_class
+test_harmonic_oscillator_deSolve_c(std::vector<double> pars) {
+  using namespace rodeint::deSolve;
+  using namespace rodeint::test;
+  func_type* func = &test_harmonic_oscillator_deSolve_func;
+  double* pars_deSolve = test_harmonic_oscillator_parms;
+  return make_ode_system_deSolve(func, pars_deSolve, pars);
 }

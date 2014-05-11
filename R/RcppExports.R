@@ -121,3 +121,7 @@ test_harmonic_oscillator_class <- function(pars) {
     .Call('rodeint_test_harmonic_oscillator_class', PACKAGE = 'rodeint', pars)
 }
 
+test_harmonic_oscillator_deSolve_c <- function(pars) {
+    .Call('rodeint_test_harmonic_oscillator_deSolve_c', PACKAGE = 'rodeint', pars)
+}
+

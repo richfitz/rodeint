@@ -37,7 +37,9 @@ function.  Generally this will be a numeric vector, but see
 \code{set_pars}.
 \item \code{validate} optional function to run on parameters each
 time they are set (see \code{set_pars}).  Useful for checking length,
-positivity, etc.
+positivity, etc.  The function should throw an error (stop) if the
+parameters are not valid.  The return value of this function is
+ignored.
 \item \code{deSolve_style} Set this to \code{TRUE} if your R function
 is in deSolve style rather than rodeint style (i.e., parameters
 \code{(t, y, pars)} and returning a \emph{list} with the first

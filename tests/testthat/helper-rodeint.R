@@ -6,10 +6,8 @@ library(deSolve) # for comparisons
 harmonic_oscillator_r     <- rodeint:::test_harmonic_oscillator_r
 harmonic_oscillator_cpp   <- rodeint:::test_harmonic_oscillator_cpp
 harmonic_oscillator_class <- rodeint:::test_harmonic_oscillator_class
-
-harmonic_oscillator_deSolve <- function(t, y, pars) {
-  list(harmonic_oscillator_r(y, t, pars))
-}
+harmonic_oscillator_deSolve <- rodeint:::test_harmonic_oscillator_deSolve
+harmonic_oscillator_deSolve_c <- rodeint:::test_harmonic_oscillator_deSolve_c
 
 last <- function(x) {
   x[[length(x)]]

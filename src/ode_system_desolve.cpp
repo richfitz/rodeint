@@ -1,8 +1,18 @@
-#include <rodeint_ode_system.h>
-#include <R_ext/Rdynload.h>
+#include <rodeint/ode_system_desolve.hpp>
+#include <rodeint/ode_system_cpp.hpp>
 
 namespace rodeint {
 namespace deSolve {
+
+ode_system_class
+make_ode_system_deSolve(func_type* func, double* pars_deSolve,
+                        std::vector<double> pars) {
+  rodeint::deSolve::ode_system_deSolve obj(func, pars_deSolve, pars);
+  return rodeint::ode_system_class_generator(pars, obj);
+}
+
+// The inverse: use rodeint's objective in deSolve, so this all needs
+// C linkage
 
 static SEXP deSolve_parameters;
 

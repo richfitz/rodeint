@@ -100,10 +100,10 @@ test_that("deSolve interface", {
   expect_that(info$initpar,  is_a("externalptr"))
 })
 
-test_that("construction from deSolve type", {
+test_that("invalid construction from deSolve type", {
   pars <- 0.5
   ## This would be the wrong generator anyway...
   expect_that(ode_system(harmonic_oscillator_cpp, pars,
                          deSolve_style=TRUE),
-              throws_error("Not yet supported"))
+              throws_error("Only meaningful for R functions"))
 })

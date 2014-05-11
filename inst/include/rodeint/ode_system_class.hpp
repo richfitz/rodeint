@@ -73,6 +73,12 @@ ode_system_class ode_system_class_generator(typename T::pars_type pars) {
   return wrapper<T>::make_ode_system(obj, Rcpp::wrap(pars));
 }
 
+template <typename T>
+ode_system_class ode_system_class_generator(typename T::pars_type pars,
+                                            T obj) {
+  return wrapper<T>::make_ode_system(obj, Rcpp::wrap(pars));
+}
+
 }
 
 #endif

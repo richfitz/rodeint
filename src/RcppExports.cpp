@@ -540,3 +540,18 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// test_harmonic_oscillator_deSolve_c
+rodeint::ode_system_class test_harmonic_oscillator_deSolve_c(std::vector<double> pars);
+RcppExport SEXP rodeint_test_harmonic_oscillator_deSolve_c(SEXP parsSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< std::vector<double> >::type pars(parsSEXP );
+        rodeint::ode_system_class __result = test_harmonic_oscillator_deSolve_c(pars);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}

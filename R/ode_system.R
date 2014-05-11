@@ -168,7 +168,7 @@ generator_init <- function(generator, pars, deSolve_style) {
     ptr <- ode_system_r__ctor(generator, pars)
   } else if (length(formals(generator)) == 1) {
     if (deSolve_style) {
-      stop("Not yet supported")
+      stop("Only meaningful for R functions")
     }
     ptr <- generator(pars)
   }
