@@ -57,21 +57,11 @@ partially_apply <- function(f, ..., set_as_defaults=FALSE) {
          collapse(unique(nd[duplicated(nd)])))
   }
 
-  ## Both of the strategies clears attributes, so store them here.
-  old_attributes <- attributes(f)
-
   if (set_as_defaults) {
-    f <- partially_apply_defaults(f, dots)
+    partially_apply_defaults(f, dots)
   } else {
-    f <- partially_apply_environment(f, dots)
+    partially_apply_environment(f, dots)
   }
-
-  ## Reset any attributes that might have been cleared, except for
-  ## srcref, which is now invalid (and will confusingly be printed
-  ## with the wrong structure).
-  attributes(f) <- old_attributes[names(old_attributes) != "srcref"]
-
-  f
 }
 
 ## The default-setting strategy, based on diversitree::set.defaults().
@@ -80,23 +70,25 @@ partially_apply <- function(f, ..., set_as_defaults=FALSE) {
 partially_apply_defaults <- function(f, defaults) {
   to_set <- names(defaults)
   ff <- formals(f)
-  ## Reorder the formals:
   ff <- ff[c(setdiff(names(ff), to_set), to_set)]
-  ## Set our new defaults:
   ff[to_set] <- defaults
-  ## And push back onto functions
-  formals(f) <- ff
-  f
+  replace_formals(f, ff)
 }
 
 ## An environment based strategy
 partially_apply_environment <- function(f, defaults) {
-  ff <- formals(f)
-  formals(f) <- ff[c(setdiff(names(ff), names(defaults)))]
-
   e <- as.environment(defaults)
   parent.env(e) <- environment(f)
-  environment(f) <- e
+  ff <- formals(f)
+  replace_formals(f, ff[c(setdiff(names(ff), names(defaults)))], e)
+}
 
-  f
+## This replaces forms, but preserves attributes except for srcref,
+## which will be invalid for any nontrivial change (and will
+## confusingly be printed with the wrong structure).
+replace_formals <- function(fun, value, envir=environment(fun)) {
+  old_attributes <- attributes(fun)
+  formals(fun, envir=envir) <- value
+  attributes(fun) <- old_attributes[names(old_attributes) != "srcref"]
+  fun
 }

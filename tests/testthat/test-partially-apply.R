@@ -101,4 +101,45 @@ test_that("partially_apply", {
   rm(z)
   expect_that(fe(), equals(1))
   expect_that(fd(), equals(1))
+
+  ## Add some attributes to a function:
+  obj <- list(class="foo", info=1:10)
+  tmp <- target
+  for (i in names(obj)) {
+    attr(tmp, i) <- obj[[i]]
+  }
+
+  z <- 1
+  tmp_e <- partially_apply(tmp, a=z)
+  tmp_d <- partially_apply(tmp, a=z, set_as_defaults=TRUE)
+
+  expect_that(attributes(tmp_e), is_identical_to(obj))
+  expect_that(attributes(tmp_d), is_identical_to(obj))
+
+  ## Check still find global/local/lexical things.
+  assign("x_global", 1, .GlobalEnv)
+  x_testthat <- 2
+  foo <- local({
+    x_local <- 3
+    function(x_lexical, y_lexical) {
+      function(x_arg, y_arg, z_arg) {
+        list(x_global, x_testthat, x_local, x_lexical, y_lexical,
+             x_arg, y_arg, z_arg)
+      }
+    }
+  })
+  scope <- foo(4, 5)
+  cmp <- as.list(1:8)
+
+  scope_e <- partially_apply(scope, x_arg=6, y_arg=7, z_arg=8)
+  scope_d <- partially_apply(scope, x_arg=6, y_arg=7, z_arg=8)
+  expect_that(scope(6, 7, 8), equals(cmp))
+  expect_that(scope_e(), equals(cmp))
+  expect_that(scope_d(), equals(cmp))
+
+  x_testthat <- -2
+  cmp[2] <- x_testthat
+  expect_that(scope(6, 7, 8), equals(cmp))
+  expect_that(scope_e(), equals(cmp))
+  expect_that(scope_d(), equals(cmp))
 })
