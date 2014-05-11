@@ -30,6 +30,35 @@ test_that("parameters", {
   expect_that(obj$get_pars(), is_identical_to(pars2))
 })
 
+test_that("parameter validation", {
+  pars <- 0.5
+  obj <- ode_system(harmonic_oscillator_r, pars,
+                    positive_scalar_numeric)
+  ## Will throw on set:
+  expect_that(obj$set_pars(-pars),         throws_error("Not positive"))
+  expect_that(obj$set_pars(c(pars, pars)), throws_error("Not scalar"))
+  expect_that(obj$set_pars(numeric(0)),    throws_error("Not scalar"))
+  expect_that(obj$set_pars("pars"),        throws_error("Not numeric"))
+  expect_that(obj$set_pars(list(pars)),    throws_error("Not numeric"))
+
+  ## And on creation:
+  expect_that(ode_system(harmonic_oscillator_r, -pars,
+                         positive_scalar_numeric),
+              throws_error("Not positive"))
+  expect_that(ode_system(harmonic_oscillator_r, c(pars, pars),
+                         positive_scalar_numeric),
+              throws_error("Not scalar"))
+  expect_that(ode_system(harmonic_oscillator_r, numeric(0),
+                         positive_scalar_numeric),
+              throws_error("Not scalar"))
+  expect_that(ode_system(harmonic_oscillator_r, "pars",
+                         positive_scalar_numeric),
+              throws_error("Not numeric"))
+  expect_that(ode_system(harmonic_oscillator_r, list(pars),
+                         positive_scalar_numeric),
+              throws_error("Not numeric"))
+})
+
 test_that("copying", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_r, pars)
@@ -73,7 +102,8 @@ test_that("deSolve interface", {
 
 test_that("construction from deSolve type", {
   pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_deSolve, pars, TRUE)
+  obj <- ode_system(harmonic_oscillator_deSolve, pars,
+                    deSolve_style=TRUE)
   expect_that(obj, is_a("ode_system"))
   y0 <- c(0, 1)
   t0 <- 0.0

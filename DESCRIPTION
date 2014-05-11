@@ -13,3 +13,4 @@ Suggests:
 Imports:
     Rcpp,
     methods
+Roxygen: list(wrap = FALSE)

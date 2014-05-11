@@ -38,3 +38,13 @@ is_same_pointer <- function(ptr) {
                 paste("is the same pointer as", name))
   }
 }
+
+positive_scalar_numeric <- function(x) {
+  if (!is.numeric(x)) {
+    stop("Not numeric")
+  } else if (length(x) != 1) {
+    stop("Not scalar")
+  } else if (x < 0) {
+    stop("Not positive")
+  }
+}
