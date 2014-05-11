@@ -24,11 +24,15 @@ test_that("parameters", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_class, pars)
   expect_that(obj$get_pars(), is_identical_to(pars))
-  ## In contrast with ode_system_r, this will throw:
   pars2 <- list(a=1, b=2)
-  expect_that(obj$set_pars(pars2), throws_error("single value"))
-  expect_that(obj$set_pars(rep(pars, 2)), throws_error())
-  expect_that(obj$set_pars(numeric(0)),   throws_error())
+  ## In contrast with ode_system_r, this will throw:
+  expect_that(obj$set_pars(pars2),
+              throws_error("expecting a single value"))
+  expect_that(obj$set_pars(rep(pars, 2)),
+              throws_error("expecting a single value"))
+  expect_that(obj$set_pars(numeric(0)),
+              throws_error("expecting a single value"))
+  expect_that(obj$get_pars(), is_identical_to(pars))
 })
 
 test_that("copying", {

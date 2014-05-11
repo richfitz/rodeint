@@ -61,20 +61,20 @@ integrate_simple_class <- function(ode_system, y, t0, t1, dt, save_state) {
     .Call('rodeint_integrate_simple_class', PACKAGE = 'rodeint', ode_system, y, t0, t1, dt, save_state)
 }
 
-ode_system_class__get_pars <- function(ode_system) {
-    .Call('rodeint_ode_system_class__get_pars', PACKAGE = 'rodeint', ode_system)
+ode_system_r__get_pars <- function(ode_system) {
+    .Call('rodeint_ode_system_r__get_pars', PACKAGE = 'rodeint', ode_system)
 }
 
-ode_system_class__set_pars <- function(ode_system, pars) {
-    invisible(.Call('rodeint_ode_system_class__set_pars', PACKAGE = 'rodeint', ode_system, pars))
+ode_system_r__set_pars <- function(ode_system, pars) {
+    invisible(.Call('rodeint_ode_system_r__set_pars', PACKAGE = 'rodeint', ode_system, pars))
 }
 
-ode_system_class__derivs <- function(ode_system, y, t) {
-    .Call('rodeint_ode_system_class__derivs', PACKAGE = 'rodeint', ode_system, y, t)
+ode_system_r__derivs <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_r__derivs', PACKAGE = 'rodeint', ode_system, y, t)
 }
 
-ode_system_cpp__derivs <- function(ode_system, y, t) {
-    .Call('rodeint_ode_system_cpp__derivs', PACKAGE = 'rodeint', ode_system, y, t)
+ode_system_r__ctor <- function(derivs, pars) {
+    .Call('rodeint_ode_system_r__ctor', PACKAGE = 'rodeint', derivs, pars)
 }
 
 ode_system_cpp__get_pars <- function(ode_system) {
@@ -85,20 +85,20 @@ ode_system_cpp__set_pars <- function(ode_system, pars) {
     invisible(.Call('rodeint_ode_system_cpp__set_pars', PACKAGE = 'rodeint', ode_system, pars))
 }
 
-ode_system_r__ctor <- function(derivs, pars_type) {
-    .Call('rodeint_ode_system_r__ctor', PACKAGE = 'rodeint', derivs, pars_type)
+ode_system_cpp__derivs <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_cpp__derivs', PACKAGE = 'rodeint', ode_system, y, t)
 }
 
-ode_system_r__derivs <- function(ode_system, y, t) {
-    .Call('rodeint_ode_system_r__derivs', PACKAGE = 'rodeint', ode_system, y, t)
+ode_system_class__get_pars <- function(ode_system) {
+    .Call('rodeint_ode_system_class__get_pars', PACKAGE = 'rodeint', ode_system)
 }
 
-ode_system_r__get_pars <- function(ode_system) {
-    .Call('rodeint_ode_system_r__get_pars', PACKAGE = 'rodeint', ode_system)
+ode_system_class__set_pars <- function(ode_system, pars) {
+    invisible(.Call('rodeint_ode_system_class__set_pars', PACKAGE = 'rodeint', ode_system, pars))
 }
 
-ode_system_r__set_pars <- function(ode_system, pars) {
-    invisible(.Call('rodeint_ode_system_r__set_pars', PACKAGE = 'rodeint', ode_system, pars))
+ode_system_class__derivs <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_class__derivs', PACKAGE = 'rodeint', ode_system, y, t)
 }
 
 stepper_controlled__ctor <- function(type, eps_abs, eps_rel) {

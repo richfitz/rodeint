@@ -13,6 +13,7 @@ void harmonic_oscillator_derivs(const std::vector<double>& y,
 
 class harmonic_oscillator {
 public:
+  typedef double pars_type;
   harmonic_oscillator(double p_) : p(p_) {}
   void derivs(const std::vector<double>& y,
               std::vector<double>& dydt,
@@ -22,9 +23,6 @@ public:
   }
   void set_pars(SEXP pars) {
     p = Rcpp::as<double>(pars);
-  }
-  SEXP get_pars() const {
-    return Rcpp::wrap(p);
   }
 private:
   double p;
@@ -44,6 +42,5 @@ test_harmonic_oscillator_cpp(std::vector<double> pars) {
 rodeint::ode_system_class
 test_harmonic_oscillator_class(double pars) {
   using rodeint::test::harmonic_oscillator;
-  harmonic_oscillator obj(pars);
-  return rodeint::wrapper<harmonic_oscillator>::make_ode_system(obj);
+  return rodeint::ode_system_class_generator<harmonic_oscillator>(pars);
 }

@@ -55,8 +55,6 @@ example_harmonic_oscillator_cpp(std::vector<double> pars) {
 /*** R
     ## Run this file with
     ##   Rcpp::sourceCpp("harmonic_oscillator_cpp.cpp")
-    ## or
-    ##   Rcpp::sourceCpp("harmonic_oscillator_cpp.cpp", embeddedR=FALSE)
     library(rodeint)
 
     obj <- ode_system(example_harmonic_oscillator_cpp, 0.5)

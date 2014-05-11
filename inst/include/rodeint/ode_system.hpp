@@ -6,16 +6,13 @@
 namespace rodeint {
 
 template <typename OdeSystem>
-typename OdeSystem::pars_type
-ode_system__get_pars(Rcpp::XPtr<OdeSystem> ode_system) {
-  return ode_system->get_pars();
+SEXP ode_system__get_pars(Rcpp::XPtr<OdeSystem> ode_system) {
+  return Rcpp::wrap(ode_system->get_pars());
 }
 
 template <typename OdeSystem>
-void
-ode_system__set_pars(Rcpp::XPtr<OdeSystem> ode_system,
-                     typename OdeSystem::pars_type pars) {
-  ode_system->set_pars(pars);
+void ode_system__set_pars(Rcpp::XPtr<OdeSystem> ode_system, SEXP pars) {
+  ode_system->set_pars(Rcpp::as<typename OdeSystem::pars_type>(pars));
 }
 
 template <typename OdeSystem>
