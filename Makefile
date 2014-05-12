@@ -4,9 +4,18 @@ all:
 attributes:
 	Rscript -e "Rcpp::compileAttributes()"
 
-document:
+document: roxygen staticdocs
+
+roxygen:
 	@mkdir -p man
 	Rscript -e "library(methods); devtools::document()"
+
+staticdocs:
+	@mkdir -p inst/staticdocs
+	Rscript -e "library(methods); staticdocs::build_site()"
+
+publish_pages: staticdocs
+	cd inst && ./update-gh-pages.sh
 
 install:
 	R CMD INSTALL .
@@ -29,4 +38,4 @@ test:
 run_examples: install
 	make -C inst/examples
 
-.PHONY: attributes document install clean build check
+.PHONY: attributes document roxygen staticdocs publish_pages install clean build check

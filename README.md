@@ -13,3 +13,5 @@ As an example of what I'm aiming for, [here](https://github.com/richfitz/rodeint
 Similarly, [here](https://github.com/richfitz/rodeint/blob/master/inst/examples/harmonic_oscillator_class.cpp) is the same system implemented as a small class.  The book-keeping here is slightly greater, but allows for arbitrary calculations after parameters are set (e.g., precomputing values that would be used at all times).
 
 The `make_integrate` function binds together target functions, integration backends and steppers.  It creates functions with relatively few arguments that are tailored to the way the function will be used.
+
+Documentation as the package evolves available [here](http://richfitz.github.io/rodeint/) (generated with [staticdocs](https://github.com/hadley/staticdocs)).

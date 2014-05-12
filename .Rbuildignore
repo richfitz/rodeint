@@ -4,3 +4,5 @@ ignore
 .travis.yml
 extra
 check.sh
+inst/web
+inst/update-gh-pages.sh
