@@ -453,6 +453,68 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// ode_system_stiff_class__get_pars
+SEXP ode_system_stiff_class__get_pars(Rcpp::XPtr<rodeint::ode_system_stiff_class> ode_system);
+RcppExport SEXP rodeint_ode_system_stiff_class__get_pars(SEXP ode_systemSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_class> >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_stiff_class__get_pars(ode_system);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// ode_system_stiff_class__set_pars
+void ode_system_stiff_class__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_class> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_stiff_class__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
+BEGIN_RCPP
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_class> >::type ode_system(ode_systemSEXP );
+        Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
+        ode_system_stiff_class__set_pars(ode_system, pars);
+    }
+    return R_NilValue;
+END_RCPP
+}
+// ode_system_stiff_class__derivs
+rodeint::ode_system_stiff_class::state_type ode_system_stiff_class__derivs(Rcpp::XPtr<rodeint::ode_system_stiff_class> ode_system, rodeint::ode_system_stiff_class::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_class__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_class> >::type ode_system(ode_systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t(tSEXP );
+        rodeint::ode_system_stiff_class::state_type __result = ode_system_stiff_class__derivs(ode_system, y, t);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// ode_system_stiff_class__jacobian
+rodeint::ode_system_stiff_class::matrix_type ode_system_stiff_class__jacobian(Rcpp::XPtr<rodeint::ode_system_stiff_class> ode_system, rodeint::ode_system_stiff_class::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_class__jacobian(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_class> >::type ode_system(ode_systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
+        Rcpp::traits::input_parameter< double >::type t(tSEXP );
+        rodeint::ode_system_stiff_class::matrix_type __result = ode_system_stiff_class__jacobian(ode_system, y, t);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // ode_system_r__get_pars
 SEXP ode_system_r__get_pars(Rcpp::XPtr<rodeint::ode_system_r> ode_system);
 RcppExport SEXP rodeint_ode_system_r__get_pars(SEXP ode_systemSEXP) {
@@ -705,6 +767,21 @@ BEGIN_RCPP
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< std::vector<double> >::type pars(parsSEXP );
         rodeint::ode_system_stiff_cpp __result = test_stiff_cpp(pars);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
+// test_stiff_class
+rodeint::ode_system_stiff_class test_stiff_class(std::vector<double> pars);
+RcppExport SEXP rodeint_test_stiff_class(SEXP parsSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< std::vector<double> >::type pars(parsSEXP );
+        rodeint::ode_system_stiff_class __result = test_stiff_class(pars);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

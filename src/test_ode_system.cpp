@@ -66,6 +66,28 @@ void stiff_jacobian(const stiff_vector&, stiff_matrix& J,
   dfdt[1] = 0.0;
 }
 
+class stiff_system {
+public:
+  typedef std::vector<double> pars_type; // still needs declaring
+  typedef rodeint::ode_system_stiff_class::state_type  vec_type;
+  typedef rodeint::ode_system_stiff_class::matrix_type mat_type;
+  stiff_system(std::vector<double> /* pars */) {} // ignore parameters
+  void derivs(const vec_type& y, vec_type& dydt, const double /* t */) {
+    dydt[0] = -101.0 * y[0] - 100.0 * y[1];
+    dydt[1] = y[0];
+  }
+  void jacobian(const vec_type& /* y */, mat_type& J, const double /* t */,
+                vec_type& dfdt) {
+    J(0, 0) = -101.0;
+    J(0, 1) = -100.0;
+    J(1, 0) = 1.0;
+    J(1, 1) = 0.0;
+    dfdt[0] = 0.0;
+    dfdt[1] = 0.0;
+  }
+  void set_pars(SEXP /* pars */) { } // noop
+};
+
 }
 }
 
@@ -101,4 +123,11 @@ test_stiff_cpp(std::vector<double> pars) {
   return rodeint::ode_system_stiff_cpp(&stiff_derivs,
                                        &stiff_jacobian,
                                        pars);
+}
+
+// [[Rcpp::export]]
+rodeint::ode_system_stiff_class
+test_stiff_class(std::vector<double> pars) {
+  using rodeint::test::stiff_system;
+  return rodeint::ode_system_stiff_class_generator<stiff_system>(pars);
 }

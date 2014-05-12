@@ -33,6 +33,10 @@ test_that("parameters", {
   expect_that(obj$set_pars(numeric(0)),
               throws_error("Incorrect length"))
   expect_that(obj$get_pars(), is_identical_to(pars))
+
+  pars2 <- pi
+  obj$set_pars(pi)
+  expect_that(obj$get_pars(), is_identical_to(pars2))
 })
 
 test_that("parameter validation", {

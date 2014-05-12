@@ -97,6 +97,22 @@ ode_system_stiff_cpp__jacobian <- function(ode_system, y, t) {
     .Call('rodeint_ode_system_stiff_cpp__jacobian', PACKAGE = 'rodeint', ode_system, y, t)
 }
 
+ode_system_stiff_class__get_pars <- function(ode_system) {
+    .Call('rodeint_ode_system_stiff_class__get_pars', PACKAGE = 'rodeint', ode_system)
+}
+
+ode_system_stiff_class__set_pars <- function(ode_system, pars) {
+    invisible(.Call('rodeint_ode_system_stiff_class__set_pars', PACKAGE = 'rodeint', ode_system, pars))
+}
+
+ode_system_stiff_class__derivs <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_stiff_class__derivs', PACKAGE = 'rodeint', ode_system, y, t)
+}
+
+ode_system_stiff_class__jacobian <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_stiff_class__jacobian', PACKAGE = 'rodeint', ode_system, y, t)
+}
+
 ode_system_r__get_pars <- function(ode_system) {
     .Call('rodeint_ode_system_r__get_pars', PACKAGE = 'rodeint', ode_system)
 }
@@ -163,5 +179,9 @@ test_harmonic_oscillator_deSolve_c <- function(pars) {
 
 test_stiff_cpp <- function(pars) {
     .Call('rodeint_test_stiff_cpp', PACKAGE = 'rodeint', pars)
+}
+
+test_stiff_class <- function(pars) {
+    .Call('rodeint_test_stiff_class', PACKAGE = 'rodeint', pars)
 }
 

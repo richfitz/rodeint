@@ -39,6 +39,7 @@
 
 #include <rodeint/ode_system_stiff_r.hpp>
 #include <rodeint/ode_system_stiff_cpp.hpp>
+#include <rodeint/ode_system_stiff_class.hpp>
 
 // NOTE: I'm surprised we never load integrate.hpp...
 
