@@ -57,8 +57,6 @@ private:
   Rcpp::RObject pars;
 };
 
-// TODO: Here and in system_class check the version compiles with
-// different target names.
 namespace internals {
 template <typename T,
           void (T::*derivs)(const ode_system_stiff_class::state_type&,
@@ -72,32 +70,70 @@ template <typename T,
           &T::jacobian,
           void (T::*set_pars)(ode_system_stiff_class::pars_type) =
           &T::set_pars>
-class stiff_wrapper {
+class wrapper_stiff {
 public:
   static ode_system_stiff_class make_ode_system(T obj, SEXP pars) {
-    stiff_wrapper w(obj);
+    wrapper_stiff w(obj);
     return ode_system_stiff_class(boost::bind(derivs,   w.data, _1, _2, _3),
                                   boost::bind(jacobian, w.data, _1, _2, _3, _4),
                                   boost::bind(set_pars, w.data, _1),
                                   pars);
   }
 private:
-  stiff_wrapper(T data_) : data(boost::shared_ptr<T>(new T(data_))) {}
+  wrapper_stiff(T data_) : data(boost::shared_ptr<T>(new T(data_))) {}
   boost::shared_ptr<T> data;
 };
 }
 
+// TODO: Test this stuff out in the same way as
+// inst/examples/defaults.cpp, possibly in the same file.
+
+template <typename T,
+          void (T::*derivs)(const ode_system_stiff_class::state_type&,
+                            ode_system_stiff_class::state_type&,
+                            const double),
+          void (T::*jacobian)(const ode_system_stiff_class::state_type&,
+                              ode_system_stiff_class::matrix_type&,
+                              const double,
+                              ode_system_stiff_class::state_type&),
+          void (T::*set_pars)(ode_system_stiff_class::pars_type)>
+ode_system_stiff_class
+make_ode_system_stiff_class(T obj, typename T::pars_type pars) {
+  SEXP p = Rcpp::wrap(pars);
+  return internals::wrapper_stiff<T, derivs, jacobian,
+                                  set_pars>::make_ode_system(obj, p);
+}
+
+// Version assuming defaults (this is easier with C++11)
+template <typename T>
+ode_system_stiff_class
+make_ode_system_stiff_class(T obj, typename T::pars_type pars) {
+  return make_ode_system_stiff_class<T, &T::derivs, &T::jacobian, &T::set_pars>(obj, pars);
+}
+
+template <typename T,
+          void (T::*derivs)(const ode_system_stiff_class::state_type&,
+                            ode_system_stiff_class::state_type&,
+                            const double),
+          void (T::*jacobian)(const ode_system_stiff_class::state_type&,
+                              ode_system_stiff_class::matrix_type&,
+                              const double,
+                              ode_system_stiff_class::state_type&),
+          void (T::*set_pars)(ode_system_stiff_class::pars_type)>
+ode_system_stiff_class
+make_ode_system_stiff_class(typename T::pars_type pars) {
+  T obj(pars);
+  SEXP p = Rcpp::wrap(pars);
+  return internals::wrapper_stiff<T, derivs, jacobian,
+                                  set_pars>::make_ode_system(obj, p);
+}
+
+// Version assuming defaults (this is easier with C++11)
 template <typename T>
 ode_system_stiff_class
 make_ode_system_stiff_class(typename T::pars_type pars) {
   T obj(pars);
-  return internals::stiff_wrapper<T>::make_ode_system(obj, Rcpp::wrap(pars));
-}
-
-template <typename T>
-ode_system_stiff_class
-make_ode_system_stiff_class(typename T::pars_type pars, T obj) {
-  return internals::stiff_wrapper<T>::make_ode_system(obj, Rcpp::wrap(pars));
+  return make_ode_system_stiff_class(obj, pars);
 }
 
 }

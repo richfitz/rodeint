@@ -74,16 +74,54 @@ private:
 };
 }
 
+// NOTE:
+// If we are on a C++11 compatible compiler we can use the same
+// default template arguments as above to allow different member
+// functions to be specified, and therefore only need the first
+// version.  Add "= &T::derivs" and "= &T::set_pars" after the second
+// and third template parameters.
+//
+// It can be used as:
+//   make_ode_system_stiff_class<my_system>(pars);
+// or
+//   make_ode_system_stiff_class<my_system, &my_system::derivs,
+//                               &my_system::set_pars>(pars);
+// see inst/examples/defaults.cpp for examples.
+
+// Version for classes with more than one parameter in their
+// constructor.
+template <typename T,
+          void (T::*derivs)(const ode_system_class::state_type&,
+                            ode_system_class::state_type&,
+                            const double),
+          void (T::*set_pars)(ode_system_class::pars_type)>
+ode_system_class make_ode_system_class(T obj, typename T::pars_type pars) {
+  SEXP p = Rcpp::wrap(pars);
+  return internals::wrapper<T, derivs, set_pars>::make_ode_system(obj, p);
+}
+
+// Version assuming defaults (this is easier with C++11)
+template <typename T>
+ode_system_class make_ode_system_class(T obj, typename T::pars_type pars) {
+  return make_ode_system_class<T, &T::derivs, &T::set_pars>(obj, pars);
+}
+
+// Version assuming object takes just pars as argument to constructor:
+template <typename T,
+          void (T::*derivs)(const ode_system_class::state_type&,
+                            ode_system_class::state_type&,
+                            const double),
+          void (T::*set_pars)(ode_system_class::pars_type)>
+ode_system_class make_ode_system_class(typename T::pars_type pars) {
+  T obj(pars);
+  return make_ode_system_class<T, derivs, set_pars>(obj, pars);
+}
+
+// And version assuming object takes pars *and* assuming defaults.
 template <typename T>
 ode_system_class make_ode_system_class(typename T::pars_type pars) {
   T obj(pars);
-  return internals::wrapper<T>::make_ode_system(obj, Rcpp::wrap(pars));
-}
-
-template <typename T>
-ode_system_class make_ode_system_class(typename T::pars_type pars,
-                                       T obj) {
-  return internals::wrapper<T>::make_ode_system(obj, Rcpp::wrap(pars));
+  return make_ode_system_class(obj, pars);
 }
 
 }
