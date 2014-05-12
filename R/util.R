@@ -19,6 +19,12 @@ assert_ode_system <- function(x, name=deparse(substitute(x))) {
   assert_inherits(x, "ode_system", name)
 }
 
+assert_function <- function(x, name=deparse(substitute(x))) {
+  if (!is.function(x)) {
+    stop(sprintf("%s must be a function", name), call.=FALSE)
+  }
+}
+
 assert_nonnegative <- function(x, name=deparse(substitute(x))) {
   if (x < 0) {
     stop(sprintf("%s must be nonnegative", name), call.=FALSE)

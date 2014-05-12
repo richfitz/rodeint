@@ -38,6 +38,7 @@
 #include <rodeint/ode_system_desolve.hpp>
 
 #include <rodeint/ode_system_stiff_r.hpp>
+#include <rodeint/ode_system_stiff_cpp.hpp>
 
 // NOTE: I'm surprised we never load integrate.hpp...
 

@@ -34,6 +34,13 @@ inline SEXP wrap(const rodeint::ode_system_stiff_r& obj) {
   ret.attr("type") = "ode_system_stiff_r";
   return wrap(ret);
 }
+template <>
+inline SEXP wrap(const rodeint::ode_system_stiff_cpp& obj) {
+  XPtr<rodeint::ode_system_stiff_cpp>
+    ret(new rodeint::ode_system_stiff_cpp(obj), true);
+  ret.attr("type") = "ode_system_stiff_cpp";
+  return wrap(ret);
+}
 
 // 'as' definitions for each class:
 template<>
@@ -55,6 +62,11 @@ inline rodeint::ode_system_r as(SEXP obj) {
 template<>
 inline rodeint::ode_system_stiff_r as(SEXP obj) {
   XPtr<rodeint::ode_system_stiff_r> xp(obj);
+  return *xp;
+}
+template<>
+inline rodeint::ode_system_stiff_cpp as(SEXP obj) {
+  XPtr<rodeint::ode_system_stiff_cpp> xp(obj);
   return *xp;
 }
 

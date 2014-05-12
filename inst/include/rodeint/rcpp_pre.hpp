@@ -27,6 +27,7 @@ class ode_system_cpp;
 class ode_system_r;
 
 class ode_system_stiff_r;
+class ode_system_stiff_cpp;
 }
 
 namespace Rcpp {
@@ -35,12 +36,14 @@ template<> SEXP wrap(const rodeint::ode_system_cpp&);
 template<> SEXP wrap(const rodeint::ode_system_r&);
 
 template<> SEXP wrap(const rodeint::ode_system_stiff_r&);
+template<> SEXP wrap(const rodeint::ode_system_stiff_cpp&);
 
 template<> rodeint::ode_system_class as(SEXP);
 template<> rodeint::ode_system_cpp as(SEXP);
 template<> rodeint::ode_system_r as(SEXP);
 
 template<> rodeint::ode_system_stiff_r as(SEXP);
+template<> rodeint::ode_system_stiff_cpp as(SEXP);
 
 template<> SEXP wrap(const boost::numeric::ublas::vector<double>&);
 template<> SEXP wrap(const boost::numeric::ublas::matrix<double>&);

@@ -18,10 +18,10 @@ test_that("derivatives", {
   set.seed(1)
   y0 <- runif(2)
   t0 <- 0.0
-  
-  expect_that(obj$generator$derivs(y0, t0),
+
+  expect_that(obj$generator()$derivs(y0, t0),
               is_identical_to(stiff_r_derivs(y0, t0, pars)))
-  expect_that(obj$generator$jacobian(y0, t0),
+  expect_that(obj$generator()$jacobian(y0, t0),
               is_identical_to(stiff_r_jacobian(y0, t0, pars)))
 
   expect_that(obj$derivs(y0, t0),
@@ -95,7 +95,7 @@ test_that("copying", {
 test_that("deSolve interface", {
   pars <- numeric(0)
   obj <- ode_system_stiff(stiff_r, pars)
-  
+
   set.seed(1)
   y0 <- runif(2)
   t0 <- 0.0

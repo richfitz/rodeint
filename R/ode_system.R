@@ -34,6 +34,9 @@ ode_system <- setRefClass("ode_system",
 ## Lock all fields:
 ode_system$lock(names(ode_system$fields()))
 
+## TODO: The argument name 'generator' is extremely confusing (here
+## and in the stiff system section.  Perhaps wrap this with some
+## helper function?
 ode_system$methods(initialize = function(generator, pars,
                      validate=NULL, deSolve_style=FALSE) {
   "\\itemize{
@@ -67,13 +70,6 @@ element being the derivatives).
   ptr       <<- obj$ptr
   validate  <<- validate_init(validate)
   validate(pars)
-
-  ## Becaue all the functions are named consistently, I'm using get()
-  ## over a big if/else list.  It's nicer to look at, though is
-  ## possibly a touch slower.
-  get_rodeint <- function(...) {
-    get(paste0(...), environment(ode_system), mode="function", inherits=FALSE)
-  }
 
   .get_pars <<- get_rodeint(type, "__get_pars")
   .set_pars <<- get_rodeint(type, "__set_pars")
@@ -157,6 +153,8 @@ ode_system$methods(deSolve_info = function() {
 })
 
 generator_init <- function(generator, pars, deSolve_style) {
+  assert_function(generator)
+
   ## First step is to look at the provided function.  A single
   ## parameter function is assumed to be a generator.  A three
   ## parameter function is assumed to be a ode_system function.
@@ -168,11 +166,15 @@ generator_init <- function(generator, pars, deSolve_style) {
       }
     }
     ptr <- ode_system_r__ctor(generator, pars)
+  } else if (deSolve_style) {
+    stop("Only meaningful for R functions")
   } else if (length(formals(generator)) == 1) {
     if (deSolve_style) {
       stop("Only meaningful for R functions")
     }
     ptr <- generator(pars)
+  } else { ## TODO: test this
+    stop("Invalid generator")
   }
 
   type=attr(ptr, "type")
@@ -200,8 +202,8 @@ validate_init <- function(validate) {
 ##' @export
 ode_system_stiff <- setRefClass("ode_system_stiff",
                                 fields=list(
-                                  ## will change to a pair?
-                                  generator="list",
+                                  ## Might still change
+                                  generator="function",
                                   type="character",
                                   ptr="externalptr",
                                   validate="function",
@@ -221,11 +223,19 @@ ode_system_stiff$methods(initialize = function(generator, pars,
   ptr       <<- obj$ptr
   validate  <<- validate_init(validate)
   validate(pars)
-  ## Will use get_rodeint
-  .get_pars <<- ode_system_stiff_r__get_pars
-  .set_pars <<- ode_system_stiff_r__set_pars
-  .derivs   <<- ode_system_stiff_r__derivs
-  .jacobian <<- ode_system_stiff_r__jacobian
+
+  .get_pars <<- get_rodeint(type, "__get_pars")
+  .set_pars <<- get_rodeint(type, "__set_pars")
+  .derivs   <<- get_rodeint(type, "__derivs")
+  .jacobian <<- get_rodeint(type, "__jacobian")
+
+  ## TODO: Derivative functions!
+  ## ty <- sub("ode_system_", "", type) # Abbrviated type :)
+  ## integrate_const    <<- get_rodeint("integrate_const_",    ty)
+  ## integrate_n_steps  <<- get_rodeint("integrate_n_steps_",  ty)
+  ## integrate_adaptive <<- get_rodeint("integrate_adaptive_", ty)
+  ## integrate_times    <<- get_rodeint("integrate_times_",    ty)
+  ## integrate_simple   <<- get_rodeint("integrate_simple_",   ty)
 })
 
 ode_system_stiff$methods(get_pars = function() {
@@ -248,12 +258,28 @@ ode_system_stiff$methods(copy=function() {
 })
 
 ode_system_stiff$methods(deSolve_info = function() {
-  ode_system_pars <- get_pars()
-  func <- function(t, y, ignored) { # we never allow extra args
-    list(generator$derivs(y, t, ode_system_pars))
-  }
-  jacfunc <- function(t, y, ignored) {
-    generator$jacobian(y, t, ode_system_pars)
+  if (type == "ode_system_stiff_r") {
+    ode_system_pars <- get_pars()
+    contents <- generator()
+    derivs <- contents$derivs
+    jacobian <- contents$jacobian
+    func <- function(t, y, ignored) { # we never allow extra args
+      list(derivs(y, t, ode_system_pars))
+    }
+    jacfunc <- function(t, y, ignored) {
+      jacobian(y, t, ode_system_pars)
+    }
+  } else if (type %in% c("ode_system_stiff_cpp",
+                         "ode_system_stiff_class")) {
+    ## TODO: needs writing
+    ## func     <- paste0("deSolve_func_", type)
+    ## jacfunc  <- paste0("deSolve_func_", type)
+    ## dllname  <- "rodeint"
+    ## initfunc <- "deSolve_initfunc"
+    ## initpar <- ptr
+    stop("Not yet supported")
+  } else {
+    stop("Unsupported type (how did you even get here?)")
   }
   dllname <- initfunc <- initpar <- NULL
   list(func=func, jacfunc=jacfunc,
@@ -261,22 +287,68 @@ ode_system_stiff$methods(deSolve_info = function() {
 })
 
 generator_init_stiff <- function(generator, pars, deSolve_style) {
-  if (!is.list(generator)) stop()
-  if (!identical(names(generator), c("derivs", "jacobian"))) stop()
-
-  if (deSolve_style) {
-    ## Note: can't specify dfdt here.
-    deSolve <- generator
-    generator <- list(derivs=function(y, t, pars)
-                      deSolve$derivs(t, y, pars)[[1]],
-                      jacobian=function(y, t, pars)
-                      deSolve$jacobian(t, y, pars))
+  ## This is one that we've built already
+  if (is.function(generator) && length(formals(generator)) == 0) {
+    generator <- generator()
   }
-  ptr <- ode_system_stiff_r__ctor(generator$derivs, generator$jacobian, pars)
+
+  if (is.list(generator)) { # ode_system_r
+    if (!identical(names(generator), c("derivs", "jacobian"))) {
+      stop("Invalid generator contents")
+    }
+    if (deSolve_style) {
+      contents <- stiff_system(generator$derivs, generator$jacobian,
+                               deSolve_style)
+    } else {
+      contents <- generator
+    }
+    ## This little dance is a workaround getting the "generator" slot
+    ## typed correctly.  Should make an S3 class that could be
+    ## either.
+    generator <- function() contents
+    ptr <- ode_system_stiff_r__ctor(contents$derivs, contents$jacobian, pars)
+  } else if (deSolve_style) {
+    stop("Only meaningful for R functions")
+  } else if (is.function(generator) && length(formals(generator)) == 1) {
+    ptr <- generator(pars)
+  } else {
+    stop("Invalid generator contents")
+  }
 
   type <- attr(ptr, "type")
   if (is.null(type)) {
     stop("Did not recieve a valid generator type")
   }
   list(type=type, generator=generator, ptr=ptr)
+}
+
+## Becaue all the functions are named consistently, I'm using get()
+## over a big if/else list.  It's nicer to look at, though is
+## possibly a touch slower.
+get_rodeint <- function(...) {
+  get(paste0(...), environment(ode_system), mode="function", inherits=FALSE)
+}
+
+## Odd little function, has a job.
+##
+## The logic around handling these things is really hard, and will
+## take some getting right.  I can probably simplify it once I know
+## exactly what the interface will be doing though.  This is going to
+## be the
+stiff_system <- function(derivs, jacobian, deSolve_style=FALSE) {
+  assert_function(derivs)
+  assert_function(jacobian)
+  ## TODO: check parameters here for t first as a deSolve style, and
+  ## allow it to be overridden with an argument.  Seems a bit cute and
+  ## error prone.  Put it up as a RFC on github and stick in a check
+  ## warning.
+  ##
+  ## NOTE: can't ever specify dfdt for deSolve models - assume
+  ## constant once we support it?
+  if (deSolve_style) {
+    list(derivs  =function(y, t, pars) derivs(t, y, pars)[[1]],
+         jacobian=function(y, t, pars) jacobian(t, y, pars))
+  } else {
+    list(derivs=derivs, jacobian=jacobian)
+  }
 }

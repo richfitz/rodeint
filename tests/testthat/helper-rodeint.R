@@ -9,9 +9,12 @@ harmonic_oscillator_class <- rodeint:::test_harmonic_oscillator_class
 harmonic_oscillator_deSolve <- rodeint:::test_harmonic_oscillator_deSolve
 harmonic_oscillator_deSolve_c <- rodeint:::test_harmonic_oscillator_deSolve_c
 
+## TODO: Helper function for validating R derivative/jacobian pairs,
+## possibly also for associating a dfdt type or specifying a default.
 stiff_r_derivs <- rodeint:::test_stiff_r_derivs
 stiff_r_jacobian <- rodeint:::test_stiff_r_jacobian
 stiff_r <- list(derivs=stiff_r_derivs, jacobian=stiff_r_jacobian)
+stiff_cpp <- rodeint:::test_stiff_cpp
 
 stiff_r_derivs_deSolve <- rodeint:::test_stiff_r_derivs_deSolve
 stiff_r_jacobian_deSolve <- rodeint:::test_stiff_r_jacobian_deSolve
