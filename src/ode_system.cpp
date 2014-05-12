@@ -7,6 +7,11 @@
 // TODO: As with integrate.cpp, this file would be substantially
 // easier to look after with code generation.
 
+// TODO: Might be possible to write changing types here:
+//  Rcpp::XPtr<rodeint::ode_system_r>  -> SEXP
+//  rodeint::ode_system_r::state_type -> SEXP
+// and doing conversion in template code.
+
 // 1: r
 // [[Rcpp::export]]
 SEXP

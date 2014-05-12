@@ -25,6 +25,19 @@ ode_system__derivs(Rcpp::XPtr<OdeSystem> ode_system,
   return dydt;
 }
 
+// Stiff systems only:
+template <typename OdeSystem>
+typename OdeSystem::matrix_type
+ode_system__jacobian(Rcpp::XPtr<OdeSystem> ode_system,
+                     typename OdeSystem::state_type y,
+                     double t) {
+  const size_t n = y.size();
+  typename OdeSystem::state_type  dfdt(n);
+  typename OdeSystem::matrix_type J(n, n);
+  ode_system->compute_jacobian(y, J, t, dfdt);
+  return J;
+}
+
 }
 
 #endif

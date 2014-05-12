@@ -4,6 +4,7 @@
 // This organises loading all full class definitions, and the as/wrap
 // prototypes
 #include <rodeint.h>
+#include "util_ublas.hpp"
 
 namespace Rcpp {
 // 'wrap' definitions for each class:
@@ -26,6 +27,14 @@ inline SEXP wrap(const rodeint::ode_system_class& obj) {
   return wrap(ret);
 }
 
+template <>
+inline SEXP wrap(const rodeint::ode_system_stiff_r& obj) {
+  XPtr<rodeint::ode_system_stiff_r>
+    ret(new rodeint::ode_system_stiff_r(obj), true);
+  ret.attr("type") = "ode_system_stiff_r";
+  return wrap(ret);
+}
+
 // 'as' definitions for each class:
 template<>
 inline rodeint::ode_system_class as(SEXP obj) {
@@ -41,6 +50,33 @@ template<>
 inline rodeint::ode_system_r as(SEXP obj) {
   XPtr<rodeint::ode_system_r> xp(obj);
   return *xp;
+}
+
+template<>
+inline rodeint::ode_system_stiff_r as(SEXP obj) {
+  XPtr<rodeint::ode_system_stiff_r> xp(obj);
+  return *xp;
+}
+
+// Not pointers, but full copies converting ublas <-> R
+template<>
+inline SEXP wrap(const boost::numeric::ublas::vector<double>& obj) {
+  return rodeint::util::ublas_vector_to_r(obj);;
+}
+
+template<>
+inline SEXP wrap(const boost::numeric::ublas::matrix<double>& obj) {
+  return rodeint::util::ublas_matrix_to_r(obj);
+}
+
+template<>
+inline boost::numeric::ublas::vector<double> as(SEXP obj) {
+  return rodeint::util::r_vector_to_ublas<double>(as<NumericVector>(obj));
+}
+
+template<>
+inline boost::numeric::ublas::matrix<double> as(SEXP obj) {
+  return rodeint::util::r_matrix_to_ublas<double>(as<NumericMatrix>(obj));
 }
 
 #ifndef RODEINT_ODE_SYSTEM_ONLY

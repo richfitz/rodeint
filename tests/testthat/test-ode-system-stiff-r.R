@@ -1,29 +1,40 @@
 source("helper-rodeint.R")
 
-context("ode_system (r)")
+context("ode_system_stiff (r)")
 
 test_that("construction", {
-  pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_r, pars)
-  expect_that(obj, is_a("ode_system"))
-  expect_that(obj$type, is_identical_to("ode_system_r"))
+  pars <- numeric(0)
+  obj <- ode_system_stiff(stiff_r, pars)
+  expect_that(obj, is_a("ode_system_stiff"))
+  expect_that(obj$type, is_identical_to("ode_system_stiff_r"))
   expect_that(obj$ptr <- obj$ptr,
               throws_error("read-only"))
 })
 
 test_that("derivatives", {
-  pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_r, pars)
-  y0 <- c(0, 1)
+  pars <- numeric(0)
+  obj <- ode_system_stiff(stiff_r, pars)
+
+  set.seed(1)
+  y0 <- runif(2)
   t0 <- 0.0
+  
+  expect_that(obj$generator$derivs(y0, t0),
+              is_identical_to(stiff_r_derivs(y0, t0, pars)))
+  expect_that(obj$generator$jacobian(y0, t0),
+              is_identical_to(stiff_r_jacobian(y0, t0, pars)))
+
   expect_that(obj$derivs(y0, t0),
-              is_identical_to(harmonic_oscillator_r(y0, t0, pars)))
+              is_identical_to(stiff_r_derivs(y0, t0, pars)))
+  expect_that(obj$jacobian(y0, t0),
+              is_identical_to(stiff_r_jacobian(y0, t0, pars)))
 })
 
 test_that("parameters", {
-  pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_r, pars)
+  pars <- numeric(0)
+  obj <- ode_system_stiff(stiff_r, pars)
   expect_that(obj$get_pars(), is_identical_to(pars))
+
   ## Can hapilly set nonsense:
   pars2 <- list(a=1, b=2)
   obj$set_pars(pars2)
@@ -32,8 +43,8 @@ test_that("parameters", {
 
 test_that("parameter validation", {
   pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_r, pars,
-                    positive_scalar_numeric)
+  obj <- ode_system_stiff(stiff_r, pars, positive_scalar_numeric)
+
   ## Will throw on set:
   expect_that(obj$set_pars(-pars),         throws_error("Not positive"))
   expect_that(obj$set_pars(c(pars, pars)), throws_error("Not scalar"))
@@ -42,27 +53,26 @@ test_that("parameter validation", {
   expect_that(obj$set_pars(list(pars)),    throws_error("Not numeric"))
 
   ## And on creation:
-  expect_that(ode_system(harmonic_oscillator_r, -pars,
+  expect_that(ode_system_stiff(stiff_r, -pars,
                          positive_scalar_numeric),
               throws_error("Not positive"))
-  expect_that(ode_system(harmonic_oscillator_r, c(pars, pars),
+  expect_that(ode_system_stiff(stiff_r, c(pars, pars),
                          positive_scalar_numeric),
               throws_error("Not scalar"))
-  expect_that(ode_system(harmonic_oscillator_r, numeric(0),
+  expect_that(ode_system_stiff(stiff_r, numeric(0),
                          positive_scalar_numeric),
               throws_error("Not scalar"))
-  expect_that(ode_system(harmonic_oscillator_r, "pars",
+  expect_that(ode_system_stiff(stiff_r, "pars",
                          positive_scalar_numeric),
               throws_error("Not numeric"))
-  expect_that(ode_system(harmonic_oscillator_r, list(pars),
+  expect_that(ode_system_stiff(stiff_r, list(pars),
                          positive_scalar_numeric),
               throws_error("Not numeric"))
 })
 
-## TODO: Does not test copying of validator
 test_that("copying", {
   pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_r, pars)
+  obj <- ode_system_stiff(stiff_r, pars)
   expect_that(obj$get_pars(), is_identical_to(pars))
 
   obj.same <- obj        # not a copy
@@ -83,9 +93,11 @@ test_that("copying", {
 })
 
 test_that("deSolve interface", {
-  pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_r, pars)
-  y0 <- c(0, 1)
+  pars <- numeric(0)
+  obj <- ode_system_stiff(stiff_r, pars)
+  
+  set.seed(1)
+  y0 <- runif(2)
   t0 <- 0.0
 
   info <- obj$deSolve_info()
@@ -93,24 +105,35 @@ test_that("deSolve interface", {
               is_identical_to(c("func", "jacfunc",
                                 "dllname", "initfunc", "initpar")))
   expect_that(info$func,     is_a("function"))
-  expect_that(info$jacfunc,  is_null())
-  expect_that(info$dllname,  is_null())
-  expect_that(info$initfunc, is_null())
-  expect_that(info$initpar,  is_null())
+  expect_that(info$jacfunc,  is_a("function"))
+  expect_that(info$dllname,  is_identical_to(NULL))
+  expect_that(info$initfunc, is_identical_to(NULL))
+  expect_that(info$initpar,  is_identical_to(NULL))
 
   expect_that(info$func(t0, y0, pars),
-              is_identical_to(harmonic_oscillator_deSolve(t0, y0, pars)))
+              is_identical_to(stiff_r_derivs_deSolve(t0, y0, pars)))
+  expect_that(info$jacfunc(t0, y0, pars),
+              is_identical_to(stiff_r_jacobian_deSolve(t0, y0, pars)))
 })
 
 test_that("construction from deSolve type", {
-  pars <- 0.5
-  obj <- ode_system(harmonic_oscillator_deSolve, pars,
-                    deSolve_style=TRUE)
-  expect_that(obj, is_a("ode_system"))
-  y0 <- c(0, 1)
+  pars <- numeric(0)
+  obj <- ode_system_stiff(list(derivs=stiff_r_derivs_deSolve,
+                               jacobian=stiff_r_jacobian_deSolve),
+                          pars, deSolve_style=TRUE)
+  expect_that(obj, is_a("ode_system_stiff"))
+
+  set.seed(1)
+  y0 <- runif(2)
   t0 <- 0.0
+
   expect_that(obj$derivs(y0, t0),
-              is_identical_to(harmonic_oscillator_r(y0, t0, pars)))
+              is_identical_to(stiff_r_derivs(y0, t0, pars)))
+  expect_that(obj$jacobian(y0, t0),
+              is_identical_to(stiff_r_jacobian(y0, t0, pars)))
+
   expect_that(obj$deSolve_info()$func(t0, y0, ignored),
-              is_identical_to(harmonic_oscillator_deSolve(t0, y0, pars)))
+              is_identical_to(stiff_r_derivs_deSolve(t0, y0, pars)))
+  expect_that(obj$deSolve_info()$jacfunc(t0, y0, ignored),
+              is_identical_to(stiff_r_jacobian_deSolve(t0, y0, pars)))
 })

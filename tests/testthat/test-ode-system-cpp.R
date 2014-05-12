@@ -93,8 +93,10 @@ test_that("deSolve interface", {
   t0 <- 0.0
   info <- obj$deSolve_info()
   expect_that(names(info),
-              is_identical_to(c("func", "dllname", "initfunc", "initpar")))
+              is_identical_to(c("func", "jacfunc",
+                                "dllname", "initfunc", "initpar")))
   expect_that(info$func,     is_identical_to("deSolve_func_ode_system_cpp"))
+  expect_that(info$jacfunc,  is_null())
   expect_that(info$dllname,  is_identical_to("rodeint"))
   expect_that(info$initfunc, is_identical_to("deSolve_initfunc"))
   expect_that(info$initpar,  is_a("externalptr"))

@@ -9,6 +9,13 @@ harmonic_oscillator_class <- rodeint:::test_harmonic_oscillator_class
 harmonic_oscillator_deSolve <- rodeint:::test_harmonic_oscillator_deSolve
 harmonic_oscillator_deSolve_c <- rodeint:::test_harmonic_oscillator_deSolve_c
 
+stiff_r_derivs <- rodeint:::test_stiff_r_derivs
+stiff_r_jacobian <- rodeint:::test_stiff_r_jacobian
+stiff_r <- list(derivs=stiff_r_derivs, jacobian=stiff_r_jacobian)
+
+stiff_r_derivs_deSolve <- rodeint:::test_stiff_r_derivs_deSolve
+stiff_r_jacobian_deSolve <- rodeint:::test_stiff_r_jacobian_deSolve
+
 last <- function(x) {
   x[[length(x)]]
 }

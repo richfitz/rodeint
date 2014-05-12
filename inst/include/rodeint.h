@@ -37,6 +37,8 @@
 #include <rodeint/ode_system_class.hpp>
 #include <rodeint/ode_system_desolve.hpp>
 
+#include <rodeint/ode_system_stiff_r.hpp>
+
 // NOTE: I'm surprised we never load integrate.hpp...
 
 // And then the actual as/wrap definitions now that all classes have

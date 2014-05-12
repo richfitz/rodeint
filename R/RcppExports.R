@@ -61,6 +61,26 @@ integrate_simple_class <- function(ode_system, y, t0, t1, dt, save_state) {
     .Call('rodeint_integrate_simple_class', PACKAGE = 'rodeint', ode_system, y, t0, t1, dt, save_state)
 }
 
+ode_system_stiff_r__get_pars <- function(ode_system) {
+    .Call('rodeint_ode_system_stiff_r__get_pars', PACKAGE = 'rodeint', ode_system)
+}
+
+ode_system_stiff_r__set_pars <- function(ode_system, pars) {
+    invisible(.Call('rodeint_ode_system_stiff_r__set_pars', PACKAGE = 'rodeint', ode_system, pars))
+}
+
+ode_system_stiff_r__derivs <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_stiff_r__derivs', PACKAGE = 'rodeint', ode_system, y, t)
+}
+
+ode_system_stiff_r__jacobian <- function(ode_system, y, t) {
+    .Call('rodeint_ode_system_stiff_r__jacobian', PACKAGE = 'rodeint', ode_system, y, t)
+}
+
+ode_system_stiff_r__ctor <- function(derivs, jacobian, pars) {
+    .Call('rodeint_ode_system_stiff_r__ctor', PACKAGE = 'rodeint', derivs, jacobian, pars)
+}
+
 ode_system_r__get_pars <- function(ode_system) {
     .Call('rodeint_ode_system_r__get_pars', PACKAGE = 'rodeint', ode_system)
 }

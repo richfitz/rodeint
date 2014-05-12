@@ -133,7 +133,7 @@ ode_system$methods(copy=function() {
 the objects created by simple assignment will share parameters (i.e.,
 setting parameters in the first object sets them in the second object
 - or rather, they are the \\emph{same} object"
-  ode_system$new(generator, get_pars())
+  ode_system$new(generator, get_pars(), validate)
 })
 
 ode_system$methods(deSolve_info = function() {
@@ -151,7 +151,9 @@ ode_system$methods(deSolve_info = function() {
   } else {
     stop("Unsupported type (how did you even get here?)")
   }
-  list(func=func, dllname=dllname, initfunc=initfunc, initpar=initpar)
+  jacfunc <- NULL
+  list(func=func, jacfunc=jacfunc,
+       dllname=dllname, initfunc=initfunc, initpar=initpar)
 })
 
 generator_init <- function(generator, pars, deSolve_style) {
@@ -189,4 +191,92 @@ validate_init <- function(validate) {
   } else {
     stop("validate must be a function")
   }
+}
+
+##' Temporary only - will merge into ode_system
+##' @title Stiff Systems of ODEs
+##' @aliases ode_system_stiff
+##' @export ode_system_stiff
+##' @export
+ode_system_stiff <- setRefClass("ode_system_stiff",
+                                fields=list(
+                                  ## will change to a pair?
+                                  generator="list",
+                                  type="character",
+                                  ptr="externalptr",
+                                  validate="function",
+                                  ## See explanation above
+                                  .get_pars="function",
+                                  .set_pars="function",
+                                  .derivs="function",
+                                  .jacobian="function")) # +dfdt
+
+ode_system_stiff$lock(names(ode_system_stiff$fields()))
+
+ode_system_stiff$methods(initialize = function(generator, pars,
+                           validate=NULL, deSolve_style=FALSE) {
+  obj <- generator_init_stiff(generator, pars, deSolve_style)
+  generator <<- obj$generator
+  type      <<- obj$type
+  ptr       <<- obj$ptr
+  validate  <<- validate_init(validate)
+  validate(pars)
+  ## Will use get_rodeint
+  .get_pars <<- ode_system_stiff_r__get_pars
+  .set_pars <<- ode_system_stiff_r__set_pars
+  .derivs   <<- ode_system_stiff_r__derivs
+  .jacobian <<- ode_system_stiff_r__jacobian
+})
+
+ode_system_stiff$methods(get_pars = function() {
+  .get_pars(ptr)
+})
+ode_system_stiff$methods(set_pars = function(pars) {
+  validate(pars)
+  .set_pars(ptr, pars)
+})
+
+ode_system_stiff$methods(derivs = function(y, t) {
+  .derivs(ptr, y, t)
+})
+ode_system_stiff$methods(jacobian = function(y, t) {
+  .jacobian(ptr, y, t)
+})
+
+ode_system_stiff$methods(copy=function() {
+  ode_system_stiff$new(generator, get_pars(), validate)
+})
+
+ode_system_stiff$methods(deSolve_info = function() {
+  ode_system_pars <- get_pars()
+  func <- function(t, y, ignored) { # we never allow extra args
+    list(generator$derivs(y, t, ode_system_pars))
+  }
+  jacfunc <- function(t, y, ignored) {
+    generator$jacobian(y, t, ode_system_pars)
+  }
+  dllname <- initfunc <- initpar <- NULL
+  list(func=func, jacfunc=jacfunc,
+       dllname=dllname, initfunc=initfunc, initpar=initpar)
+})
+
+generator_init_stiff <- function(generator, pars, deSolve_style) {
+  if (!is.list(generator)) stop()
+  if (!identical(names(generator), c("derivs", "jacobian"))) stop()
+
+  if (deSolve_style) {
+    ## Note: can't specify dfdt here.
+    deSolve <- generator
+    generator <- list(derivs=function(y, t, pars)
+                      deSolve$derivs(t, y, pars)[[1]],
+                      jacobian=function(y, t, pars)
+                      deSolve$jacobian(t, y, pars))
+  }
+  ptr <- ode_system_stiff_r__ctor(generator$derivs, generator$jacobian, pars)
+
+  type <- attr(ptr, "type")
+  if (is.null(type)) {
+    stop("Did not recieve a valid generator type")
+  }
+  list(type=type, generator=generator, ptr=ptr)
 }
