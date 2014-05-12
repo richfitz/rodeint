@@ -8,7 +8,7 @@ ode_system_class
 make_ode_system_deSolve(func_type* func, double* pars_deSolve,
                         std::vector<double> pars) {
   rodeint::deSolve::ode_system_deSolve obj(func, pars_deSolve, pars);
-  return rodeint::ode_system_class_generator(pars, obj);
+  return rodeint::make_ode_system_class(pars, obj);
 }
 
 // The inverse: use rodeint's objective in deSolve, so this all needs

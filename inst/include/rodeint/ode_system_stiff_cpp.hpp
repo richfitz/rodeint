@@ -7,7 +7,8 @@
 #include "util_ublas.hpp"
 #include "util.hpp" // util::check_length
 
-// TODO: Separate version that takes dfdt separately?
+// TODO: Assumes that dfdt is zero (all of the stiff systems so far
+// do)
 
 namespace rodeint {
 class ode_system_stiff_cpp {

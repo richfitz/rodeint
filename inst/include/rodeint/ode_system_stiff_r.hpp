@@ -6,6 +6,9 @@
 #include <boost/numeric/ublas/matrix.hpp>
 #include "util_ublas.hpp"
 
+// TODO: Assumes that dfdt is zero (all of the stiff systems so far
+// do)
+
 namespace rodeint {
 class ode_system_stiff_r {
 public:

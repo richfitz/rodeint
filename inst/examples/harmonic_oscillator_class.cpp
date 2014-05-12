@@ -30,7 +30,7 @@ private:
 rodeint::ode_system_class
 example_harmonic_oscillator_class(double pars) {
   using examples::harmonic_oscillator;
-  return rodeint::ode_system_class_generator<harmonic_oscillator>(pars);
+  return rodeint::make_ode_system_class<harmonic_oscillator>(pars);
 }
 
 /*** R

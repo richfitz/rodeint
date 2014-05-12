@@ -3,9 +3,6 @@
 namespace rodeint {
 namespace test {
 
-// TODO: I think we can prototype harmonic_oscillator as
-// ode_system_cpp::derivs_type and that will automatically check the
-// signature for us?
 void harmonic_oscillator_derivs(const std::vector<double>& y,
                                 std::vector<double>& dydt,
                                 const double /* t */,
@@ -20,7 +17,7 @@ public:
   harmonic_oscillator(double p_) : p(p_) {}
   void derivs(const std::vector<double>& y,
               std::vector<double>& dydt,
-              const double /* t */) { // not const
+              const double /* t */) { // method not const
     dydt[0] =  y[1];
     dydt[1] = -y[0] - p * y[1];
   }
@@ -102,7 +99,7 @@ test_harmonic_oscillator_cpp(std::vector<double> pars) {
 rodeint::ode_system_class
 test_harmonic_oscillator_class(double pars) {
   using rodeint::test::harmonic_oscillator;
-  return rodeint::ode_system_class_generator<harmonic_oscillator>(pars);
+  return rodeint::make_ode_system_class<harmonic_oscillator>(pars);
 }
 
 // [[Rcpp::export]]
@@ -129,5 +126,5 @@ test_stiff_cpp(std::vector<double> pars) {
 rodeint::ode_system_stiff_class
 test_stiff_class(std::vector<double> pars) {
   using rodeint::test::stiff_system;
-  return rodeint::ode_system_stiff_class_generator<stiff_system>(pars);
+  return rodeint::make_ode_system_stiff_class<stiff_system>(pars);
 }
