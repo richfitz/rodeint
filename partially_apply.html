@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>partially_apply. rodeint 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+Rich FitzJohn
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">rodeint 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Partially Apply Arguments to a Function</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>partially_apply(f, ..., set_as_defaults&nbsp;=&nbsp;FALSE)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>f</dt>
+      <dd>A function</dd>
+      <dt>...</dt>
+      <dd>Named arguments to set</dd>
+      <dt>set_as_defaults</dt>
+      <dd>Should values in <code>...</code> be set as
+defaults?</dd>
+    </dl>
+    
+    <div class="Partially Apply Arguments to a Function">
+      <h2>Partially Apply Arguments to a Function</h2>
+      
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Partially apply arguments to a function, reducing the number of
+arguments it takes, or setting them as defaults.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>There are two strategies.  In the default, with
+<code>set_as_defaults=FALSE</code>, we assign all supplied values into a
+new environment that is placed ahead of the function's native
+environment: the supplied values will be found first.  The
+returned function will have an argument list that omits the given
+arguments.</p>
+  
+      <p>In the second, with <code>set_as_defaults=TRUE</code>, we set the
+supplied values as defaults in the function's argument list.  The
+returned function's argument list still includes the given
+arguments, but they are all moved <em>after</em> the unset values,
+and kept in the order provided.  If the function contains
+<code>...</code> as an argument, then these values will be put
+<em>after</em> the ellipsis, which means partial name matching won't
+work (don't use it anyway!).</p>
+  
+      <p>Both strategies seem to offer similar performance.  I suspect that
+the <code>set_as_defaults=TRUE</code> strategy is a little more fragile.
+They differ mainly in how the function is intended to be used - if
+you want to forever specify particular values for a value, use
+<code>set_as_defaults=FALSE</code>.  If you want to generate new
+function that you might sometimes want to use different values in,
+use <code>set_as_defaults=TRUE</code>.</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>partially_apply</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    
+    <h2>Author</h2>
+    
+Rich FitzJohn
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

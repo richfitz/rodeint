@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>make_integrate. rodeint 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="
+Rich FitzJohn
+">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">rodeint 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <h1>Make Integration Function</h1>
+
+<div class="row">
+  <div class="span8">
+    <h2>Usage</h2>
+    <pre><div>make_integrate(ode_system, ..., stepper&nbsp;=&nbsp;NULL, integrate&nbsp;=&nbsp;integrate_adaptive)</div>
+<div>make_integrate_pars(ode_system, ...)</div></pre>
+    
+    <h2>Arguments</h2>
+    <dl>
+      <dt>ode_system</dt>
+      <dd>A ode_system function (<code><a href='ode_system-class.html'>ode_system</a></code>).</dd>
+      <dt>...</dt>
+      <dd>Additional arguments to bind.  Setting <code>t0</code> when a
+system is time independent means <code>t1</code> will be a function of
+elapsed time, which can be useful.  All integrate functions take a
+<code>dt</code> argument, so that's useful to bind too.  You can also
+pass in <code>set_as_defaults=TRUE</code> and the arguments, including
+<code>stepper</code> and <code>ode_system</code> will simply be set as defaults
+allowing some tuning later.</dd>
+      <dt>stepper</dt>
+      <dd>A stepper object. By default the controlled
+<code>runge_kutta_dopri</code> stepper is used with default tolerances.
+If you want to change the tolerance, you must provide a different
+stepper object.</dd>
+      <dt>integrate</dt>
+      <dd>One of the integration functions.  The default is
+<code><a href='integrate_adaptive.html'>integrate_adaptive</a></code>.</dd>
+    </dl>
+    
+    <div class="Make Integration Function">
+      <h2>Make Integration Function</h2>
+      
+    </div>
+
+    <div class="Description">
+      <h2>Description</h2>
+      
+      <p>Helper function for binding ode_systems, steppers and integration
+functions together.  This can be used to create a function
+<code>f(y0, t)</code> from your system of <code>f\'(y0, t)</code>.</p>
+  
+    </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>Note the opposite ordering of the <code>ode_system</code> and <code>stepper</code>
+arguments here compared with the rest of the package (following
+<code>odeint</code>.</p>
+  
+    </div>
+      </div>
+  <div class="span4">
+    <!-- <ul>
+      <li>make_integrate</li><li>make_integrate_pars</li>
+    </ul>
+    <ul>
+      
+    </ul> -->
+      
+    
+    <h2>Author</h2>
+    
+Rich FitzJohn
+
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>

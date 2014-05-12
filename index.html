@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+<title>Index. rodeint 0.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="author" content="Richard G. FitzJohn">
+
+<link href="css/bootstrap.css" rel="stylesheet">
+<link href="css/bootstrap-responsive.css" rel="stylesheet">
+<link href="css/highlight.css" rel="stylesheet">
+<link href="css/staticdocs.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+  <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+  </head>
+
+  <body>
+    <div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="brand" href="#">rodeint 0.1</a>
+      <div class="nav">
+        <ul class="nav">
+          <li><a href="index.html"><i class="icon-home icon-white"></i> Index</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="container">
+      <header>
+        
+      </header>
+      
+      <div class="row">
+  <div class="span8">
+    <h1>rodeint</h1>
+
+<p><a href="https://travis-ci.org/richfitz/rodeint"><img src="https://travis-ci.org/richfitz/rodeint.png?branch=master" alt="Build Status"/></a></p>
+
+<p><img src="https://github.com/richfitz/rodeint/raw/master/extra/rodeint.png" alt="rodeint logo"/></p>
+
+<p>An R interface to <a href="http://headmyshoulder.github.io/odeint-v2/downloads.html">odeint</a>, using Rcpp for glue.</p>
+
+<p>This is under development and nothing is guaranteed to stay the same for any length of time.  Use at your own risk!</p>
+
+<p>As an example of what I&#39;m aiming for, <a href="https://github.com/richfitz/rodeint/blob/master/inst/examples/harmonic_oscillator_cpp.cpp">here</a> is a simple harmonic oscillator, implemented as a function.  The embedded R code at the bottom will run when passed through <code>Rcpp::sourceCpp</code>.</p>
+
+<p>Similarly, <a href="https://github.com/richfitz/rodeint/blob/master/inst/examples/harmonic_oscillator_class.cpp">here</a> is the same system implemented as a small class.  The book-keeping here is slightly greater, but allows for arbitrary calculations after parameters are set (e.g., precomputing values that would be used at all times).</p>
+
+<p>The <code>make_integrate</code> function binds together target functions, integration backends and steppers.  It creates functions with relatively few arguments that are tailored to the way the function will be used.</p>
+
+
+    <h2>Help topics</h2>
+
+    <h3></h3>
+    
+    
+    <ul class="index">
+        
+      <li>
+        <code><a href="integrate_adaptive.html">integrate_adaptive</a></code><br />Adaptively Integrate an ODE System</li>
+            
+      <li>
+        <code><a href="integrate_const.html">integrate_const</a></code><br />Adaptively Integrate an ODE System</li>
+            
+      <li>
+        <code><a href="integrate_n_steps.html">integrate_n_steps</a></code><br />Adaptively Integrate an ODE System</li>
+            
+      <li>
+        <code><a href="integrate_simple.html">integrate_simple</a></code><br />Integrate an ODE System</li>
+            
+      <li>
+        <code><a href="integrate_times.html">integrate_times</a></code><br />Adaptively Integrate an ODE System</li>
+            
+      <li>
+        <code><a href="make_integrate.html">make_integrate</a></code>(make_integrate_pars)<br />Make Integration Function</li>
+            
+      <li>
+        <code><a href="ode_system_stiff-class.html">ode_system_stiff-class</a></code>(ode_system_stiff)<br />Stiff Systems of ODEs</li>
+            
+      <li>
+        <code><a href="ode_system-class.html">ode_system-class</a></code>(ode_system)<br />Systems of ODEs</li>
+            
+      <li>
+        <code><a href="partially_apply.html">partially_apply</a></code><br />Partially Apply Arguments to a Function</li>
+            
+      <li>
+        <code><a href="stepper_deSolve.html">stepper_deSolve-class</a></code>(make_stepper_deSolve, make_stepper_deSolve_basic, make_stepper_deSolve_controlled, stepper_deSolve)<br />Stepper (deSolve wrappers)</li>
+            
+      <li>
+        <code><a href="stepper_types.html">stepper_types</a></code>(stepper_basic_types, stepper_categories, stepper_controlled_types)<br />Types of Controlled Stepper</li>
+            
+      <li>
+        <code><a href="stepper.html">stepper-class</a></code>(make_stepper, make_stepper_basic, make_stepper_controlled, stepper)<br />Stepper</li>
+    
+    </ul>
+  </div>
+  
+  <div class="span3 offset1">
+        
+    <h2>Dependencies</h2>
+    <ul>
+      <li><strong>Depends</strong>: </li>
+      <li><strong>Imports</strong>: Rcpp, methods</li>
+      <li><strong>Suggests</strong>: testthat, deSolve</li>
+      <li><strong>Extends</strong>: </li>
+    </ul>
+     
+    
+  </div>
+</div>
+      
+      <footer>
+      <p class="pull-right"><a href="#">Back to top</a></p>
+<p>Built by <a href="https://github.com/hadley/staticdocs">staticdocs</a>. Styled with <a href="http://twitter.github.com/bootstrap">bootstrap</a>.</p>
+      </footer>
+    </div>
+  </body>
+</html>
