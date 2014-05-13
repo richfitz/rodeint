@@ -793,6 +793,21 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// stepper_stiff__category
+std::vector<std::string> stepper_stiff__category(rodeint::stepper_stiff s);
+RcppExport SEXP rodeint_stepper_stiff__category(SEXP sSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< rodeint::stepper_stiff >::type s(sSEXP );
+        std::vector<std::string> __result = stepper_stiff__category(s);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // test_harmonic_oscillator_cpp
 rodeint::ode_system_cpp test_harmonic_oscillator_cpp(std::vector<double> pars);
 RcppExport SEXP rodeint_test_harmonic_oscillator_cpp(SEXP parsSEXP) {

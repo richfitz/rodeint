@@ -154,6 +154,30 @@ private:
   }
 };
 
+class stepper_stiff_category_visitor : boost::static_visitor<> {
+public:
+  typedef std::vector<std::string> result_type;
+  result_type operator()(const stepper_basic_rosenbrock4&) const {
+    return join_types("basic", "rosenbrock4");
+  }
+  result_type operator()(const stepper_controlled_rosenbrock4&) const {
+    return join_types("controlled", "rosenbrock4");
+  }
+  result_type operator()(const stepper_dense_rosenbrock4&) const {
+    return join_types("dense", "rosenbrock4");
+  }
+
+private:
+  static std::vector<std::string> join_types(const std::string& category,
+                                             const std::string& type) {
+    std::vector<std::string> ret;
+    ret.push_back(category);
+    ret.push_back(type);
+    return ret;
+  }
+};
+
+
 }
 
 #endif

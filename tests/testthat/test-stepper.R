@@ -116,5 +116,9 @@ test_that("stiff steppers (really implicit)", {
 
     expect_that(s$rtol, equals(tol))
     expect_that(s$rtol <- s$atol, throws_error("read-only"))
+
+    ## Test of internal method:
+    expect_that(rodeint:::stepper_stiff__category(s$ptr),
+                is_identical_to(c(category, "rosenbrock4")))
   }
 })

@@ -79,21 +79,12 @@ stepper_stiff__ctor(std::string category,
   return rodeint::stepper_stiff();
 }
 
-// This is going to change considerably, and might go into the
-// general controlled system...
-//
-// TODO: check and change eps_abs / eps_rel -> atol, rtol everywhere.
-// rodeint::stepper_stiff
-// stepper_stiff__ctor(std::string /* type */, // currently ignored
-//                     double eps_abs, double eps_rel) {
-//   return ///rodeint::stepper_stiff_controlled(eps_abs, eps_rel);
-
-//   rodeint::stepper_stiff ret(make_dense_output<rosenbrock4<double >>
-//                              (eps_abs, eps_rel));
-//   return ret;
-// }
-
 // [[Rcpp::export]]
 std::vector<std::string> stepper__type(rodeint::stepper s) {
   return boost::apply_visitor(rodeint::stepper_type_visitor(), s);
+}
+
+// [[Rcpp::export]]
+std::vector<std::string> stepper_stiff__category(rodeint::stepper_stiff s) {
+  return boost::apply_visitor(rodeint::stepper_stiff_category_visitor(), s);
 }

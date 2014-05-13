@@ -181,6 +181,10 @@ stepper__type <- function(s) {
     .Call('rodeint_stepper__type', PACKAGE = 'rodeint', s)
 }
 
+stepper_stiff__category <- function(s) {
+    .Call('rodeint_stepper_stiff__category', PACKAGE = 'rodeint', s)
+}
+
 test_harmonic_oscillator_cpp <- function(pars) {
     .Call('rodeint_test_harmonic_oscillator_cpp', PACKAGE = 'rodeint', pars)
 }
