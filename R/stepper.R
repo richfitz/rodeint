@@ -103,6 +103,14 @@ stepper_categories <- function() {
   c("basic", "controlled")
 }
 
+## TODO: Once dense output support is there for the normal steppers
+## this goes away.
+##' @export
+##' @rdname stepper_types
+stepper_stiff_categories <- function() {
+  c("basic", "controlled", "dense")
+}
+
 ##' @rdname stepper
 ##' @export
 make_stepper_basic <- function(type) {

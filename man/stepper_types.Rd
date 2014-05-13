@@ -3,6 +3,7 @@
 \alias{stepper_basic_types}
 \alias{stepper_categories}
 \alias{stepper_controlled_types}
+\alias{stepper_stiff_categories}
 \alias{stepper_types}
 \title{Types of Controlled Stepper}
 \usage{
@@ -13,6 +14,8 @@ stepper_controlled_types()
 stepper_basic_types()
 
 stepper_categories()
+
+stepper_stiff_categories()
 }
 \arguments{
 \item{category}{Either "basic" or "controlled"}

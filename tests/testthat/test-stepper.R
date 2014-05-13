@@ -4,6 +4,8 @@ context("stepper")
 
 test_that("stepper lists", {
   expect_that(stepper_categories(), equals(c("basic", "controlled")))
+  expect_that(stepper_stiff_categories(),
+              equals(c("basic", "controlled", "dense")))
 
   expect_that(stepper_basic_types(),
               equals(c("euler", "modified_midpoint", "runge_kutta4",
@@ -95,10 +97,6 @@ test_that("controlled steppers", {
 })
 
 test_that("stiff steppers (really implicit)", {
-  stepper_stiff_categories <- function() {
-    c("basic", "controlled", "dense")
-  }
-
   for (category in stepper_stiff_categories()) {
     tol <- if (category == "basic") NA_real_ else 1e-6
 
