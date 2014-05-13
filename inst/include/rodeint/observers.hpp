@@ -11,6 +11,7 @@ namespace rodeint {
 template <typename T>
 struct state_saver {
   struct observer {
+    // Note this is a vector of state types.
     std::vector<T>&      y;
     std::vector<double>& t;
     observer(std::vector<T>& y_, std::vector<double>& t_) : y(y_), t(t_) {}

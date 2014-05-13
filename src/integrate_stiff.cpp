@@ -11,6 +11,8 @@
 // Stepper information, may move to a stiff file.
 #include <rodeint/stepper.hpp>
 
+#include <rodeint/observers.hpp>
+
 // TODO: Everything.  This is a prototype, no steppers passed in, not
 // dealing with observers, one integrate function only.  Baby steps.
 
@@ -25,17 +27,28 @@ r_integrate_stiff_adaptive(/* stepper_stiff stepper,*/
                            bool save_state) {
   check_dt(t0, t1, dt);
 
+  state_saver<typename OdeSystem::state_type> state;
+
   using boost::numeric::odeint::integrate_adaptive;
   using boost::numeric::odeint::make_dense_output;
   using boost::numeric::odeint::rosenbrock4;
   stepper_dense_rosenbrock4 stepper =
     make_dense_output<rosenbrock4<double > >(1.0e-6 ,1.0e-6);
   ode_system_stiff_odeint<OdeSystem> sys(ode_system);
-  size_t n_steps = integrate_adaptive(stepper, sys, y, t0, t1, dt);
+
+  if (save_state) {
+    state.steps =
+      integrate_adaptive(stepper, sys, y, t0, t1, dt, state.obs);
+  } else {
+    integrate_adaptive(stepper, sys, y, t0, t1, dt);
+  }
   // This section is done through the cleanup:
   Rcpp::NumericVector ret(y.begin(), y.end());
   if (save_state) {
-    ret.attr("steps") = n_steps;
+    ret.attr("steps") = state.steps;
+    ret.attr("t")     = state.t;
+    // Should be easy to implement:
+    // ret.attr("y")     = util::to_rcpp_matrix_by_row(state.y);
   }
   return ret;
 }
