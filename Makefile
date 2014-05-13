@@ -14,7 +14,7 @@ staticdocs:
 	@mkdir -p inst/staticdocs
 	Rscript -e "library(methods); staticdocs::build_site()"
 
-publish_pages: staticdocs
+publish_pages:
 	cd inst && ./update-gh-pages.sh
 
 install:
