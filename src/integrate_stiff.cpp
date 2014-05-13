@@ -20,7 +20,7 @@ namespace rodeint {
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_stiff_adaptive(/* stepper_stiff stepper,*/
+r_integrate_adaptive_stiff(SEXP /* stepper_stiff stepper*/,
                            OdeSystem ode_system,
                            typename OdeSystem::state_type y,
                            double t0, double t1, double dt,
@@ -47,37 +47,45 @@ r_integrate_stiff_adaptive(/* stepper_stiff stepper,*/
   if (save_state) {
     ret.attr("steps") = state.steps;
     ret.attr("t")     = state.t;
-    // Should be easy to implement:
-    // ret.attr("y")     = util::to_rcpp_matrix_by_row(state.y);
+    ret.attr("y")     = util::to_rcpp_matrix_by_row(state.y);
   }
   return ret;
 }
 
 }
 
+
+// NOTE: Here, all the SEXP stepper -> rodeint::stepper_stiff stepper
+
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_stiff_adaptive_r(rodeint::ode_system_stiff_r ode_system,
-                             rodeint::ode_system_stiff_r::state_type y,
+integrate_adaptive_stiff_r(SEXP stepper,
+                           rodeint::ode_system_stiff_r ode_system,
+                           rodeint::ode_system_stiff_r::state_type y,
+                           double t0, double t1, double dt,
+                           bool save_state) {
+  return rodeint::r_integrate_adaptive_stiff(stepper, ode_system,
+                                             y, t0, t1, dt, save_state);
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector
+integrate_adaptive_stiff_cpp(SEXP stepper,
+                             rodeint::ode_system_stiff_cpp ode_system,
+                             rodeint::ode_system_stiff_cpp::state_type y,
                              double t0, double t1, double dt,
                              bool save_state) {
-  return rodeint::r_integrate_stiff_adaptive(ode_system, y, t0, t1, dt, save_state);
+  return rodeint::r_integrate_adaptive_stiff(stepper, ode_system,
+                                             y, t0, t1, dt, save_state);
 }
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-r_integrate_stiff_adaptive_cpp(rodeint::ode_system_stiff_cpp ode_system,
-                               rodeint::ode_system_stiff_cpp::state_type y,
+integrate_adaptive_stiff_class(SEXP stepper,
+                               rodeint::ode_system_stiff_class ode_system,
+                               rodeint::ode_system_stiff_class::state_type y,
                                double t0, double t1, double dt,
                                bool save_state) {
-  return rodeint::r_integrate_stiff_adaptive(ode_system, y, t0, t1, dt, save_state);
-}
-
-// [[Rcpp::export]]
-Rcpp::NumericVector
-r_integrate_stiff_adaptive_class(rodeint::ode_system_stiff_class ode_system,
-                                 rodeint::ode_system_stiff_class::state_type y,
-                                 double t0, double t1, double dt,
-                                 bool save_state) {
-  return rodeint::r_integrate_stiff_adaptive(ode_system, y, t0, t1, dt, save_state);
+  return rodeint::r_integrate_adaptive_stiff(stepper, ode_system,
+                                             y, t0, t1, dt, save_state);
 }

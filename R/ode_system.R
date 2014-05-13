@@ -211,7 +211,14 @@ ode_system_stiff <- setRefClass("ode_system_stiff",
                                   .get_pars="function",
                                   .set_pars="function",
                                   .derivs="function",
-                                  .jacobian="function")) # +dfdt
+                                  .jacobian="function", # +dfdt soon?
+                                  # These seem OK though
+                                  # integrate_const="function",
+                                  # integrate_n_steps="function",
+                                  integrate_adaptive="function"))
+# integrate_times="function",
+# integrate_simple="function"))
+
 
 ode_system_stiff$lock(names(ode_system_stiff$fields()))
 
@@ -230,10 +237,10 @@ ode_system_stiff$methods(initialize = function(generator, pars,
   .jacobian <<- get_rodeint(type, "__jacobian")
 
   ## TODO: Derivative functions!
-  ## ty <- sub("ode_system_", "", type) # Abbrviated type :)
+  ty <- sub("ode_system_", "", type) # Abbrviated type :)
   ## integrate_const    <<- get_rodeint("integrate_const_",    ty)
   ## integrate_n_steps  <<- get_rodeint("integrate_n_steps_",  ty)
-  ## integrate_adaptive <<- get_rodeint("integrate_adaptive_", ty)
+  integrate_adaptive <<- get_rodeint("integrate_adaptive_", ty)
   ## integrate_times    <<- get_rodeint("integrate_times_",    ty)
   ## integrate_simple   <<- get_rodeint("integrate_simple_",   ty)
 })

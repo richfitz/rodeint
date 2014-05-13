@@ -16,7 +16,7 @@ assert_stepper <- function(x, name=deparse(substitute(x))) {
 }
 
 assert_ode_system <- function(x, name=deparse(substitute(x))) {
-  assert_inherits(x, "ode_system", name)
+  assert_inherits(x, c("ode_system", "ode_system_stiff"), name)
 }
 
 assert_function <- function(x, name=deparse(substitute(x))) {
