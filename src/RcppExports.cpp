@@ -7,13 +7,13 @@
 using namespace Rcpp;
 
 // integrate_adaptive_stiff_r
-Rcpp::NumericVector integrate_adaptive_stiff_r(SEXP stepper, rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t0, double t1, double dt, bool save_state);
+Rcpp::NumericVector integrate_adaptive_stiff_r(rodeint::stepper_stiff stepper, rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t0, double t1, double dt, bool save_state);
 RcppExport SEXP rodeint_integrate_adaptive_stiff_r(SEXP stepperSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< SEXP >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::stepper_stiff >::type stepper(stepperSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
@@ -28,13 +28,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_adaptive_stiff_cpp
-Rcpp::NumericVector integrate_adaptive_stiff_cpp(SEXP stepper, rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double t1, double dt, bool save_state);
+Rcpp::NumericVector integrate_adaptive_stiff_cpp(rodeint::stepper_stiff stepper, rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double t1, double dt, bool save_state);
 RcppExport SEXP rodeint_integrate_adaptive_stiff_cpp(SEXP stepperSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< SEXP >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::stepper_stiff >::type stepper(stepperSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
@@ -49,13 +49,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_adaptive_stiff_class
-Rcpp::NumericVector integrate_adaptive_stiff_class(SEXP stepper, rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t0, double t1, double dt, bool save_state);
+Rcpp::NumericVector integrate_adaptive_stiff_class(rodeint::stepper_stiff stepper, rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t0, double t1, double dt, bool save_state);
 RcppExport SEXP rodeint_integrate_adaptive_stiff_class(SEXP stepperSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< SEXP >::type stepper(stepperSEXP );
+        Rcpp::traits::input_parameter< rodeint::stepper_stiff >::type stepper(stepperSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );

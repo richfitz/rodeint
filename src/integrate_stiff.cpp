@@ -20,7 +20,7 @@ namespace rodeint {
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_adaptive_stiff(SEXP /* stepper_stiff stepper*/,
+r_integrate_adaptive_stiff(stepper_stiff /* stepper*/,
                            OdeSystem ode_system,
                            typename OdeSystem::state_type y,
                            double t0, double t1, double dt,
@@ -54,12 +54,9 @@ r_integrate_adaptive_stiff(SEXP /* stepper_stiff stepper*/,
 
 }
 
-
-// NOTE: Here, all the SEXP stepper -> rodeint::stepper_stiff stepper
-
 // [[Rcpp::export]]
 Rcpp::NumericVector
-integrate_adaptive_stiff_r(SEXP stepper,
+integrate_adaptive_stiff_r(rodeint::stepper_stiff stepper,
                            rodeint::ode_system_stiff_r ode_system,
                            rodeint::ode_system_stiff_r::state_type y,
                            double t0, double t1, double dt,
@@ -70,7 +67,7 @@ integrate_adaptive_stiff_r(SEXP stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-integrate_adaptive_stiff_cpp(SEXP stepper,
+integrate_adaptive_stiff_cpp(rodeint::stepper_stiff stepper,
                              rodeint::ode_system_stiff_cpp ode_system,
                              rodeint::ode_system_stiff_cpp::state_type y,
                              double t0, double t1, double dt,
@@ -81,7 +78,7 @@ integrate_adaptive_stiff_cpp(SEXP stepper,
 
 // [[Rcpp::export]]
 Rcpp::NumericVector
-integrate_adaptive_stiff_class(SEXP stepper,
+integrate_adaptive_stiff_class(rodeint::stepper_stiff stepper,
                                rodeint::ode_system_stiff_class ode_system,
                                rodeint::ode_system_stiff_class::state_type y,
                                double t0, double t1, double dt,
