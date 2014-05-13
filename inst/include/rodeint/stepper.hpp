@@ -48,7 +48,7 @@ typedef
 boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type>
 stepper_basic_runge_kutta_dopri5;
 
-// 2. Controlld stepper types
+// 2. Controlled stepper types
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type> >
@@ -80,6 +80,26 @@ boost::variant<
   stepper_controlled_runge_kutta_fehlberg78,
   stepper_controlled_runge_kutta_dopri5>
 stepper;
+
+// Stiff stepper (only rosenbrock supported).
+typedef
+boost::numeric::odeint::rosenbrock4<double>
+stepper_basic_rosenbrock4;
+
+typedef
+boost::numeric::odeint::rosenbrock4_controller<
+  stepper_basic_rosenbrock4>
+stepper_controlled_rosenbrock4;
+
+typedef
+boost::numeric::odeint::rosenbrock4_dense_output<
+  stepper_controlled_rosenbrock4>
+stepper_dense_rosenbrock4;
+
+// For now these are the same type:
+typedef stepper_basic_rosenbrock4      stepper_stiff_basic;
+typedef stepper_controlled_rosenbrock4 stepper_controlled_basic;
+typedef stepper_dense_rosenbrock4      stepper_dense_basic;
 
 // This is more of a demonstration of how the approach will work more
 // than anything else, really.  Gives a human readable version of the
