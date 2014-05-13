@@ -199,10 +199,6 @@ test_that("integrate_adaptive", {
 })
 
 test_that("integrate_times", {
-  ## TODO: check times of length 0, 1, fails
-  ## TODO: check unsorted times
-  ## TODO: check decreasing times (with +ve and -ve dt)
-  ## TODO: check duplicated times
   pars <- 0.5
   ode_r <- ode_system(harmonic_oscillator_r, pars)
   ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)

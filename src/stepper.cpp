@@ -50,6 +50,35 @@ stepper_basic__ctor(std::string type) {
   return ret;
 }
 
+// [[Rcpp::export]]
+rodeint::stepper_stiff
+stepper_stiff__ctor(std::string category,
+                    double eps_abs, double eps_rel) {
+  using boost::numeric::odeint::rosenbrock4;
+  using boost::numeric::odeint::make_controlled;
+  using boost::numeric::odeint::make_dense_output;
+
+  typedef double state;
+
+  // I'm unclear why the non-multiple exit approach does not work.
+  if (category == "basic") {
+    rodeint::stepper_basic_rosenbrock4 stepper =
+      rosenbrock4<double>();
+    return rodeint::stepper_stiff(stepper);
+  } else if (category == "controlled") {
+    rodeint::stepper_controlled_rosenbrock4 stepper =
+      make_controlled<rosenbrock4<double > >(eps_abs, eps_rel);
+    return rodeint::stepper_stiff(stepper);
+  } else if (category == "dense") {
+    rodeint::stepper_dense_rosenbrock4 stepper =
+      make_dense_output<rosenbrock4<double > >(eps_abs, eps_rel);
+    return rodeint::stepper_stiff(stepper);
+  }
+
+  Rcpp::stop("Unknown category: " + category);
+  return rodeint::stepper_stiff();
+}
+
 // This is going to change considerably, and might go into the
 // general controlled system...
 //

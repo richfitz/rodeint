@@ -93,3 +93,28 @@ test_that("controlled steppers", {
     expect_that(s$rtol, equals(rtol))
   }
 })
+
+test_that("stiff steppers (really implicit)", {
+  stepper_stiff_categories <- function() {
+    c("basic", "controlled", "dense")
+  }
+
+  for (category in stepper_stiff_categories()) {
+    tol <- if (category == "basic") NA_real_ else 1e-6
+
+    s <- stepper_stiff(category)
+    expect_that(s, is_a("stepper_stiff"))
+
+    expect_that(s$category, equals(category))
+    expect_that(s$category <- s$category, throws_error("read-only"))
+
+    expect_that(s$type, equals("rosenbrock4"))
+    expect_that(s$type <- s$type, throws_error("read-only"))
+
+    expect_that(s$atol, equals(tol))
+    expect_that(s$atol <- s$atol, throws_error("read-only"))
+
+    expect_that(s$rtol, equals(tol))
+    expect_that(s$rtol <- s$atol, throws_error("read-only"))
+  }
+})

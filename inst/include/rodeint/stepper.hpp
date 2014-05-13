@@ -81,7 +81,10 @@ boost::variant<
   stepper_controlled_runge_kutta_dopri5>
 stepper;
 
-// Stiff stepper (only rosenbrock supported).
+// Stiff stepper (only rosenbrock supported, requiring ublas vectors)
+// typedef boost::numeric::ublas::vector<double> stepper_stiff_state_type;
+typedef double stepper_stiff_state_type;
+
 typedef
 boost::numeric::odeint::rosenbrock4<double>
 stepper_basic_rosenbrock4;
@@ -96,10 +99,11 @@ boost::numeric::odeint::rosenbrock4_dense_output<
   stepper_controlled_rosenbrock4>
 stepper_dense_rosenbrock4;
 
-// For now these are the same type:
-typedef stepper_basic_rosenbrock4      stepper_stiff_basic;
-typedef stepper_controlled_rosenbrock4 stepper_controlled_basic;
-typedef stepper_dense_rosenbrock4      stepper_dense_basic;
+typedef boost::variant<
+  stepper_basic_rosenbrock4,
+  stepper_controlled_rosenbrock4,
+  stepper_dense_rosenbrock4>
+stepper_stiff;
 
 // This is more of a demonstration of how the approach will work more
 // than anything else, really.  Gives a human readable version of the

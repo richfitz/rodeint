@@ -111,11 +111,22 @@ inline SEXP wrap(const rodeint::stepper& obj) {
     ret(new rodeint::stepper(obj), true);
   return wrap(ret);
 }
+template<>
+inline SEXP wrap(const rodeint::stepper_stiff& obj) {
+  XPtr<rodeint::stepper_stiff>
+    ret(new rodeint::stepper_stiff(obj), true);
+  return wrap(ret);
+}
 
 // 'as' definitions for each class:
 template<>
 inline rodeint::stepper as(SEXP obj) {
   XPtr<rodeint::stepper> xp(obj);
+  return *xp;
+}
+template<>
+inline rodeint::stepper_stiff as(SEXP obj) {
+  XPtr<rodeint::stepper_stiff> xp(obj);
   return *xp;
 }
 #endif

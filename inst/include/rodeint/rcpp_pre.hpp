@@ -55,7 +55,9 @@ template<> boost::numeric::ublas::matrix<double> as(SEXP);
 
 #ifndef RODEINT_ODE_SYSTEM_ONLY
 template<> SEXP wrap(const rodeint::stepper&);
+template<> SEXP wrap(const rodeint::stepper_stiff&);
 template<> rodeint::stepper as(SEXP);
+template<> rodeint::stepper_stiff as(SEXP);
 #endif
 }
 

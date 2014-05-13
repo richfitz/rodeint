@@ -27,6 +27,39 @@ stepper$methods(initialize=function(category, type, atol, rtol) {
   }
 })
 
+##' Stepper (documentation coming)
+##' @title Stepper
+##' @rdname stepper_stiff
+##' @export stepper_stiff
+##' @export
+stepper_stiff <- setRefClass("stepper_stiff",
+                             fields=list(
+                         category="character",
+                         type="character",
+                         atol="numeric",
+                         rtol="numeric",
+                         ptr="externalptr"))
+
+stepper_stiff$lock(names(stepper_stiff$fields()))
+
+stepper_stiff$methods(initialize=function(category, atol=1e-6, rtol=1e-6) {
+  category <<- category
+  type <<- "rosenbrock4"
+  if (category == "basic") {
+    atol <<- NA_real_
+    rtol <<- NA_real_
+  } else {
+    atol <<- atol
+    rtol <<- rtol
+  }
+
+  if (type == "rosenbrock4") {
+    ptr <<- stepper_stiff__ctor(category, atol, rtol)
+  } else {
+    stop("Invalid stepper type")
+  }
+})
+
 ## This is going to change at some point, but this is a list of the
 ## possible controlled stepper types.  Once I work out what to do
 ## about non-controlled steppers (dense output, etc), then this might

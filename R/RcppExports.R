@@ -173,6 +173,10 @@ stepper_basic__ctor <- function(type) {
     .Call('rodeint_stepper_basic__ctor', PACKAGE = 'rodeint', type)
 }
 
+stepper_stiff__ctor <- function(category, eps_abs, eps_rel) {
+    .Call('rodeint_stepper_stiff__ctor', PACKAGE = 'rodeint', category, eps_abs, eps_rel)
+}
+
 stepper__type <- function(s) {
     .Call('rodeint_stepper__type', PACKAGE = 'rodeint', s)
 }

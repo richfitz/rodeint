@@ -761,6 +761,23 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// stepper_stiff__ctor
+rodeint::stepper_stiff stepper_stiff__ctor(std::string category, double eps_abs, double eps_rel);
+RcppExport SEXP rodeint_stepper_stiff__ctor(SEXP categorySEXP, SEXP eps_absSEXP, SEXP eps_relSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< std::string >::type category(categorySEXP );
+        Rcpp::traits::input_parameter< double >::type eps_abs(eps_absSEXP );
+        Rcpp::traits::input_parameter< double >::type eps_rel(eps_relSEXP );
+        rodeint::stepper_stiff __result = stepper_stiff__ctor(category, eps_abs, eps_rel);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}
 // stepper__type
 std::vector<std::string> stepper__type(rodeint::stepper s);
 RcppExport SEXP rodeint_stepper__type(SEXP sSEXP) {
