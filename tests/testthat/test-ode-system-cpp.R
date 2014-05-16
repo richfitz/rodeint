@@ -30,6 +30,17 @@ test_that("jacobian", {
               throws_error("System does not contain Jacobian"))
 })
 
+test_that("show / print", {
+  pars <- 0.5
+  obj <- ode_system(harmonic_oscillator_cpp, pars)
+  expect_that(obj$show(), prints_text("ordinary differential equations"))
+  expect_that(obj$show(), not(prints_text("Jacobian")))
+  ## Detailed method:
+  expect_that(obj$show(), not(prints_text("addr")))
+  expect_that(obj$show(TRUE), prints_text("addr"))
+  expect_that(obj$show(TRUE), prints_text("ode_system_cpp"))
+})
+
 test_that("parameters", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_cpp, pars)

@@ -35,6 +35,24 @@ ode_system <- setRefClass("ode_system",
 ## Lock all fields:
 ode_system$lock(names(ode_system$fields()))
 
+ode_system$methods(show = function(details=FALSE) {
+  cat("A system of ordinary differential equations\n\n")
+  cat("Useful methods include:\n")
+  cat("\tderivs(y, t) -- compute dy/dt\n")
+  if (has_jacobian) {
+    cat("\tjacobian(y, t) -- compute Jacobian (d[dy/dy]/d(pars))\n")
+  }
+  cat("\tset_pars(pars) -- set parameters\n")
+  cat("\tcopy() -- create an independent copy of this system\n\n")
+  cat("Integrate this system with functions in ?rodeint_integrate\n")
+  if (details) {
+    cat("----------------------------\n")
+    cat(sprintf("addr: %s\n", ptr_address(ptr)))
+    cat(sprintf("type: %s\n", type))
+    cat("----------------------------\n")
+  }
+})
+
 ## TODO: The argument name 'generator' is extremely confusing (here
 ## and in the stiff system section.  Perhaps wrap this with some
 ## helper function?
@@ -279,3 +297,11 @@ jacobian_for_deSolve <- function(jacobian, pars) {
     jacobian(y, t, pars)
   }
 }
+
+## No Jacobian functions for these systems:
+ode_target_r__jacobian <-
+  ode_target_cpp_jacobian <-
+  ode_target_class_jacobian <-
+  function(y, t) {
+    stop("System does not contain Jacobian")
+  }

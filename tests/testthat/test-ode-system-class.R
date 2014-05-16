@@ -11,6 +11,17 @@ test_that("construction", {
               throws_error("read-only"))
 })
 
+test_that("show / print", {
+  pars <- 0.5
+  obj <- ode_system(harmonic_oscillator_class, pars)
+  expect_that(obj$show(), prints_text("ordinary differential equations"))
+  expect_that(obj$show(), not(prints_text("Jacobian")))
+  ## Detailed method:
+  expect_that(obj$show(), not(prints_text("addr")))
+  expect_that(obj$show(TRUE), prints_text("addr"))
+  expect_that(obj$show(TRUE), prints_text("ode_system_class"))
+})
+
 test_that("derivatives", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_class, pars)
@@ -147,7 +158,7 @@ test_that("construction from deSolve type", {
 test_that("invalid construction from deSolve type", {
   pars <- 0.5
   ## This would be the wrong generator anyway...
-  expect_that(ode_system(harmonic_oscillator_cpp, pars,
+  expect_that(ode_system(harmonic_oscillator_class, pars,
                          deSolve_style=TRUE),
               throws_error("Only meaningful for R functions"))
 })

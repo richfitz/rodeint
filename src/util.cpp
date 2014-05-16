@@ -39,3 +39,9 @@ size_t safe_size_t_from_r(int n) {
 }
 
 }
+
+// [[Rcpp::export]]
+std::string ptr_address(SEXP ptr) {
+  void* p = R_ExternalPtrAddr(ptr);
+  return rodeint::util::to_string(p);
+}

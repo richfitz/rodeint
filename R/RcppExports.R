@@ -217,3 +217,7 @@ test_stiff_class <- function(pars) {
     .Call('rodeint_test_stiff_class', PACKAGE = 'rodeint', pars)
 }
 
+ptr_address <- function(ptr) {
+    .Call('rodeint_ptr_address', PACKAGE = 'rodeint', ptr)
+}
+

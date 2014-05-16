@@ -11,6 +11,17 @@ test_that("construction", {
               throws_error("read-only"))
 })
 
+test_that("show / print", {
+  pars <- numeric(0)
+  obj <- ode_system(stiff_class, pars)
+  expect_that(obj$show(), prints_text("ordinary differential equations"))
+  expect_that(obj$show(), prints_text("Jacobian"))
+  ## Detailed method:
+  expect_that(obj$show(), not(prints_text("addr")))
+  expect_that(obj$show(TRUE), prints_text("addr"))
+  expect_that(obj$show(TRUE), prints_text("ode_system_stiff_class"))
+})
+
 test_that("derivatives", {
   pars <- numeric(0)
   obj <- ode_system(stiff_class, pars)

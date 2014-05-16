@@ -961,3 +961,18 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
+// ptr_address
+std::string ptr_address(SEXP ptr);
+RcppExport SEXP rodeint_ptr_address(SEXP ptrSEXP) {
+BEGIN_RCPP
+    SEXP __sexp_result;
+    {
+        Rcpp::RNGScope __rngScope;
+        Rcpp::traits::input_parameter< SEXP >::type ptr(ptrSEXP );
+        std::string __result = ptr_address(ptr);
+        PROTECT(__sexp_result = Rcpp::wrap(__result));
+    }
+    UNPROTECT(1);
+    return __sexp_result;
+END_RCPP
+}

@@ -11,6 +11,17 @@ test_that("construction", {
               throws_error("read-only"))
 })
 
+test_that("show / print", {
+  pars <- 0.5
+  obj <- ode_system(harmonic_oscillator_r, pars)
+  expect_that(obj$show(), prints_text("ordinary differential equations"))
+  expect_that(obj$show(), not(prints_text("Jacobian")))
+  ## Detailed method:
+  expect_that(obj$show(), not(prints_text("addr")))
+  expect_that(obj$show(TRUE), prints_text("addr"))
+  expect_that(obj$show(TRUE), prints_text("ode_system_r"))
+})
+
 test_that("derivatives", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_r, pars)
