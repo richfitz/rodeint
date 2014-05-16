@@ -255,63 +255,6 @@ test_that("integrate_times", {
   }
 })
 
-test_that("integrate_simple", {
-  pars <- 0.5
-  ode_r <- ode_system(harmonic_oscillator_r, pars)
-  ode_cpp <- ode_system(harmonic_oscillator_cpp, pars)
-  ode_class <- ode_system(harmonic_oscillator_class, pars)
-
-  y0 <- c(0, 1)
-  t0 <- 0
-  t1 <- 1
-  dt <- 0.1
-
-  ## Here is the solution from deSolve, using lsoda:
-  cmp <- unname(lsoda(y0, c(t0, t1), harmonic_oscillator_deSolve,
-                      pars)[-1,-1])
-
-  tolerance <- expected_tolerance("runge_kutta_dopri5")
-
-  ## run with rodeint:
-  y_r <- integrate_simple(ode_r, y0, t0, t1, dt)
-  expect_that(y_r, is_a("numeric"))
-  expect_that(y_r, equals(cmp, tolerance=tolerance))
-
-  y_r_s <- integrate_simple(ode_r, y0, t0, t1, dt, TRUE)
-  expect_that(y_r_s, equals(cmp, tolerance=tolerance,
-                            check.attributes=FALSE))
-  expect_that(as.numeric(y_r_s), is_identical_to(y_r))
-  expect_that(names(attributes(y_r_s)), equals(c("steps", "t", "y")))
-
-  steps <- attr(y_r_s, "steps")
-  tt    <- attr(y_r_s, "t")
-  yy    <- attr(y_r_s, "y")
-
-  expect_that(steps, is_a("numeric"))
-  expect_that(tt,    is_a("numeric"))
-  expect_that(yy,    is_a("matrix"))
-
-  expect_that(length(tt), equals(steps + 1))
-  expect_that(dim(yy),    equals(c(steps + 1, length(y0))))
-
-  expect_that(tt[[1]],         is_identical_to(t0))
-  expect_that(tt[[steps + 1]], is_identical_to(t1))
-
-  expect_that(yy[1,],         is_identical_to(y0))
-  expect_that(yy[steps + 1,], is_identical_to(y_r))
-
-  ## Check the compiled version
-  expect_that(integrate_simple(ode_cpp, y0, t0, t1, dt),
-              is_identical_to(y_r))
-  expect_that(integrate_simple(ode_cpp, y0, t0, t1, dt, TRUE),
-              is_identical_to(y_r_s))
-
-  expect_that(integrate_simple(ode_class, y0, t0, t1, dt),
-              is_identical_to(y_r))
-  expect_that(integrate_simple(ode_class, y0, t0, t1, dt, TRUE),
-              is_identical_to(y_r_s))
-})
-
 test_that("make_integrate", {
   pars <- 0.5
   ode_r <- ode_system(harmonic_oscillator_r, pars)

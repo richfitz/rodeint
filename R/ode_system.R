@@ -21,8 +21,7 @@ ode_system <- setRefClass("ode_system",
                             integrate_const="function",
                             integrate_n_steps="function",
                             integrate_adaptive="function",
-                            integrate_times="function",
-                            integrate_simple="function"))
+                            integrate_times="function"))
 
 ## An explanation: I'd like to have the get_pars/set_pars/derivs
 ## methods dispatch fairly effiently to one of the three possible
@@ -106,14 +105,6 @@ element being the derivatives).
   integrate_n_steps  <<- get_rodeint("integrate_n_steps_",  ty)
   integrate_adaptive <<- get_rodeint("integrate_adaptive_", ty)
   integrate_times    <<- get_rodeint("integrate_times_",    ty)
-  if (!has_jacobian) {
-    integrate_simple   <<- get_rodeint("integrate_simple_", ty)
-  } else {
-    ## TODO: This is do-doable, but drop
-    integrate_simple <<- function(...) {
-      stop("Not supported with systems with jacobians")
-    }
-  }
 })
 
 ode_system$methods(get_pars = function() {

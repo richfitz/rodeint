@@ -3,7 +3,6 @@
 export(integrate_adaptive)
 export(integrate_const)
 export(integrate_n_steps)
-export(integrate_simple)
 export(integrate_times)
 export(make_integrate)
 export(make_integrate_pars)

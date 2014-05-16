@@ -498,66 +498,6 @@ BEGIN_RCPP
     return __sexp_result;
 END_RCPP
 }
-// integrate_simple_r
-Rcpp::NumericVector integrate_simple_r(rodeint::ode_system_r ode_system, rodeint::ode_system_r::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_simple_r(SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_r >::type ode_system(ode_systemSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_r::state_type >::type y(ySEXP );
-        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
-        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
-        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_simple_r(ode_system, y, t0, t1, dt, save_state);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// integrate_simple_cpp
-Rcpp::NumericVector integrate_simple_cpp(rodeint::ode_system_cpp ode_system, rodeint::ode_system_cpp::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_simple_cpp(SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_cpp >::type ode_system(ode_systemSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_cpp::state_type >::type y(ySEXP );
-        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
-        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
-        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_simple_cpp(ode_system, y, t0, t1, dt, save_state);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
-// integrate_simple_class
-Rcpp::NumericVector integrate_simple_class(rodeint::ode_system_class ode_system, rodeint::ode_system_class::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_simple_class(SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
-BEGIN_RCPP
-    SEXP __sexp_result;
-    {
-        Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_class >::type ode_system(ode_systemSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_class::state_type >::type y(ySEXP );
-        Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
-        Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
-        Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_simple_class(ode_system, y, t0, t1, dt, save_state);
-        PROTECT(__sexp_result = Rcpp::wrap(__result));
-    }
-    UNPROTECT(1);
-    return __sexp_result;
-END_RCPP
-}
 // ode_system_stiff_r__get_pars
 SEXP ode_system_stiff_r__get_pars(SEXP ode_system);
 RcppExport SEXP rodeint_ode_system_stiff_r__get_pars(SEXP ode_systemSEXP) {

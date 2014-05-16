@@ -97,18 +97,6 @@ integrate_times_class <- function(s, ode_system, y, times, dt) {
     .Call('rodeint_integrate_times_class', PACKAGE = 'rodeint', s, ode_system, y, times, dt)
 }
 
-integrate_simple_r <- function(ode_system, y, t0, t1, dt, save_state) {
-    .Call('rodeint_integrate_simple_r', PACKAGE = 'rodeint', ode_system, y, t0, t1, dt, save_state)
-}
-
-integrate_simple_cpp <- function(ode_system, y, t0, t1, dt, save_state) {
-    .Call('rodeint_integrate_simple_cpp', PACKAGE = 'rodeint', ode_system, y, t0, t1, dt, save_state)
-}
-
-integrate_simple_class <- function(ode_system, y, t0, t1, dt, save_state) {
-    .Call('rodeint_integrate_simple_class', PACKAGE = 'rodeint', ode_system, y, t0, t1, dt, save_state)
-}
-
 ode_system_stiff_r__get_pars <- function(ode_system) {
     .Call('rodeint_ode_system_stiff_r__get_pars', PACKAGE = 'rodeint', ode_system)
 }

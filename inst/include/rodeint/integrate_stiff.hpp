@@ -453,10 +453,6 @@ r_integrate_times_stiff(stepper s, OdeSystem system,
   return data.run();
 }
 
-
-// NOTE: No integrate_simple (but that might go from the nonstiff
-// cases anyway).
-
-} // namespace
+}
 
 #endif

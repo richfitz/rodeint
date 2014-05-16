@@ -440,26 +440,6 @@ r_integrate_times(stepper s, OdeSystem system,
   return data.run();
 }
 
-// 5. Convenience function
-template <typename OdeSystem>
-Rcpp::NumericVector
-r_integrate_simple(OdeSystem ode_system,
-                   typename OdeSystem::state_type y,
-                   double t0, double t1, double dt,
-                   bool save_state=false) {
-  using boost::numeric::odeint::integrate;
-  check_dt(t0, t1, dt);
-
-  state_saver<typename OdeSystem::state_type> state;
-  if (save_state) {
-    state.steps = integrate(ode_system, y, t0, t1, dt, state.obs);
-  } else {
-    integrate(ode_system, y, t0, t1, dt);
-  }
-
-  return integration_state(y, state, save_state);
-}
-
 }
 
 #endif

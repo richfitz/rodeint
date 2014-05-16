@@ -117,31 +117,6 @@ integrate_times <- function(stepper, ode_system, y, times, dt) {
   ode_system$integrate_times(stepper$ptr, ode_system$ptr, y, times, dt)
 }
 
-##' Integrate a system of ordinary differential equations.  This is
-##' just a convenience function (in odeint) and probably should not be
-##' the final function used.
-##'
-##' @title Integrate an ODE System
-##' @param ode_system The ode_system system, created by
-##' \code{\link{ode_system}}
-##' @param y Initial conditions
-##' @param t0 Time to start the integration
-##' @param t1 Time to finish the integration (not sure if we hit this
-##' one exactly)
-##' @param dt Step size
-##' @param save_state Return information about intermediate points as
-##' @author Rich FitzJohn
-##' @export
-integrate_simple <- function(ode_system, y, t0, t1, dt,
-                             save_state=FALSE) {
-  assert_ode_system(ode_system)
-  assert_numeric(y)
-  assert_scalar_numeric(t0)
-  assert_scalar_numeric(t1)
-  assert_scalar_numeric(dt)
-  ode_system$integrate_simple(ode_system$ptr, y, t0, t1, dt, save_state)
-}
-
 ##' Helper function for binding ode_systems, steppers and integration
 ##' functions together.  This can be used to create a function
 ##' \code{f(y0, t)} from your system of \code{f\'(y0, t)}.
