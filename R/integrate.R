@@ -1,21 +1,29 @@
-## TODO: Document these all on one page?  Lots of duplicated
-## documentation otherwise.
-
-##' Integrate a system of ODEs, taking fixed steps
+##' Integrate a system of ODEs
 ##'
-##' @title Adaptively Integrate an ODE System
+##' integrate_const: "Equidistant observer calls"
+##'
+##' integrate_n_steps: "Integrate a given number of steps"
+##'
+##' integrate_adaptive "Observer calls at each step"
+##'
+##' integrate_times: "Observer calls at given time points"
+##'
+##' @title Integrate a System of ODEs
 ##' @param stepper A \code{stepper} object, created by
-##' \code{\link{stepper}} (other types will be supported
-##' soon).
+##' \code{\link{make_stepper}}
 ##' @param ode_system The ode_system system, created by
 ##' \code{\link{ode_system}}
 ##' @param y Initial conditions
 ##' @param t0 Time to start the integration
 ##' @param t1 Time to finish the integration
 ##' @param dt Step size
-##' @param save_state Return information about intermediate points as
-##' an attribute?
+##' @param n Number of steps to take (\code{integrate_n_steps} only)
+##' @param times Vector of times (\code{integrate_times} only)
+##' @param save_state Logical: return information about intermediate
+##' points as an attribute.  Not applicable for
+##' \code{integrate_times}.
 ##' @author Rich FitzJohn
+##' @rdname rodeint_integrate
 ##' @export
 integrate_const <- function(stepper, ode_system, y, t0, t1, dt,
                             save_state=FALSE) {
@@ -31,22 +39,8 @@ integrate_const <- function(stepper, ode_system, y, t0, t1, dt,
                              save_state)
 }
 
-##' Integrate a system of ODEs, taking a fixed number of fixed size steps.
-##'
-##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{stepper} object, created by
-##' \code{\link{stepper}} (other types will be supported
-##' soon).
-##' @param ode_system The ode_system system, created by
-##' \code{\link{ode_system}}
-##' @param y Initial conditions
-##' @param t0 Time to start the integration
-##' @param dt Step size
-##' @param n Number of steps
-##' @param save_state Return information about intermediate points as
-##' an attribute?
-##' @author Rich FitzJohn
 ##' @export
+##' @rdname rodeint_integrate
 integrate_n_steps <- function(stepper, ode_system, y, t0, dt, n,
                               save_state=FALSE) {
   assert_stepper(stepper)
@@ -59,23 +53,8 @@ integrate_n_steps <- function(stepper, ode_system, y, t0, dt, n,
                                save_state)
 }
 
-##' Integrate a system of ODEs adaptively.
-##'
-##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{stepper} object, created by
-##' \code{\link{stepper}} (other types will be supported
-##' soon).
-##' @param ode_system The ode_system system, created by
-##' \code{\link{ode_system}}
-##' @param y Initial conditions
-##' @param t0 Time to start the integration
-##' @param t1 Time to finish the integration
-##' @param dt Initial step size (will be tuned for controlled steppers
-##' -- see odeint documentation)
-##' @param save_state Return information about intermediate points as
-##' an attribute?
-##' @author Rich FitzJohn
 ##' @export
+##' @rdname rodeint_integrate
 integrate_adaptive <- function(stepper, ode_system, y, t0, t1, dt,
                                save_state=FALSE) {
   assert_stepper(stepper)
@@ -87,24 +66,8 @@ integrate_adaptive <- function(stepper, ode_system, y, t0, t1, dt,
   ode_system$integrate_adaptive(stepper$ptr, ode_system$ptr, y, t0, t1, dt,
                                 save_state)
 }
-
-##' Integrate a system of ODEs at fixed times (perhaps adaptively).
-##' This version \emph{always} saves state -- that is the reason for
-##' calling it.
-##'
-##' @title Adaptively Integrate an ODE System
-##' @param stepper A \code{stepper} object, created by
-##' \code{\link{stepper}} (other types will be supported
-##' soon).
-##' @param ode_system The ode_system system, created by
-##' \code{\link{ode_system}}
-##' @param y Initial conditions
-##' @param times Vector of times.  First time is start time, last time
-##' is end time.
-##' @param dt Initial step size (will be tuned for controlled steppers
-##' -- see odeint documentation)
-##' @author Rich FitzJohn
 ##' @export
+##' @rdname rodeint_integrate
 integrate_times <- function(stepper, ode_system, y, times, dt) {
   assert_stepper(stepper)
   assert_ode_system(ode_system)
