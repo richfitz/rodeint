@@ -96,18 +96,16 @@ boost::any stepper::construct(stepper::Category category,
                               double abs_tol, double rel_tol) {
   validate(category, type, stiff, abs_tol, rel_tol);
   if (stiff) {
-    return construct<stepper_state_type_ublas>
-      (category, type, abs_tol, rel_tol);
+    return construct<vector_ublas>(category, type, abs_tol, rel_tol);
   } else {
-    return construct<stepper_state_type_stl>
-      (category, type, abs_tol, rel_tol);
+    return construct<vector_stl>(category, type, abs_tol, rel_tol);
   }
 }
 
 // OK, lots of duplication, but we can code generate it away.
 template <>
 boost::any
-stepper::construct_basic<stepper_state_type_stl>(stepper::Type type) {
+stepper::construct_basic<vector_stl>(stepper::Type type) {
   switch(type) {
   case EULER:
     return stepper_basic_euler_stl();
@@ -129,7 +127,7 @@ stepper::construct_basic<stepper_state_type_stl>(stepper::Type type) {
 
 template <>
 boost::any
-stepper::construct_basic<stepper_state_type_ublas>(stepper::Type type) {
+stepper::construct_basic<vector_ublas>(stepper::Type type) {
   switch(type) {
   case EULER:
     return stepper_basic_euler_ublas();
@@ -153,14 +151,14 @@ stepper::construct_basic<stepper_state_type_ublas>(stepper::Type type) {
 
 template <>
 boost::any
-stepper::construct_controlled<stepper_state_type_stl>(stepper::Type type,
-                                                      double abs_tol,
-                                                      double rel_tol) {
+stepper::construct_controlled<vector_stl>(stepper::Type type,
+                                          double abs_tol,
+                                          double rel_tol) {
   using boost::numeric::odeint::make_controlled;
   using boost::numeric::odeint::runge_kutta_cash_karp54;
   using boost::numeric::odeint::runge_kutta_fehlberg78;
   using boost::numeric::odeint::runge_kutta_dopri5;
-  typedef rodeint::stepper_state_type_stl state;
+  typedef rodeint::vector_stl state;
 
   switch(type) {
   case RUNGE_KUTTA_CASH_KARP54:
@@ -178,14 +176,14 @@ stepper::construct_controlled<stepper_state_type_stl>(stepper::Type type,
 
 template <>
 boost::any
-stepper::construct_controlled<stepper_state_type_ublas>(stepper::Type type,
-                                                      double abs_tol,
-                                                      double rel_tol) {
+stepper::construct_controlled<vector_ublas>(stepper::Type type,
+                                            double abs_tol,
+                                            double rel_tol) {
   using boost::numeric::odeint::make_controlled;
   using boost::numeric::odeint::runge_kutta_cash_karp54;
   using boost::numeric::odeint::runge_kutta_fehlberg78;
   using boost::numeric::odeint::runge_kutta_dopri5;
-  typedef rodeint::stepper_state_type_ublas state;
+  typedef rodeint::vector_ublas state;
 
   switch(type) {
   case RUNGE_KUTTA_CASH_KARP54:

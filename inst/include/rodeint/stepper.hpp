@@ -24,74 +24,74 @@
 #include <boost/any.hpp>
 
 namespace rodeint {
-typedef std::vector<double> stepper_state_type_stl;
-typedef boost::numeric::ublas::vector<double> stepper_state_type_ublas;
+typedef std::vector<double> vector_stl;
+typedef boost::numeric::ublas::vector<double> vector_ublas;
 
 // 1. Basic stepper types.
 typedef
-boost::numeric::odeint::euler<stepper_state_type_stl>
+boost::numeric::odeint::euler<vector_stl>
 stepper_basic_euler_stl;
 
 typedef
-boost::numeric::odeint::modified_midpoint<stepper_state_type_stl>
+boost::numeric::odeint::modified_midpoint<vector_stl>
 stepper_basic_modified_midpoint_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta4<stepper_state_type_stl>
+boost::numeric::odeint::runge_kutta4<vector_stl>
 stepper_basic_runge_kutta4_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_stl>
+boost::numeric::odeint::runge_kutta_cash_karp54<vector_stl>
 stepper_basic_runge_kutta_cash_karp54_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_stl>
+boost::numeric::odeint::runge_kutta_fehlberg78<vector_stl>
 stepper_basic_runge_kutta_fehlberg78_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_stl>
+boost::numeric::odeint::runge_kutta_dopri5<vector_stl>
 stepper_basic_runge_kutta_dopri5_stl;
 
 // 2. Controlled stepper types
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_stl> >
+  boost::numeric::odeint::runge_kutta_cash_karp54<vector_stl> >
 stepper_controlled_runge_kutta_cash_karp54_stl;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_stl> >
+  boost::numeric::odeint::runge_kutta_fehlberg78<vector_stl> >
 stepper_controlled_runge_kutta_fehlberg78_stl;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_stl> >
+  boost::numeric::odeint::runge_kutta_dopri5<vector_stl> >
 stepper_controlled_runge_kutta_dopri5_stl;
 
 // uBLAS things
 // 1. Basic steppers
 typedef
-boost::numeric::odeint::euler<stepper_state_type_ublas>
+boost::numeric::odeint::euler<vector_ublas>
 stepper_basic_euler_ublas;
 
 typedef
-boost::numeric::odeint::modified_midpoint<stepper_state_type_ublas>
+boost::numeric::odeint::modified_midpoint<vector_ublas>
 stepper_basic_modified_midpoint_ublas;
 
 typedef
-boost::numeric::odeint::runge_kutta4<stepper_state_type_ublas>
+boost::numeric::odeint::runge_kutta4<vector_ublas>
 stepper_basic_runge_kutta4_ublas;
 
 typedef
-boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_ublas>
+boost::numeric::odeint::runge_kutta_cash_karp54<vector_ublas>
 stepper_basic_runge_kutta_cash_karp54_ublas;
 
 typedef
-boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_ublas>
+boost::numeric::odeint::runge_kutta_fehlberg78<vector_ublas>
 stepper_basic_runge_kutta_fehlberg78_ublas;
 
 typedef
-boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_ublas>
+boost::numeric::odeint::runge_kutta_dopri5<vector_ublas>
 stepper_basic_runge_kutta_dopri5_ublas;
 
 // NOTE: Not available for stl steppers
@@ -102,17 +102,17 @@ stepper_basic_rosenbrock4_ublas;
 // 2. Controlled steppers
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_ublas> >
+  boost::numeric::odeint::runge_kutta_cash_karp54<vector_ublas> >
 stepper_controlled_runge_kutta_cash_karp54_ublas;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_ublas> >
+  boost::numeric::odeint::runge_kutta_fehlberg78<vector_ublas> >
 stepper_controlled_runge_kutta_fehlberg78_ublas;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_ublas> >
+  boost::numeric::odeint::runge_kutta_dopri5<vector_ublas> >
 stepper_controlled_runge_kutta_dopri5_ublas;
 
 // NOTE: Not available for stl steppers
