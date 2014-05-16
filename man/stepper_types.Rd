@@ -3,22 +3,24 @@
 \alias{stepper_basic_types}
 \alias{stepper_categories}
 \alias{stepper_controlled_types}
-\alias{stepper_stiff_categories}
 \alias{stepper_types}
 \title{Types of Controlled Stepper}
 \usage{
-stepper_types(category)
+stepper_types(category, have_jacobian = FALSE)
 
-stepper_controlled_types()
+stepper_basic_types(have_jacobian = FALSE)
 
-stepper_basic_types()
+stepper_controlled_types(have_jacobian = FALSE)
 
 stepper_categories()
-
-stepper_stiff_categories()
 }
 \arguments{
 \item{category}{Either "basic" or "controlled"}
+
+\item{have_jacobian}{Logical indicating if the stepper will work
+on problems with a Jacobian (this is a superset: every problem
+that provides a Jacobian will work fine with steppers that don't
+require a Jacobian).}
 }
 \description{
 Valid values for making a \code{\link{stepper}}.

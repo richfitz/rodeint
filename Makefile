@@ -1,6 +1,12 @@
 all:
 	make -C src
 
+cog:
+	cog.py -Iextra -r @extra/generation_list.txt
+
+uncog:
+	cog.py -Iextra -r -x @extra/generation_list.txt
+
 attributes:
 	Rscript -e "Rcpp::compileAttributes()"
 

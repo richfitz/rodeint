@@ -3,10 +3,15 @@
 
 namespace rodeint {
 
+// TODO: Merge into integrate_stiff
+
+// See
+//   http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/concepts/implicit_system.html
+// for why this works.
 template <typename OdeSystem>
 struct ode_system_stiff_odeint {
+  typedef typename OdeSystem::state_type  state_type;
   struct jacobian {
-    typedef typename OdeSystem::state_type  state_type;
     typedef typename OdeSystem::matrix_type matrix_type;
     jacobian(OdeSystem ode_system_) : ode_system(ode_system_) {}
     void operator()(const state_type& y, matrix_type& J ,
@@ -19,22 +24,14 @@ struct ode_system_stiff_odeint {
   typedef jacobian second_type;
   ode_system_stiff_odeint(OdeSystem ode_system)
     : first(ode_system), second(jacobian(ode_system)) {}
+  // This allows this to be used by non-implicit solvers
+  void operator()(const state_type& y, state_type &dydt,
+                  const double t) {
+    first(y, dydt, t);
+  }
   first_type first;
   second_type second;
 };
-
-// If the above class organises inclusion, drop this
-class ode_system_stiff_r;
-class ode_system_stiff_cpp;
-class ode_system_stiff_class;
-
-// But these might reduce typing and errors?
-typedef ode_system_stiff_odeint<ode_system_stiff_r>
-ode_system_stiff_r_odeint;
-typedef ode_system_stiff_odeint<ode_system_stiff_cpp>
-ode_system_stiff_cpp_odeint;
-typedef ode_system_stiff_odeint<ode_system_stiff_class>
-ode_system_stiff_class_odeint;
 
 }
 

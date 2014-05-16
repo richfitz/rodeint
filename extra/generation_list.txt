@@ -1,0 +1,4 @@
+inst/include/rodeint/integrate.hpp
+inst/include/rodeint/integrate_stiff.hpp
+src/integrate.cpp
+src/integrate_stiff.cpp

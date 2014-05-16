@@ -82,6 +82,22 @@ inline void check_length(size_t recieved, size_t expected) {
 }
 
 }
+
+// TODO: May move elsewhere.
+template <typename State>
+Rcpp::NumericVector
+integration_state(const typename State::state_type& y,
+                  const State& state,
+                  bool save_state) {
+  Rcpp::NumericVector ret(y.begin(), y.end());
+  if (save_state) {
+    ret.attr("steps") = state.steps;
+    ret.attr("t")     = state.t;
+    ret.attr("y")     = util::to_rcpp_matrix_by_row(state.y);
+  }
+  return ret;
+}
+
 }
 
 #endif

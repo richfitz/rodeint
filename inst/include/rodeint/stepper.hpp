@@ -17,166 +17,261 @@
 #include <boost/numeric/odeint/stepper/generation.hpp>
 #endif
 
-// Holding everything together with Boost.Variant - that way we can
-// export a single type to R and still have compile time
-// polymorphism/type checking on our side.  That's the idea anyway!
-#include <boost/variant.hpp>
 #include <string>
 #include <vector>
 
+#include <rodeint/stop.hpp>
+#include <boost/any.hpp>
+
 namespace rodeint {
-typedef std::vector<double> stepper_state_type;
+typedef std::vector<double> stepper_state_type_stl;
+typedef boost::numeric::ublas::vector<double> stepper_state_type_ublas;
 
 // 1. Basic stepper types.
 typedef
-boost::numeric::odeint::modified_midpoint<stepper_state_type>
-stepper_basic_modified_midpoint;
+boost::numeric::odeint::euler<stepper_state_type_stl>
+stepper_basic_euler_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta4<stepper_state_type>
-stepper_basic_runge_kutta4;
+boost::numeric::odeint::modified_midpoint<stepper_state_type_stl>
+stepper_basic_modified_midpoint_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type>
-stepper_basic_runge_kutta_cash_karp54;
+boost::numeric::odeint::runge_kutta4<stepper_state_type_stl>
+stepper_basic_runge_kutta4_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type>
-stepper_basic_runge_kutta_fehlberg78;
+boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_stl>
+stepper_basic_runge_kutta_cash_karp54_stl;
 
 typedef
-boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type>
-stepper_basic_runge_kutta_dopri5;
+boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_stl>
+stepper_basic_runge_kutta_fehlberg78_stl;
+
+typedef
+boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_stl>
+stepper_basic_runge_kutta_dopri5_stl;
 
 // 2. Controlled stepper types
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type> >
-stepper_controlled_runge_kutta_cash_karp54;
+  boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_stl> >
+stepper_controlled_runge_kutta_cash_karp54_stl;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type> >
-stepper_controlled_runge_kutta_fehlberg78;
+  boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_stl> >
+stepper_controlled_runge_kutta_fehlberg78_stl;
 
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
-  boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type> >
-stepper_controlled_runge_kutta_dopri5;
+  boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_stl> >
+stepper_controlled_runge_kutta_dopri5_stl;
+
+// uBLAS things
+// 1. Basic steppers
+typedef
+boost::numeric::odeint::euler<stepper_state_type_ublas>
+stepper_basic_euler_ublas;
 
 typedef
-boost::numeric::odeint::euler<stepper_state_type>
-stepper_basic_euler;
+boost::numeric::odeint::modified_midpoint<stepper_state_type_ublas>
+stepper_basic_modified_midpoint_ublas;
 
 typedef
-boost::variant<
-  stepper_basic_euler,
-  stepper_basic_modified_midpoint,
-  stepper_basic_runge_kutta4,
-  stepper_basic_runge_kutta_cash_karp54,
-  stepper_basic_runge_kutta_fehlberg78,
-  stepper_basic_runge_kutta_dopri5,
-  stepper_controlled_runge_kutta_cash_karp54,
-  stepper_controlled_runge_kutta_fehlberg78,
-  stepper_controlled_runge_kutta_dopri5>
-stepper;
+boost::numeric::odeint::runge_kutta4<stepper_state_type_ublas>
+stepper_basic_runge_kutta4_ublas;
 
-// Stiff stepper (only rosenbrock supported, requiring ublas vectors)
-// typedef boost::numeric::ublas::vector<double> stepper_stiff_state_type;
-typedef double stepper_stiff_state_type;
+typedef
+boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_ublas>
+stepper_basic_runge_kutta_cash_karp54_ublas;
 
+typedef
+boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_ublas>
+stepper_basic_runge_kutta_fehlberg78_ublas;
+
+typedef
+boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_ublas>
+stepper_basic_runge_kutta_dopri5_ublas;
+
+// NOTE: Not available for stl steppers
 typedef
 boost::numeric::odeint::rosenbrock4<double>
-stepper_basic_rosenbrock4;
+stepper_basic_rosenbrock4_ublas;
 
+// 2. Controlled steppers
+typedef
+boost::numeric::odeint::controlled_runge_kutta<
+  boost::numeric::odeint::runge_kutta_cash_karp54<stepper_state_type_ublas> >
+stepper_controlled_runge_kutta_cash_karp54_ublas;
+
+typedef
+boost::numeric::odeint::controlled_runge_kutta<
+  boost::numeric::odeint::runge_kutta_fehlberg78<stepper_state_type_ublas> >
+stepper_controlled_runge_kutta_fehlberg78_ublas;
+
+typedef
+boost::numeric::odeint::controlled_runge_kutta<
+  boost::numeric::odeint::runge_kutta_dopri5<stepper_state_type_ublas> >
+stepper_controlled_runge_kutta_dopri5_ublas;
+
+// NOTE: Not available for stl steppers
 typedef
 boost::numeric::odeint::rosenbrock4_controller<
-  stepper_basic_rosenbrock4>
-stepper_controlled_rosenbrock4;
+  stepper_basic_rosenbrock4_ublas>
+stepper_controlled_rosenbrock4_ublas;
 
+// 3. Dense steppers
 typedef
 boost::numeric::odeint::rosenbrock4_dense_output<
-  stepper_controlled_rosenbrock4>
-stepper_dense_rosenbrock4;
+  stepper_controlled_rosenbrock4_ublas>
+stepper_dense_rosenbrock4_ublas;
 
-typedef boost::variant<
-  stepper_basic_rosenbrock4,
-  stepper_controlled_rosenbrock4,
-  stepper_dense_rosenbrock4>
-stepper_stiff;
-
-// This is more of a demonstration of how the approach will work more
-// than anything else, really.  Gives a human readable version of the
-// type of the controlled output stepper.
-//
-// An alternative way of doing this would be to have two versions --
-// one for the category, one for the type.  But the information is all
-// stored in the reference class object anyway.
-class stepper_type_visitor : boost::static_visitor<> {
+// OK, some terminology:
+//   Category: basic, controlled, dense
+//   Type: The algorithm itself
+//   Stiff: n/y -- *also changes state type!*
+// Later on we'll get multistep methods in here too.
+class stepper {
 public:
-  typedef std::vector<std::string> result_type;
-  result_type operator()(const stepper_basic_euler&) const {
-    return join_types("basic", "euler");
+  // TODO: No need for these to be in u.c.
+  // TODO: Can generate these lists and the ones in the cpp file via
+  // cog, which would ensure the order is *always* correct.
+  enum Category {BASIC, CONTROLLED, DENSE};
+  enum Type {EULER,
+             MODIFIED_MIDPOINT,
+             RUNGE_KUTTA4,
+             RUNGE_KUTTA_CASH_KARP54,
+             RUNGE_KUTTA_FEHLBERG78,
+             RUNGE_KUTTA_DOPRI5,
+             BULIRSCH_STOER,
+             ROSENBROCK4};
+
+  // Construction from human-readable things (used from R)
+  stepper(std::string category_, std::string type_, bool stiff_state_,
+          double abs_tol_, double rel_tol_)
+    : category(category_from_string(category_)),
+      type(type_from_string(type_)),
+      stiff_state(stiff_state_),
+      abs_tol(abs_tol_), rel_tol(rel_tol_),
+      stepper_odeint(construct(category, type, stiff_state, abs_tol, rel_tol)) {
   }
-  result_type operator()(const stepper_basic_modified_midpoint&) const {
-    return join_types("basic", "modified_midpoint");
+  // Might make this private (also nice if we had delegated
+  // constructors)
+  stepper(Category category_, Type type_, bool stiff_state_,
+          double abs_tol_, double rel_tol_)
+    : category(category_), type(type_), stiff_state(stiff_state_),
+      abs_tol(abs_tol_), rel_tol(rel_tol_),
+      stepper_odeint(construct(category, type, stiff_state, abs_tol, rel_tol)) {
   }
-  result_type operator()(const stepper_basic_runge_kutta4&) const {
-    return join_types("basic", "runge_kutta4");
+  std::string category_name() const {
+    return category_name(category);
   }
-  result_type operator()(const stepper_basic_runge_kutta_cash_karp54&) const {
-    return join_types("basic", "runge_kutta_cash_karp54");
+  std::string type_name() const {
+    return type_name(type);
   }
-  result_type operator()(const stepper_basic_runge_kutta_fehlberg78&) const {
-    return join_types("basic", "runge_kutta_fehlberg78");
+  // Used in tests
+  Category category_id() const {
+    return category;
   }
-  result_type operator()(const stepper_basic_runge_kutta_dopri5&) const {
-    return join_types("basic", "runge_kutta_dopri5");
+  Type type_id() const {
+    return type;
+  }
+  bool has_stiff_state() const {
+    return stiff_state;
+  }
+  bool needs_jacobian() const {
+    return needs_ublas[type];
   }
 
-  result_type operator()(const stepper_controlled_runge_kutta_cash_karp54&) const {
-    return join_types("controlled", "runge_kutta_cash_karp54");
+  // This is the little accessor:
+  template <typename Stepper>
+  Stepper as() const {
+    try {
+      Stepper ret = boost::any_cast<Stepper>(stepper_odeint);
+      return ret;
+    } catch (const boost::bad_any_cast&) {
+      Rcpp::stop("Failed to get stepper");
+      return Stepper(); // Won't get here.
+    }
   }
-  result_type operator()(const stepper_controlled_runge_kutta_fehlberg78&) const {
-    return join_types("controlled", "runge_kutta_fehlberg78");
+  template <typename Stepper>
+  Stepper as(bool stiff_state_) {
+    // Enforce the right state type
+    if (stiff_state != stiff_state_) {
+      stepper_odeint =
+        construct(category, type, stiff_state_, abs_tol, rel_tol);
+    }
+    return as<Stepper>();
   }
-  result_type operator()(const stepper_controlled_runge_kutta_dopri5&) const {
-    return join_types("controlled", "runge_kutta_dopri5");
-  }
-
 private:
-  static std::vector<std::string> join_types(const std::string& category,
-                                             const std::string& type) {
-    std::vector<std::string> ret;
-    ret.push_back(category);
-    ret.push_back(type);
-    return ret;
-  }
+  // Actual stepper information.
+  Category   category;
+  Type       type;
+  bool       stiff_state;
+  double     abs_tol;
+  double     rel_tol;
+  boost::any stepper_odeint;
+
+  // Information about the different types.  This idea might change.
+  const static bool ok_basic[];
+  const static bool ok_controlled[];
+  const static bool ok_dense[];
+  const static bool needs_ublas[];
+
+  // Check a bunch of stuff on intitialisation
+  static std::string category_name(Category category);
+  static std::string type_name(Type type);
+  static void validate(Category category, Type type, bool stiff_state,
+                       double abs_tol, double rel_tol);
+  static boost::any construct(Category category, Type type, bool stiff_state,
+                              double abs_tol, double rel_tol);
+  template <typename T>
+  static boost::any construct(Category category, Type type,
+                              double abs_tol, double rel_tol);
+  template <typename T>
+  static boost::any construct_basic(Type typetype);
+  template <typename T>
+  static boost::any construct_controlled(Type type,
+                                         double abs_tol, double rel_tol);
+  template <typename T>
+  static boost::any construct_dense(Type type,
+                                    double abs_tol, double rel_tol);
+
+  // Used during initialisation from R to translate names into
+  // strings.  The tests will check that we do actually agree.
+  static Category category_from_string(const std::string& x);
+  static Type type_from_string(const std::string& x);
 };
 
-class stepper_stiff_category_visitor : boost::static_visitor<> {
-public:
-  typedef std::vector<std::string> result_type;
-  result_type operator()(const stepper_basic_rosenbrock4&) const {
-    return join_types("basic", "rosenbrock4");
+template <typename T>
+boost::any stepper::construct(stepper::Category category,
+                              stepper::Type type,
+                              double abs_tol, double rel_tol) {
+  switch(category) {
+  case BASIC:
+    return construct_basic<T>(type);
+  case CONTROLLED:
+    return construct_controlled<T>(type, abs_tol, rel_tol);
+  case DENSE:
+    return construct_dense<T>(type, abs_tol, rel_tol);
+  default:
+    stop("Invalid category"); // defensive
   }
-  result_type operator()(const stepper_controlled_rosenbrock4&) const {
-    return join_types("controlled", "rosenbrock4");
-  }
-  result_type operator()(const stepper_dense_rosenbrock4&) const {
-    return join_types("dense", "rosenbrock4");
-  }
+  return boost::any(); // Won't get here.
+}
 
-private:
-  static std::vector<std::string> join_types(const std::string& category,
-                                             const std::string& type) {
-    std::vector<std::string> ret;
-    ret.push_back(category);
-    ret.push_back(type);
-    return ret;
-  }
-};
-
+template <typename T>
+boost::any stepper::construct_dense(stepper::Type /* type */,
+                                    double /* abs_tol */,
+                                    double /* rel_tol */) {
+  // TODO: euler
+  // TODO: rosenbrock_dopri5
+  // TODO: bulirsch_stoer
+  // TODO: rosenbrock4
+  stop("Invalid dense type");
+  return boost::any();
+}
 
 }
 

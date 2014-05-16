@@ -8,9 +8,11 @@
 \alias{stepper-class}
 \title{Stepper}
 \usage{
-make_stepper_basic(type)
+make_stepper_basic(type, atol = NA_real_, rtol = NA_real_,
+  stiff_state = NA)
 
-make_stepper_controlled(type, atol = 1e-06, rtol = 1e-06)
+make_stepper_controlled(type, atol = 1e-06, rtol = 1e-06,
+  stiff_state = NA)
 
 make_stepper(category, type, ...)
 }
@@ -18,6 +20,15 @@ make_stepper(category, type, ...)
 \item{atol}{Absolute tolerance (see odeint docs for now)}
 
 \item{rtol}{Relative tolerance (see odeint docs for now)}
+
+\item{stiff_state}{Logical, indicating on whether the stepper
+should use the internal data structures required by the stiff
+systems.  This is likely to disappear soon, as it depends entirely
+on the system itself.  The default, NA, will switch based on the
+\code{type} argument -- \code{rosenbrock4} is the stiff system
+stepper.  However, to use other steppers with the stiff system, we
+need to set up normal steppers similarly.  So probably at runtime
+this will just rebuild the stepper for us.}
 
 \item{category}{Either "basic" or "controlled"}
 

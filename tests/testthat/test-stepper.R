@@ -4,9 +4,6 @@ context("stepper")
 
 test_that("stepper lists", {
   expect_that(stepper_categories(), equals(c("basic", "controlled")))
-  expect_that(stepper_stiff_categories(),
-              equals(c("basic", "controlled", "dense")))
-
   expect_that(stepper_basic_types(),
               equals(c("euler", "modified_midpoint", "runge_kutta4",
                        "runge_kutta_cash_karp54",
@@ -17,106 +14,147 @@ test_that("stepper lists", {
                        "runge_kutta_fehlberg78",
                        "runge_kutta_dopri5")))
 
+  expect_that(stepper_basic_types(have_jacobian=TRUE),
+              equals(c(stepper_basic_types(), "rosenbrock4")))
+  expect_that(stepper_controlled_types(have_jacobian=TRUE),
+              equals(c(stepper_controlled_types(), "rosenbrock4")))
+
   expect_that(stepper_types("basic"),
               is_identical_to(stepper_basic_types()))
   expect_that(stepper_types("controlled"),
               is_identical_to(stepper_controlled_types()))
+  expect_that(stepper_types("basic", TRUE),
+              is_identical_to(stepper_basic_types(TRUE)))
+  expect_that(stepper_types("controlled", TRUE),
+              is_identical_to(stepper_controlled_types(TRUE)))
 
   expect_that(stepper_types("nonexistant"),
               throws_error("Invalid stepper category"))
 })
 
+## TODO: error messages are inconsistent.
 test_that("corner cases", {
+  expect_that(make_stepper("nonexistant", "euler"),
+              throws_error("Invalid stepper category"))
   expect_that(make_stepper_basic("nonexistant"),
-              throws_error("Unknown type"))
+              throws_error("Invalid type"))
   expect_that(make_stepper_controlled("nonexistant"),
-              throws_error("Unknown type"))
+              throws_error("Invalid type"))
+
+  ## TODO: Expand this out and check nonscalar, negative.
   ## Controlled steppers take tolerance arguments that must be
   ## numeric:
   expect_that(make_stepper_controlled("runge_kutta_cash_karp54", "a"),
               throws_error("numeric"))
 })
 
-test_that("basic steppers", {
-  for (type in stepper_basic_types()) {
-    s <- make_stepper_basic(type)
-    expect_that(s, is_a("stepper"))
+test_that("construction", {
+  ## What is set by default:
+  tol_default <- list(basic=rep(NA_real_, 2),
+                      controlled=rep(1e-6, 2))
+  for (category in stepper_categories()) {
+    for (type in stepper_basic_types()) {
+      if ((category == "basic"      && type %in% stepper_basic_types()) ||
+          (category == "controlled" && type %in% stepper_controlled_types())) {
+        s <- make_stepper(category, type)
+        expect_that(s, is_a("stepper"))
 
-    expect_that(s$ptr, is_a("externalptr"))
-    expect_that(s$ptr <- s$ptr, throws_error("read-only"))
+        expect_that(s$ptr, is_a("externalptr"))
+        expect_that(s$category, equals(category))
+        expect_that(s$type, equals(type))
+        expect_that(s$abs_tol, equals(tol_default[[category]][[1]]))
+        expect_that(s$rel_tol, equals(tol_default[[category]][[2]]))
 
-    expect_that(s$category, equals("basic"))
-    expect_that(s$category <- s$category, throws_error("read-only"))
+        ## All fields are read only:
+        expect_that(s$ptr <- s$ptr, throws_error("read-only"))
+        expect_that(s$category <- s$category, throws_error("read-only"))
+        expect_that(s$type <- s$type, throws_error("read-only"))
+        expect_that(s$abs_tol <- s$abs_tol, throws_error("read-only"))
+        expect_that(s$rel_tol <- s$abs_tol, throws_error("read-only"))
 
-    expect_that(s$type, equals(type))
-    expect_that(s$type <- s$type, throws_error("read-only"))
-
-    expect_that(s$atol, equals(NA_real_))
-    expect_that(s$atol <- s$atol, throws_error("read-only"))
-
-    expect_that(s$rtol, equals(NA_real_))
-    expect_that(s$rtol <- s$atol, throws_error("read-only"))
-
-    ## Test of internal method:
-    expect_that(rodeint:::stepper__type(s$ptr),
-                is_identical_to(c("basic", type)))
+        ## Test of internal method & some internal consistency.
+        ## Includes attributes.
+        cmp <- structure(c(category, type),
+                         category_id=match(category, stepper_categories()) - 1L,
+                         type_id=match(type, stepper_basic_types()) - 1L,
+                         stiff_state=FALSE, needs_jacobian=FALSE)
+        expect_that(rodeint:::stepper__type(s$ptr), is_identical_to(cmp))
+      } else {
+        expect_that(make_stepper(category, type),
+                    throws_error("Cannot make a controlled stepper"))
+      }
+    }
   }
 })
 
-test_that("controlled steppers", {
-  for (type in stepper_controlled_types()) {
-    s <- make_stepper_controlled(type)
-    expect_that(s, is_a("stepper"))
+test_that("tolerance", {
+  ## What we will provide as a test case:
+  tol_given   <- c(1e-8, 1e-9)
+  ## What we expect back:
+  tol_result <- list(basic=rep(NA_real_, 2),
+                     controlled=tol_given)
 
-    expect_that(s$category, equals("controlled"))
-    expect_that(s$category <- s$category, throws_error("read-only"))
+  for (category in stepper_categories()) {
+    for (type in stepper_basic_types()) {
+      if ((category == "basic"      && type %in% stepper_basic_types()) ||
+          (category == "controlled" && type %in% stepper_controlled_types())) {
+        ## Set tolerances and see if they stick
+        if (category == "basic") {
+          expect_that(s <- make_stepper(category, type,
+                                        tol_given[[1]], tol_given[[2]]),
+                      gives_warning("Ignoring provided tolerance"))
+          expect_that(s$abs_tol, equals(tol_result[[category]][[1]]))
+          expect_that(s$rel_tol, equals(tol_result[[category]][[2]]))
+        } else {
+          s <- make_stepper(category, type, tol_given[[1]], tol_given[[2]])
+          expect_that(s$abs_tol, equals(tol_result[[category]][[1]]))
+          expect_that(s$rel_tol, equals(tol_result[[category]][[2]]))
 
-    expect_that(s$ptr, is_a("externalptr"))
-    expect_that(s$ptr <- s$ptr, throws_error("read-only"))
-
-    expect_that(s$type, equals(type))
-    expect_that(s$type <- s$type, throws_error("read-only"))
-
-    expect_that(s$atol, equals(1e-6))
-    expect_that(s$atol <- s$atol, throws_error("read-only"))
-
-    expect_that(s$rtol, equals(1e-6))
-    expect_that(s$rtol <- s$atol, throws_error("read-only"))
-
-    ## Test of internal method:
-    expect_that(rodeint:::stepper__type(s$ptr),
-                is_identical_to(c("controlled", type)))
-
-    ## Test setting atol/rtol
-    atol <- 1e-10
-    rtol <- 1e-04
-    s <- make_stepper_controlled(type, atol, rtol)
-    expect_that(s$atol, equals(atol))
-    expect_that(s$rtol, equals(rtol))
+          expect_that(make_stepper(category, type, NA_real_, tol_given[[2]]),
+                      throws_error("Tolerances must be non-NA"))
+          expect_that(make_stepper(category, type, tol_given[[1]], NA_real_),
+                      throws_error("Tolerances must be non-NA"))
+          expect_that(make_stepper(category, type, NA_real_, NA_real_),
+                      throws_error("Tolerances must be non-NA"))
+        }
+      }
+    }
   }
 })
 
 test_that("stiff steppers (really implicit)", {
-  for (category in stepper_stiff_categories()) {
-    tol <- if (category == "basic") NA_real_ else 1e-6
+  for (category in stepper_categories()) {
+    for (type in stepper_basic_types(TRUE)) {
+      if ((category == "basic"      &&
+           type %in% stepper_basic_types(TRUE)) ||
+          (category == "controlled" &&
+           type %in% stepper_controlled_types(TRUE))) {
+        s <- make_stepper(category, type, stiff_state=TRUE)
+        expect_that(s, is_a("stepper"))
+        category_id <- match(category, stepper_categories()) - 1L
+        cmp <- structure(c(category, type),
+                         category_id=category_id,
+                         type_id=length(stepper_basic_types())+1L,
+                         stiff_state=TRUE, needs_jacobian=TRUE)
+        if (type == "rosenbrock4") {
+        } else {
+          cmp <- structure(c(category, type),
+                           category_id=category_id,
+                           type_id=match(type, stepper_basic_types()) - 1L,
+                           stiff_state=TRUE, needs_jacobian=FALSE)
+        }
+        expect_that(rodeint:::stepper__type(s$ptr), is_identical_to(cmp))
+      } else {
+        expect_that(make_stepper(category, type),
+                    throws_error("Cannot make a controlled stepper"))
+      }
+    }
+  }
+})
 
-    s <- stepper_stiff(category)
-    expect_that(s, is_a("stepper_stiff"))
-
-    expect_that(s$category, equals(category))
-    expect_that(s$category <- s$category, throws_error("read-only"))
-
-    expect_that(s$type, equals("rosenbrock4"))
-    expect_that(s$type <- s$type, throws_error("read-only"))
-
-    expect_that(s$atol, equals(tol))
-    expect_that(s$atol <- s$atol, throws_error("read-only"))
-
-    expect_that(s$rtol, equals(tol))
-    expect_that(s$rtol <- s$atol, throws_error("read-only"))
-
-    ## Test of internal method:
-    expect_that(rodeint:::stepper_stiff__category(s$ptr),
-                is_identical_to(c(category, "rosenbrock4")))
+test_that("Can't make stiff stepper with nonstiff state", {
+  for (category in stepper_categories()) {
+    expect_that(make_stepper(category, "rosenbrock4", stiff_state=FALSE),
+                throws_error("requires a uBLAS state"))
   }
 })

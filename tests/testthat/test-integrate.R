@@ -145,7 +145,6 @@ test_that("integrate_adaptive", {
   t0 <- 0
   t1 <- 1
   dt0 <- 0.01
-  tol <- 1e-6
 
   ## Here is the solution from deSolve, using lsoda:
   cmp <- unname(lsoda(y0, c(t0, t1), harmonic_oscillator_deSolve,
@@ -208,7 +207,6 @@ test_that("integrate_times", {
   t0 <- 0
   t1 <- 1
   dt0 <- 0.01
-  tol <- 1e-6
 
   # Some randomly spaced times between t0 and t1:
   set.seed(1)

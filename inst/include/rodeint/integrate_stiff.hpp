@@ -1,5 +1,5 @@
-#ifndef _RODEINT_INTEGRATE_HPP_
-#define _RODEINT_INTEGRATE_HPP_
+#ifndef _RODEINT_INTEGRATE_STIFF_HPP_
+#define _RODEINT_INTEGRATE_STIFF_HPP_
 
 #ifdef ODEINT_INCLUDE_EVERYTHING
 #include <boost/numeric/odeint.hpp>
@@ -18,50 +18,45 @@
 #include <rodeint/stepper.hpp>
 #include <rodeint/util.hpp>
 
-namespace rodeint {
+#include <rodeint/ode_system_stiff.hpp>
 
-// This is the function that does all the actual work:
-// Little struct to hold everything together.  It's just needed to
-// keep the arguments under control.  We're using the generic stepper
-// type here without knowing the true underlying type.
+namespace rodeint {
 
 // 1. integrate_const: "Equidistant observer calls"
 template <typename OdeSystem>
-struct integrate_const_data {
+struct integrate_const_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
   OdeSystem system;
   state_type y;
   double t0, t1, dt;
   bool save_state;
-  integrate_const_data(stepper s_, OdeSystem system_, state_type y_,
-                       double t0_, double t1_, double dt_,
-                       bool save_state_)
+  integrate_const_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+                             double t0_, double t1_, double dt_,
+                             bool save_state_)
     : s(s_), system(system_),
       y(y_), t0(t0_), t1(t1_), dt(dt_), save_state(save_state_) {}
 
-  // This function actually unpacks the stepper to it's true type, and
-  // organises running the integration, doing checks and organising
-  // output.  All the interesting logic is kept here.
   template <typename Stepper>
   Rcpp::NumericVector run() {
     using boost::numeric::odeint::integrate_const;
     check_dt(t0, t1, dt);
-    Stepper s_typed = s.template as<Stepper>();
+    Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
+    // NOTE: This line is special to stiff systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
     if (save_state) {
       state.steps =
-        integrate_const(s_typed, system, y, t0, t1, dt, state.obs);
+        integrate_const(s_typed, sys, y, t0, t1, dt, state.obs);
     } else {
-      integrate_const(s_typed, system, y, t0, t1, dt);
+      integrate_const(s_typed, sys, y, t0, t1, dt);
     }
     return integration_state(y, state, save_state);
   }
-
   // And then set this up to work:
   /*[[[cog
     import generation as g
-    g.integrate_nonstiff('Rcpp::NumericVector')
+    g.integrate_stiff('Rcpp::NumericVector')
     ]]]*/
   // *** Generated section: do not edit until the end marker
 
@@ -79,17 +74,19 @@ struct integrate_const_data {
   Rcpp::NumericVector run_basic() {
     switch(s.type_id()) {
     case stepper::EULER:
-      return run<stepper_basic_euler_stl>();
+      return run<stepper_basic_euler_ublas>();
     case stepper::MODIFIED_MIDPOINT:
-      return run<stepper_basic_modified_midpoint_stl>();
+      return run<stepper_basic_modified_midpoint_ublas>();
     case stepper::RUNGE_KUTTA4:
-      return run<stepper_basic_runge_kutta4_stl>();
+      return run<stepper_basic_runge_kutta4_ublas>();
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_basic_runge_kutta_cash_karp54_stl>();
+      return run<stepper_basic_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_basic_runge_kutta_fehlberg78_stl>();
+      return run<stepper_basic_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_basic_runge_kutta_dopri5_stl>();
+      return run<stepper_basic_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_basic_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -98,11 +95,13 @@ struct integrate_const_data {
   Rcpp::NumericVector run_controlled() {
     switch(s.type_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
+      return run<stepper_controlled_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
+      return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_controlled_runge_kutta_dopri5_stl>();
+      return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_controlled_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -113,7 +112,7 @@ struct integrate_const_data {
 
 // 2. integrate_n_steps: "Integrate a given number of steps"
 template <typename OdeSystem>
-struct integrate_n_steps_data {
+struct integrate_n_steps_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
   OdeSystem system;
@@ -121,9 +120,9 @@ struct integrate_n_steps_data {
   double t0, dt;
   size_t n;
   bool save_state;
-  integrate_n_steps_data(stepper s_, OdeSystem system_, state_type y_,
-                         double t0_, double dt_, size_t n_,
-                         bool save_state_)
+  integrate_n_steps_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+                               double t0_, double dt_, size_t n_,
+                               bool save_state_)
     : s(s_), system(system_),
       y(y_), t0(t0_), dt(dt_), n(n_), save_state(save_state_) {}
 
@@ -137,14 +136,16 @@ struct integrate_n_steps_data {
     if (dt == 0.0) {
       Rcpp::stop("dt cannot be zero");
     }
-    Stepper s_typed = s.template as<Stepper>();
+    Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
+    // NOTE: This line is special to stiff systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
     if (save_state) {
       // NOTE: here, the final time is returned instead of n_steps
-      integrate_n_steps(s_typed, system, y, t0, dt, n, state.obs);
+      integrate_n_steps(s_typed, sys, y, t0, dt, n, state.obs);
       state.steps = n;
     } else {
-      integrate_n_steps(s_typed, system, y, t0, dt, n);
+      integrate_n_steps(s_typed, sys, y, t0, dt, n);
     }
     return integration_state(y, state, save_state);
   }
@@ -152,7 +153,7 @@ struct integrate_n_steps_data {
   // And then set this up to work:
   /*[[[cog
     import generation as g
-    g.integrate_nonstiff('Rcpp::NumericVector')
+    g.integrate_stiff('Rcpp::NumericVector')
     ]]]*/
   // *** Generated section: do not edit until the end marker
 
@@ -170,17 +171,19 @@ struct integrate_n_steps_data {
   Rcpp::NumericVector run_basic() {
     switch(s.type_id()) {
     case stepper::EULER:
-      return run<stepper_basic_euler_stl>();
+      return run<stepper_basic_euler_ublas>();
     case stepper::MODIFIED_MIDPOINT:
-      return run<stepper_basic_modified_midpoint_stl>();
+      return run<stepper_basic_modified_midpoint_ublas>();
     case stepper::RUNGE_KUTTA4:
-      return run<stepper_basic_runge_kutta4_stl>();
+      return run<stepper_basic_runge_kutta4_ublas>();
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_basic_runge_kutta_cash_karp54_stl>();
+      return run<stepper_basic_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_basic_runge_kutta_fehlberg78_stl>();
+      return run<stepper_basic_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_basic_runge_kutta_dopri5_stl>();
+      return run<stepper_basic_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_basic_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -189,11 +192,13 @@ struct integrate_n_steps_data {
   Rcpp::NumericVector run_controlled() {
     switch(s.type_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
+      return run<stepper_controlled_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
+      return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_controlled_runge_kutta_dopri5_stl>();
+      return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_controlled_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -204,41 +209,39 @@ struct integrate_n_steps_data {
 
 // 3. integrate_adaptive "Observer calls at each step"
 template <typename OdeSystem>
-struct integrate_adaptive_data {
+struct integrate_adaptive_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
   OdeSystem system;
   state_type y;
   double t0, t1, dt;
   bool save_state;
-  integrate_adaptive_data(stepper s_, OdeSystem system_, state_type y_,
-                          double t0_, double t1_, double dt_,
-                          bool save_state_)
+  integrate_adaptive_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+                                double t0_, double t1_, double dt_,
+                                bool save_state_)
     : s(s_), system(system_),
       y(y_), t0(t0_), t1(t1_), dt(dt_), save_state(save_state_) {}
 
-  // This function actually unpacks the stepper to it's true type, and
-  // organises running the integration, doing checks and organising
-  // output.  All the interesting logic is kept here.
   template <typename Stepper>
   Rcpp::NumericVector run() {
     using boost::numeric::odeint::integrate_adaptive;
     check_dt(t0, t1, dt);
-    Stepper s_typed = s.template as<Stepper>();
+    Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
+    // NOTE: This line is special to stiff systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
     if (save_state) {
       state.steps =
-        integrate_adaptive(s_typed, system, y, t0, t1, dt, state.obs);
+        integrate_adaptive(s_typed, sys, y, t0, t1, dt, state.obs);
     } else {
-      integrate_adaptive(s_typed, system, y, t0, t1, dt);
+      integrate_adaptive(s_typed, sys, y, t0, t1, dt);
     }
     return integration_state(y, state, save_state);
   }
-
   // And then set this up to work:
   /*[[[cog
     import generation as g
-    g.integrate_nonstiff('Rcpp::NumericVector')
+    g.integrate_stiff('Rcpp::NumericVector')
     ]]]*/
   // *** Generated section: do not edit until the end marker
 
@@ -256,17 +259,19 @@ struct integrate_adaptive_data {
   Rcpp::NumericVector run_basic() {
     switch(s.type_id()) {
     case stepper::EULER:
-      return run<stepper_basic_euler_stl>();
+      return run<stepper_basic_euler_ublas>();
     case stepper::MODIFIED_MIDPOINT:
-      return run<stepper_basic_modified_midpoint_stl>();
+      return run<stepper_basic_modified_midpoint_ublas>();
     case stepper::RUNGE_KUTTA4:
-      return run<stepper_basic_runge_kutta4_stl>();
+      return run<stepper_basic_runge_kutta4_ublas>();
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_basic_runge_kutta_cash_karp54_stl>();
+      return run<stepper_basic_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_basic_runge_kutta_fehlberg78_stl>();
+      return run<stepper_basic_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_basic_runge_kutta_dopri5_stl>();
+      return run<stepper_basic_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_basic_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -275,11 +280,13 @@ struct integrate_adaptive_data {
   Rcpp::NumericVector run_controlled() {
     switch(s.type_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
+      return run<stepper_controlled_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
+      return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_controlled_runge_kutta_dopri5_stl>();
+      return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_controlled_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -296,15 +303,15 @@ struct integrate_adaptive_data {
 // returned thing being the matrix of times, and the final state 'y'
 // now an attribute.
 template <typename OdeSystem>
-struct integrate_times_data {
+struct integrate_times_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
   OdeSystem system;
   state_type y;
   std::vector<double> times;
   double dt;
-  integrate_times_data(stepper s_, OdeSystem system_, state_type y_,
-                       std::vector<double> times_, double dt_)
+  integrate_times_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+                             std::vector<double> times_, double dt_)
     : s(s_), system(system_),
       y(y_), times(times_), dt(dt_) {}
 
@@ -324,10 +331,12 @@ struct integrate_times_data {
       }
     }
 
-    Stepper s_typed = s.template as<Stepper>();
+    Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
+    // NOTE: This line is special to stiff systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
     state.steps =
-      integrate_times(s_typed, system, y,
+      integrate_times(s_typed, sys, y,
                       times.begin(), times.end(), dt, state.obs);
 
     Rcpp::NumericMatrix ret = util::to_rcpp_matrix_by_row(state.y);
@@ -340,7 +349,7 @@ struct integrate_times_data {
   // And then set this up to work:
   /*[[[cog
     import generation as g
-    g.integrate_nonstiff('Rcpp::NumericMatrix')
+    g.integrate_stiff('Rcpp::NumericMatrix')
     ]]]*/
   // *** Generated section: do not edit until the end marker
 
@@ -358,17 +367,19 @@ struct integrate_times_data {
   Rcpp::NumericMatrix run_basic() {
     switch(s.type_id()) {
     case stepper::EULER:
-      return run<stepper_basic_euler_stl>();
+      return run<stepper_basic_euler_ublas>();
     case stepper::MODIFIED_MIDPOINT:
-      return run<stepper_basic_modified_midpoint_stl>();
+      return run<stepper_basic_modified_midpoint_ublas>();
     case stepper::RUNGE_KUTTA4:
-      return run<stepper_basic_runge_kutta4_stl>();
+      return run<stepper_basic_runge_kutta4_ublas>();
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_basic_runge_kutta_cash_karp54_stl>();
+      return run<stepper_basic_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_basic_runge_kutta_fehlberg78_stl>();
+      return run<stepper_basic_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_basic_runge_kutta_dopri5_stl>();
+      return run<stepper_basic_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_basic_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -377,11 +388,13 @@ struct integrate_times_data {
   Rcpp::NumericMatrix run_controlled() {
     switch(s.type_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
-      return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
+      return run<stepper_controlled_runge_kutta_cash_karp54_ublas>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
-      return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
+      return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
-      return run<stepper_controlled_runge_kutta_dopri5_stl>();
+      return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_controlled_rosenbrock4_ublas>();
     default:
       stop("Unimplemented type"); // TODO: give details
     }
@@ -390,39 +403,39 @@ struct integrate_times_data {
   //[[[end]]]
 };
 
-// Functions we actually within integrate.cpp.  They're templated
+// Functions we actually within integrate_stiff.cpp.  They're templated
 // against the ode sytem (r, cpp, class).  All it does is collect the
 // data object together and pass it along.
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_const(stepper s, OdeSystem system,
-                  typename OdeSystem::state_type y,
-                  double t0, double t1, double dt,
-                  bool save_state) {
-  integrate_const_data<OdeSystem> data(s, system, y,
-                                       t0, t1, dt, save_state);
+r_integrate_const_stiff(stepper s, OdeSystem system,
+                        typename OdeSystem::state_type y,
+                        double t0, double t1, double dt,
+                        bool save_state) {
+  integrate_const_stiff_data<OdeSystem> data(s, system, y,
+                                             t0, t1, dt, save_state);
   return data.run();
 }
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_n_steps(stepper s, OdeSystem system,
-                    typename OdeSystem::state_type y,
-                    double t0, double dt, size_t n,
-                    bool save_state) {
-  integrate_n_steps_data<OdeSystem> data(s, system, y,
-                                         t0, dt, n, save_state);
+r_integrate_n_steps_stiff(stepper s, OdeSystem system,
+                          typename OdeSystem::state_type y,
+                          double t0, double dt, size_t n,
+                          bool save_state) {
+  integrate_n_steps_stiff_data<OdeSystem> data(s, system, y,
+                                               t0, dt, n, save_state);
   return data.run();
 }
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_adaptive(stepper s, OdeSystem system,
-                     typename OdeSystem::state_type y,
-                     double t0, double t1, double dt,
-                     bool save_state) {
-  integrate_adaptive_data<OdeSystem> data(s, system, y,
-                                          t0, t1, dt, save_state);
+r_integrate_adaptive_stiff(stepper s, OdeSystem system,
+                           typename OdeSystem::state_type y,
+                           double t0, double t1, double dt,
+                           bool save_state) {
+  integrate_adaptive_stiff_data<OdeSystem> data(s, system, y,
+                                                t0, t1, dt, save_state);
   return data.run();
 }
 
@@ -432,34 +445,18 @@ r_integrate_adaptive(stepper s, OdeSystem system,
 // 'y' with the final state saved as an attribute "y".
 template <typename OdeSystem>
 Rcpp::NumericMatrix
-r_integrate_times(stepper s, OdeSystem system,
-                  typename OdeSystem::state_type y,
-                  std::vector<double> times, double dt) {
-  integrate_times_data<OdeSystem> data(s, system, y,
-                                       times, dt);
+r_integrate_times_stiff(stepper s, OdeSystem system,
+                        typename OdeSystem::state_type y,
+                        std::vector<double> times, double dt) {
+  integrate_times_stiff_data<OdeSystem> data(s, system, y,
+                                             times, dt);
   return data.run();
 }
 
-// 5. Convenience function
-template <typename OdeSystem>
-Rcpp::NumericVector
-r_integrate_simple(OdeSystem ode_system,
-                   typename OdeSystem::state_type y,
-                   double t0, double t1, double dt,
-                   bool save_state=false) {
-  using boost::numeric::odeint::integrate;
-  check_dt(t0, t1, dt);
 
-  state_saver<typename OdeSystem::state_type> state;
-  if (save_state) {
-    state.steps = integrate(ode_system, y, t0, t1, dt, state.obs);
-  } else {
-    integrate(ode_system, y, t0, t1, dt);
-  }
+// NOTE: No integrate_simple (but that might go from the nonstiff
+// cases anyway).
 
-  return integration_state(y, state, save_state);
-}
-
-}
+} // namespace
 
 #endif
