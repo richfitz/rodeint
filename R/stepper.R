@@ -8,20 +8,20 @@ stepper <- setRefClass("stepper",
                        fields=list(
                          category="character",
                          type="character",
-                         stiff_state="logical",
+                         ublas_state="logical",
                          abs_tol="numeric",
                          rel_tol="numeric",
                          ptr="externalptr"))
 stepper$lock(names(stepper$fields()))
 
-stepper$methods(initialize=function(category, type, stiff_state,
+stepper$methods(initialize=function(category, type, ublas_state,
                   abs_tol, rel_tol) {
   category <<- category
   type     <<- type
-  stiff_state <<- stiff_state
+  ublas_state <<- ublas_state
   abs_tol <<- abs_tol
   rel_tol <<- rel_tol
-  ptr <<- stepper__ctor(category, type, stiff_state,
+  ptr <<- stepper__ctor(category, type, ublas_state,
                         abs_tol, rel_tol)
 })
 
@@ -77,22 +77,22 @@ stepper_categories <- function() {
 ##' @rdname stepper
 ##' @export
 make_stepper_basic <- function(type, abs_tol=NA_real_, rel_tol=NA_real_,
-                               stiff_state=NA) {
+                               ublas_state=NA) {
   if (!is.na(abs_tol) || !is.na(rel_tol)) {
     warning("Ignoring provided tolerance arguments")
   }
-  if (is.na(stiff_state)) {
-    stiff_state <- type == "rosenbrock4"
+  if (is.na(ublas_state)) {
+    ublas_state <- type == "rosenbrock4"
   }
-  stepper("basic", type, stiff_state, NA_real_, NA_real_)
+  stepper("basic", type, ublas_state, NA_real_, NA_real_)
 }
 
-## TODO: See the comment about stiff_state below.
+## TODO: See the comment about ublas_state below.
 ##' @rdname stepper
 ##' @export
 ##' @param abs_tol Absolute tolerance (see odeint docs for now)
 ##' @param rel_tol Relative tolerance (see odeint docs for now)
-##' @param stiff_state Logical, indicating on whether the stepper
+##' @param ublas_state Logical, indicating on whether the stepper
 ##' should use the internal data structures required by the stiff
 ##' systems.  This is likely to disappear soon, as it depends entirely
 ##' on the system itself.  The default, NA, will switch based on the
@@ -101,11 +101,11 @@ make_stepper_basic <- function(type, abs_tol=NA_real_, rel_tol=NA_real_,
 ##' need to set up normal steppers similarly.  So probably at runtime
 ##' this will just rebuild the stepper for us.
 make_stepper_controlled <- function(type, abs_tol=1e-6, rel_tol=1e-6,
-                                    stiff_state=NA) {
-  if (is.na(stiff_state)) {
-    stiff_state <- type == "rosenbrock4"
+                                    ublas_state=NA) {
+  if (is.na(ublas_state)) {
+    ublas_state <- type == "rosenbrock4"
   }
-  stepper("controlled", type, stiff_state, abs_tol, rel_tol)
+  stepper("controlled", type, ublas_state, abs_tol, rel_tol)
 }
 
 ##' @rdname stepper

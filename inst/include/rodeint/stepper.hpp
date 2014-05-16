@@ -148,21 +148,21 @@ public:
              ROSENBROCK4};
 
   // Construction from human-readable things (used from R)
-  stepper(std::string category_, std::string type_, bool stiff_state_,
+  stepper(std::string category_, std::string type_, bool ublas_state_,
           double abs_tol_, double rel_tol_)
     : category(category_from_string(category_)),
       type(type_from_string(type_)),
-      stiff_state(stiff_state_),
+      ublas_state(ublas_state_),
       abs_tol(abs_tol_), rel_tol(rel_tol_),
-      stepper_odeint(construct(category, type, stiff_state, abs_tol, rel_tol)) {
+      stepper_odeint(construct(category, type, ublas_state, abs_tol, rel_tol)) {
   }
   // Might make this private (also nice if we had delegated
   // constructors)
-  stepper(Category category_, Type type_, bool stiff_state_,
+  stepper(Category category_, Type type_, bool ublas_state_,
           double abs_tol_, double rel_tol_)
-    : category(category_), type(type_), stiff_state(stiff_state_),
+    : category(category_), type(type_), ublas_state(ublas_state_),
       abs_tol(abs_tol_), rel_tol(rel_tol_),
-      stepper_odeint(construct(category, type, stiff_state, abs_tol, rel_tol)) {
+      stepper_odeint(construct(category, type, ublas_state, abs_tol, rel_tol)) {
   }
   std::string category_name() const {
     return category_name(category);
@@ -177,8 +177,8 @@ public:
   Type type_id() const {
     return type;
   }
-  bool has_stiff_state() const {
-    return stiff_state;
+  bool has_ublas_state() const {
+    return ublas_state;
   }
   bool needs_jacobian() const {
     return needs_ublas[type];
@@ -196,11 +196,11 @@ public:
     }
   }
   template <typename Stepper>
-  Stepper as(bool stiff_state_) {
+  Stepper as(bool ublas_state_) {
     // Enforce the right state type
-    if (stiff_state != stiff_state_) {
+    if (ublas_state != ublas_state_) {
       stepper_odeint =
-        construct(category, type, stiff_state_, abs_tol, rel_tol);
+        construct(category, type, ublas_state_, abs_tol, rel_tol);
     }
     return as<Stepper>();
   }
@@ -208,7 +208,7 @@ private:
   // Actual stepper information.
   Category   category;
   Type       type;
-  bool       stiff_state;
+  bool       ublas_state;
   double     abs_tol;
   double     rel_tol;
   boost::any stepper_odeint;
@@ -222,9 +222,9 @@ private:
   // Check a bunch of stuff on intitialisation
   static std::string category_name(Category category);
   static std::string type_name(Type type);
-  static void validate(Category category, Type type, bool stiff_state,
+  static void validate(Category category, Type type, bool ublas_state,
                        double abs_tol, double rel_tol);
-  static boost::any construct(Category category, Type type, bool stiff_state,
+  static boost::any construct(Category category, Type type, bool ublas_state,
                               double abs_tol, double rel_tol);
   template <typename T>
   static boost::any construct(Category category, Type type,

@@ -189,8 +189,8 @@ ode_system_class__derivs <- function(ode_system, y, t) {
     .Call('rodeint_ode_system_class__derivs', PACKAGE = 'rodeint', ode_system, y, t)
 }
 
-stepper__ctor <- function(category, type, stiff_state, abs_tol, rel_tol) {
-    .Call('rodeint_stepper__ctor', PACKAGE = 'rodeint', category, type, stiff_state, abs_tol, rel_tol)
+stepper__ctor <- function(category, type, ublas_state, abs_tol, rel_tol) {
+    .Call('rodeint_stepper__ctor', PACKAGE = 'rodeint', category, type, ublas_state, abs_tol, rel_tol)
 }
 
 stepper__type <- function(s) {

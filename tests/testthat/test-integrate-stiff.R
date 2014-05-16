@@ -29,7 +29,7 @@ test_that("integate_adaptive", {
   for (category in stepper_categories()) {
     for (type in stepper_types(category, have_jacobian=TRUE)) {
       tolerance <- expected_tolerance(type)
-      s <- make_stepper(category, type, stiff_state=TRUE)
+      s <- make_stepper(category, type, ublas_state=TRUE)
 
       ## TODO: Here, and in test-integrate.R, y_r -> y
       y_r <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0)
@@ -72,7 +72,7 @@ test_that("integate_adaptive", {
       ##
       ## This is doing a conversion for us behind the scenes.
       if (type != "rosenbrock4") {
-        s_nonstiff <- make_stepper(category, type, stiff_state=FALSE)
+        s_nonstiff <- make_stepper(category, type, ublas_state=FALSE)
         expect_that(integrate_adaptive(s_nonstiff, ode_r, y0, t0, t1, dt0),
                     is_identical_to(y_r))
         expect_that(integrate_adaptive(s_nonstiff, ode_cpp, y0, t0, t1, dt0),
@@ -81,7 +81,7 @@ test_that("integate_adaptive", {
                     is_identical_to(y_r))
         ## Pass-by-value leaves stepper unchanged.
         expect_that(attr(rodeint:::stepper__type(s_nonstiff$ptr),
-                         "stiff_state"),
+                         "ublas_state"),
                     is_false())
       }
     }

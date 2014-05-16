@@ -77,7 +77,7 @@ test_that("construction", {
         cmp <- structure(c(category, type),
                          category_id=match(category, stepper_categories()) - 1L,
                          type_id=match(type, stepper_basic_types()) - 1L,
-                         stiff_state=FALSE, needs_jacobian=FALSE)
+                         ublas_state=FALSE, needs_jacobian=FALSE)
         expect_that(rodeint:::stepper__type(s$ptr), is_identical_to(cmp))
       } else {
         expect_that(make_stepper(category, type),
@@ -129,19 +129,19 @@ test_that("stiff steppers (really implicit)", {
            type %in% stepper_basic_types(TRUE)) ||
           (category == "controlled" &&
            type %in% stepper_controlled_types(TRUE))) {
-        s <- make_stepper(category, type, stiff_state=TRUE)
+        s <- make_stepper(category, type, ublas_state=TRUE)
         expect_that(s, is_a("stepper"))
         category_id <- match(category, stepper_categories()) - 1L
         cmp <- structure(c(category, type),
                          category_id=category_id,
                          type_id=length(stepper_basic_types())+1L,
-                         stiff_state=TRUE, needs_jacobian=TRUE)
+                         ublas_state=TRUE, needs_jacobian=TRUE)
         if (type == "rosenbrock4") {
         } else {
           cmp <- structure(c(category, type),
                            category_id=category_id,
                            type_id=match(type, stepper_basic_types()) - 1L,
-                           stiff_state=TRUE, needs_jacobian=FALSE)
+                           ublas_state=TRUE, needs_jacobian=FALSE)
         }
         expect_that(rodeint:::stepper__type(s$ptr), is_identical_to(cmp))
       } else {
@@ -154,7 +154,7 @@ test_that("stiff steppers (really implicit)", {
 
 test_that("Can't make stiff stepper with nonstiff state", {
   for (category in stepper_categories()) {
-    expect_that(make_stepper(category, "rosenbrock4", stiff_state=FALSE),
+    expect_that(make_stepper(category, "rosenbrock4", ublas_state=FALSE),
                 throws_error("requires a uBLAS state"))
   }
 })

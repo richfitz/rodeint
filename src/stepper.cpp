@@ -64,7 +64,7 @@ stepper::Type stepper::type_from_string(const std::string& x) {
 
 void stepper::validate(stepper::Category category,
                        stepper::Type type,
-                       bool stiff_state,
+                       bool ublas_state,
                        double abs_tol, double rel_tol) {
   if (category == BASIC) {
     if (!ok_basic[type]) {
@@ -85,7 +85,7 @@ void stepper::validate(stepper::Category category,
       stop("Cannot make a dense stepper of type " + type_name(type));
     }
   }
-  if (!stiff_state && needs_ublas[type]) { //
+  if (!ublas_state && needs_ublas[type]) { //
     stop("The stepper type " + type_name(type) + " requires a uBLAS state");
   }
 }
@@ -205,9 +205,9 @@ stepper::construct_controlled<vector_ublas>(stepper::Type type,
 
 // [[Rcpp::export]]
 rodeint::stepper
-stepper__ctor(std::string category, std::string type, bool stiff_state,
+stepper__ctor(std::string category, std::string type, bool ublas_state,
               double abs_tol, double rel_tol) {
-  return rodeint::stepper(category, type, stiff_state, abs_tol, rel_tol);
+  return rodeint::stepper(category, type, ublas_state, abs_tol, rel_tol);
 }
 
 // [[Rcpp::export]]
@@ -217,7 +217,7 @@ Rcpp::CharacterVector stepper__type(rodeint::stepper s) {
   ret.push_back(s.type_name());
   ret.attr("category_id")    = static_cast<int>(s.category_id());
   ret.attr("type_id")        = static_cast<int>(s.type_id());
-  ret.attr("stiff_state")    = s.has_stiff_state();
+  ret.attr("ublas_state")    = s.has_ublas_state();
   ret.attr("needs_jacobian") = s.needs_jacobian();
   return ret;
 }

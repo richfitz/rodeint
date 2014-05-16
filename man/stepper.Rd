@@ -9,10 +9,10 @@
 \title{Stepper}
 \usage{
 make_stepper_basic(type, abs_tol = NA_real_, rel_tol = NA_real_,
-  stiff_state = NA)
+  ublas_state = NA)
 
 make_stepper_controlled(type, abs_tol = 1e-06, rel_tol = 1e-06,
-  stiff_state = NA)
+  ublas_state = NA)
 
 make_stepper(category, type, ...)
 }
@@ -21,7 +21,7 @@ make_stepper(category, type, ...)
 
 \item{rel_tol}{Relative tolerance (see odeint docs for now)}
 
-\item{stiff_state}{Logical, indicating on whether the stepper
+\item{ublas_state}{Logical, indicating on whether the stepper
 should use the internal data structures required by the stiff
 systems.  This is likely to disappear soon, as it depends entirely
 on the system itself.  The default, NA, will switch based on the
