@@ -42,15 +42,20 @@ Rich FitzJohn
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>stepper_types(category)</div>
-<div>stepper_controlled_types()</div>
-<div>stepper_basic_types()</div>
+    <pre><div>stepper_types(category, have_jacobian&nbsp;=&nbsp;FALSE)</div>
+<div>stepper_basic_types(have_jacobian&nbsp;=&nbsp;FALSE)</div>
+<div>stepper_controlled_types(have_jacobian&nbsp;=&nbsp;FALSE)</div>
 <div>stepper_categories()</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>category</dt>
       <dd>Either "basic" or "controlled"</dd>
+      <dt>have_jacobian</dt>
+      <dd>Logical indicating if the stepper will work
+on problems with a Jacobian (this is a superset: every problem
+that provides a Jacobian will work fine with steppers that don't
+require a Jacobian).</dd>
     </dl>
     
     <div class="Types of Controlled Stepper">

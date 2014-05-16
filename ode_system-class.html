@@ -67,8 +67,9 @@ done on either variable.  This might change in the future.</dd>
 ode_system, this is the parameters passed in to the object and is not
 necessarily the same as the way you are choosing to store processed
 parameters.</dd>
-<dt><code>initialize(generator, pars, validate = NULL, deSolve_style = FALSE)</code></dt><dd><ul>
-<li> <code>generator</code> Either
+<dt><code>initialize(derivs, pars, jacobian = NULL, validate = NULL,
+  deSolve_style = FALSE)</code></dt><dd><ul>
+<li> <code>derivs</code> Either
 <ul>
 <li> an R function of three parameters <code>(y, t, pars)</code> that
 returns a vector of derivatives (dy/dt), the same length as <code>y</code>.
@@ -76,7 +77,7 @@ returns a vector of derivatives (dy/dt), the same length as <code>y</code>.
 <li> as R function that, when run with the single argument
 <code>pars</code> returns a special object that will point at compiled
 functions (<code>ode_system_cpp</code>) or a compiled class
-<code>ode_system_class</code>.  There will be more extensive documentation
+<code>ode_system_class</code>. There will be more extensive documentation
 coming on this soon.
 </li>
 </ul></p>
@@ -84,7 +85,15 @@ coming on this soon.
       <p></li>
 <li> <code>pars</code> the initial parameters, as accepted by your
 function.  Generally this will be a numeric vector, but see
-<code>set_pars</code>.
+<code>set_pars</code>.  This exists so that we can establish the correct
+parameter vector length, and to ensure that all systems have
+<em>something</em> initialised to prevent possible crashes or
+unexpected behaviour.
+</li>
+<li> <code>jacobian</code> If you are specifiying an R system and have
+the jacobian, then this allows you to use stiff solvers
+(e.g. <code>rosenbrock4</code>).  It needs to be an R function of three
+parameters <code>(y, t, pars)</code> and return the Jacobian matrix.
 </li>
 <li> <code>validate</code> optional function to run on parameters each
 time they are set (see <code>set_pars</code>).  Useful for checking length,
@@ -99,6 +108,7 @@ element being the derivatives).
 </li>
 </ul>
 </dd>
+<dt><code>jacobian(y, t)</code></dt><dd>Compute the Jacobian.  Not all systems can do this</dd>
 <dt><code>set_pars(pars)</code></dt><dd>Set parameters within the object.</p>
   
       <p>In addition to the validation carried out by <code>validate</code>,

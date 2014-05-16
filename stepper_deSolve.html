@@ -42,7 +42,7 @@
     <h2>Usage</h2>
     <pre><div>make_stepper_deSolve(category, type, ...)</div>
 <div>make_stepper_deSolve_basic(type)</div>
-<div>make_stepper_deSolve_controlled(type, atol&nbsp;=&nbsp;1e-06, rtol&nbsp;=&nbsp;1e-06)</div></pre>
+<div>make_stepper_deSolve_controlled(type, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -54,10 +54,10 @@
       <dd>Additional parameters passed from <code>make_stepper</code>
 to either <code>make_stepper_basic</code> (none allowed) or
 <code>make_stepper_controlled</code>.</dd>
-      <dt>atol</dt>
-      <dd>Absolute tolerance (see deSolve docs for now)</dd>
-      <dt>rtol</dt>
-      <dd>Relative tolerance (see deSolve docs for now)</dd>
+      <dt>abs_tol</dt>
+      <dd>Absolute tolerance (see atol in deSolve docs for now)</dd>
+      <dt>rel_tol</dt>
+      <dd>Relative tolerance (see rtol in deSolve docs for now)</dd>
     </dl>
     
     <div class="Stepper (deSolve wrappers)">

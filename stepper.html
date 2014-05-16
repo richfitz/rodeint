@@ -40,16 +40,25 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>make_stepper_basic(type)</div>
-<div>make_stepper_controlled(type, atol&nbsp;=&nbsp;1e-06, rtol&nbsp;=&nbsp;1e-06)</div>
+    <pre><div>make_stepper_basic(type, abs_tol&nbsp;=&nbsp;NA_real_, rel_tol&nbsp;=&nbsp;NA_real_, ublas_state&nbsp;=&nbsp;NA)</div>
+<div>make_stepper_controlled(type, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, ublas_state&nbsp;=&nbsp;NA)</div>
 <div>make_stepper(category, type, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
-      <dt>atol</dt>
+      <dt>abs_tol</dt>
       <dd>Absolute tolerance (see odeint docs for now)</dd>
-      <dt>rtol</dt>
+      <dt>rel_tol</dt>
       <dd>Relative tolerance (see odeint docs for now)</dd>
+      <dt>ublas_state</dt>
+      <dd>Logical, indicating on whether the stepper
+should use the internal data structures required by the stiff
+systems.  This is likely to disappear soon, as it depends entirely
+on the system itself.  The default, NA, will switch based on the
+<code>type</code> argument -- <code>rosenbrock4</code> is the stiff system
+stepper.  However, to use other steppers with the stiff system, we
+need to set up normal steppers similarly.  So probably at runtime
+this will just rebuild the stepper for us.</dd>
       <dt>category</dt>
       <dd>Either "basic" or "controlled"</dd>
       <dt>type</dt>
