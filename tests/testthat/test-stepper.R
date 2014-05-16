@@ -79,6 +79,11 @@ test_that("construction", {
                          type_id=match(type, stepper_basic_types()) - 1L,
                          ublas_state=FALSE, needs_jacobian=FALSE)
         expect_that(s$details(), is_identical_to(cmp))
+
+        ## Print method:
+        expect_that(s$show(), prints_text("stepper for solving"))
+        expect_that(s$show(), not(prints_text("addr:")))
+        expect_that(s$show(TRUE), prints_text("addr:"))
       } else {
         expect_that(make_stepper(category, type),
                     throws_error("Cannot make a controlled stepper"))

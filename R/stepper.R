@@ -13,6 +13,26 @@ stepper <- setRefClass("stepper",
                          ptr="externalptr"))
 stepper$lock(names(stepper$fields()))
 
+stepper$methods(show = function(details=FALSE) {
+  cat("A stepper for solving ordinary differential equations\n\n")
+  cat("This object has no useful methods\n")
+  cat("Pass this stepper to functions in ?rodeint_integrate\n")
+  cat("\nDetails:\n")
+  cat(sprintf("\tcategory: %s\n", category))
+  cat(sprintf("\talgorithm: %s\n", type))
+  if (category != "basic") {
+    cat(sprintf("\tabs_tol: %s\n", abs_tol))
+    cat(sprintf("\trel_tol: %s\n", rel_tol))
+  }
+  if (details) {
+    cat("----------------------------\n")
+    cat(sprintf("addr:  %s\n", ptr_address(ptr)))
+    cat(sprintf("ublas_state: %s\n",
+                if (ublas_state) "yes" else "no"))
+    cat("----------------------------\n")
+  }
+})
+
 stepper$methods(initialize=function(category, type, ublas_state,
                   abs_tol, rel_tol) {
   category <<- category
