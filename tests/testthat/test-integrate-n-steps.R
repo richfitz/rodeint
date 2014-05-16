@@ -12,8 +12,8 @@ test_that("Time ends at multiple of dt", {
   dt <- 0.05
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_n_steps(s, ode_system, y0, t0, dt, n)
       expect_that(y_r, is_a("numeric"))
@@ -42,8 +42,8 @@ test_that("Time runs backwards", {
   dt <- -0.05
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_n_steps(s, ode_system, y0, t0, dt, n)
       y_r_s <- integrate_n_steps(s, ode_system, y0, t0, dt, n, TRUE)

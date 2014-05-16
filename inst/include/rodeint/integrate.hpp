@@ -77,7 +77,7 @@ struct integrate_const_data {
     }
   }
   Rcpp::NumericVector run_basic() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::EULER:
       return run<stepper_basic_euler_stl>();
     case stepper::MODIFIED_MIDPOINT:
@@ -91,12 +91,12 @@ struct integrate_const_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
     }
-    return Rcpp::NumericVector(); // never get here
   }
   Rcpp::NumericVector run_controlled() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
       return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
@@ -104,9 +104,9 @@ struct integrate_const_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
     }
-    return Rcpp::NumericVector(); // never get here
   }
   //[[[end]]]
 };
@@ -168,7 +168,7 @@ struct integrate_n_steps_data {
     }
   }
   Rcpp::NumericVector run_basic() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::EULER:
       return run<stepper_basic_euler_stl>();
     case stepper::MODIFIED_MIDPOINT:
@@ -182,12 +182,12 @@ struct integrate_n_steps_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
     }
-    return Rcpp::NumericVector(); // never get here
   }
   Rcpp::NumericVector run_controlled() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
       return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
@@ -195,9 +195,9 @@ struct integrate_n_steps_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
     }
-    return Rcpp::NumericVector(); // never get here
   }
   //[[[end]]]
 };
@@ -254,7 +254,7 @@ struct integrate_adaptive_data {
     }
   }
   Rcpp::NumericVector run_basic() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::EULER:
       return run<stepper_basic_euler_stl>();
     case stepper::MODIFIED_MIDPOINT:
@@ -268,12 +268,12 @@ struct integrate_adaptive_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
     }
-    return Rcpp::NumericVector(); // never get here
   }
   Rcpp::NumericVector run_controlled() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
       return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
@@ -281,9 +281,9 @@ struct integrate_adaptive_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
     }
-    return Rcpp::NumericVector(); // never get here
   }
   //[[[end]]]
 };
@@ -356,7 +356,7 @@ struct integrate_times_data {
     }
   }
   Rcpp::NumericMatrix run_basic() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::EULER:
       return run<stepper_basic_euler_stl>();
     case stepper::MODIFIED_MIDPOINT:
@@ -370,12 +370,12 @@ struct integrate_times_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericMatrix(); // never get here
     }
-    return Rcpp::NumericMatrix(); // never get here
   }
   Rcpp::NumericMatrix run_controlled() {
-    switch(s.type_id()) {
+    switch(s.algorithm_id()) {
     case stepper::RUNGE_KUTTA_CASH_KARP54:
       return run<stepper_controlled_runge_kutta_cash_karp54_stl>();
     case stepper::RUNGE_KUTTA_FEHLBERG78:
@@ -383,9 +383,9 @@ struct integrate_times_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented type"); // TODO: give details
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericMatrix(); // never get here
     }
-    return Rcpp::NumericMatrix(); // never get here
   }
   //[[[end]]]
 };

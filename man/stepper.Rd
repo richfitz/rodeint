@@ -8,13 +8,13 @@
 \alias{stepper-class}
 \title{Stepper}
 \usage{
-make_stepper_basic(type, abs_tol = NA_real_, rel_tol = NA_real_,
+make_stepper_basic(algorithm, abs_tol = NA_real_, rel_tol = NA_real_,
   ublas_state = NA)
 
-make_stepper_controlled(type, abs_tol = 1e-06, rel_tol = 1e-06,
+make_stepper_controlled(algorithm, abs_tol = 1e-06, rel_tol = 1e-06,
   ublas_state = NA)
 
-make_stepper(category, type, ...)
+make_stepper(category, algorithm, ...)
 }
 \arguments{
 \item{abs_tol}{Absolute tolerance (see odeint docs for now)}
@@ -25,14 +25,15 @@ make_stepper(category, type, ...)
 should use the internal data structures required by the stiff
 systems.  This is likely to disappear soon, as it depends entirely
 on the system itself.  The default, NA, will switch based on the
-\code{type} argument -- \code{rosenbrock4} is the stiff system
+\code{algorithm} argument -- \code{rosenbrock4} is the stiff system
 stepper.  However, to use other steppers with the stiff system, we
 need to set up normal steppers similarly.  So probably at runtime
 this will just rebuild the stepper for us.}
 
 \item{category}{Either "basic" or "controlled"}
 
-\item{type}{The type of stepper (e.g. "runge_kutta4")}
+\item{algorithm}{The stepper algorithm (e.g. "runge_kutta4") - see
+lists in \code{\link{stepper_algorithms}}}
 
 \item{...}{Additional parameters passed from \code{make_stepper}
 to either \code{make_stepper_basic} (none allowed) or

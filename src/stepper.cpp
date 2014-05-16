@@ -20,9 +20,9 @@ std::string stepper::category_name(stepper::Category category) {
   }
 }
 
-std::string stepper::type_name(stepper::Type type) {
+std::string stepper::algorithm_name(stepper::Algorithm algorithm) {
   std::string ret;
-  switch(type) {
+  switch(algorithm) {
   case EULER:                   return "euler";
   case MODIFIED_MIDPOINT:       return "modified_midpoint";
   case RUNGE_KUTTA4:            return "runge_kutta4";
@@ -31,7 +31,7 @@ std::string stepper::type_name(stepper::Type type) {
   case RUNGE_KUTTA_DOPRI5:      return "runge_kutta_dopri5";
   case BULIRSCH_STOER:          return "bulirsch_stoer";
   case ROSENBROCK4:             return "rosenbrock4";
-  default: stop("Invalid type");
+  default: stop("Invalid algorithm");
   }
 }
 
@@ -47,8 +47,8 @@ stepper::category_from_string(const std::string& x) {
   return ret;
 }
 
-stepper::Type stepper::type_from_string(const std::string& x) {
-  Type ret = EULER;
+stepper::Algorithm stepper::algorithm_from_string(const std::string& x) {
+  Algorithm ret = EULER;
   // Please excuse the odd formatting.
   if      (x == "euler")                   {ret = EULER;                  }
   else if (x == "modified_midpoint")       {ret = MODIFIED_MIDPOINT;      }
@@ -58,55 +58,59 @@ stepper::Type stepper::type_from_string(const std::string& x) {
   else if (x == "runge_kutta_dopri5")      {ret = RUNGE_KUTTA_DOPRI5;     }
   else if (x == "bulirsch_stoer")          {ret = BULIRSCH_STOER;         }
   else if (x == "rosenbrock4")             {ret = ROSENBROCK4;            }
-  else {stop("Invalid type " + x);}
+  else {stop("Invalid algorithm " + x);}
   return ret;
 }
 
 void stepper::validate(stepper::Category category,
-                       stepper::Type type,
+                       stepper::Algorithm algorithm,
                        bool ublas_state,
                        double abs_tol, double rel_tol) {
   if (category == BASIC) {
-    if (!ok_basic[type]) {
-      stop("Cannot make a basic stepper of type " + type_name(type));
+    if (!ok_basic[algorithm]) {
+      stop("Cannot make a basic stepper with algorithm " +
+           algorithm_name(algorithm));
     }
     if (!R_IsNA(abs_tol) || !R_IsNA(rel_tol)) {
       stop("Basic steppers must have NA tolerances");
     }
   } else if (category == CONTROLLED) {
-    if (!ok_controlled[type]) {
-      stop("Cannot make a controlled stepper of type " + type_name(type));
+    if (!ok_controlled[algorithm]) {
+      stop("Cannot make a controlled stepper with algorithm " +
+           algorithm_name(algorithm));
     }
     if (R_IsNA(abs_tol) || R_IsNA(rel_tol)) {
       stop("Tolerances must be non-NA");
     }
   } else if (category == DENSE) {
-    if (!ok_dense[type]) {
-      stop("Cannot make a dense stepper of type " + type_name(type));
+    if (!ok_dense[algorithm]) {
+      stop("Cannot make a dense stepper of algorithm " +
+           algorithm_name(algorithm));
     }
   }
-  if (!ublas_state && needs_ublas[type]) { //
-    stop("The stepper type " + type_name(type) + " requires a uBLAS state");
+  if (!ublas_state && needs_ublas[algorithm]) { //
+    stop("The stepper algorithm " + algorithm_name(algorithm) +
+         " requires a uBLAS state");
   }
 }
 
 boost::any stepper::construct(stepper::Category category,
-                              stepper::Type type,
+                              stepper::Algorithm algorithm,
                               bool stiff,
                               double abs_tol, double rel_tol) {
-  validate(category, type, stiff, abs_tol, rel_tol);
+  validate(category, algorithm, stiff, abs_tol, rel_tol);
   if (stiff) {
-    return construct<vector_ublas>(category, type, abs_tol, rel_tol);
+    return construct<vector_ublas>(category, algorithm, abs_tol, rel_tol);
   } else {
-    return construct<vector_stl>(category, type, abs_tol, rel_tol);
+    return construct<vector_stl>(category, algorithm, abs_tol, rel_tol);
   }
 }
 
 // OK, lots of duplication, but we can code generate it away.
 template <>
 boost::any
-stepper::construct_basic<vector_stl>(stepper::Type type) {
-  switch(type) {
+stepper::construct_basic<vector_stl>(stepper::Algorithm algorithm) {
+  switch(algorithm) {
   case EULER:
     return stepper_basic_euler_stl();
   case MODIFIED_MIDPOINT:
@@ -120,15 +124,15 @@ stepper::construct_basic<vector_stl>(stepper::Type type) {
   case RUNGE_KUTTA_DOPRI5:
     return stepper_basic_runge_kutta_dopri5_stl();
   default:
-    stop("Invalid basic type"); // TODO: print type
+    stop("Invalid basic algorithm"); // TODO: print algorithm
+    return boost::any();
   }
-  return boost::any();
 }
 
 template <>
 boost::any
-stepper::construct_basic<vector_ublas>(stepper::Type type) {
-  switch(type) {
+stepper::construct_basic<vector_ublas>(stepper::Algorithm algorithm) {
+  switch(algorithm) {
   case EULER:
     return stepper_basic_euler_ublas();
   case MODIFIED_MIDPOINT:
@@ -144,14 +148,14 @@ stepper::construct_basic<vector_ublas>(stepper::Type type) {
   case ROSENBROCK4:
     return stepper_basic_rosenbrock4_ublas();
   default:
-    stop("Invalid basic type"); // TODO: print type
+    stop("Invalid basic algorithm"); // TODO: print algorithm
+    return boost::any();
   }
-  return boost::any();
 }
 
 template <>
 boost::any
-stepper::construct_controlled<vector_stl>(stepper::Type type,
+stepper::construct_controlled<vector_stl>(stepper::Algorithm algorithm,
                                           double abs_tol,
                                           double rel_tol) {
   using boost::numeric::odeint::make_controlled;
@@ -160,7 +164,7 @@ stepper::construct_controlled<vector_stl>(stepper::Type type,
   using boost::numeric::odeint::runge_kutta_dopri5;
   typedef rodeint::vector_stl state;
 
-  switch(type) {
+  switch(algorithm) {
   case RUNGE_KUTTA_CASH_KARP54:
     return make_controlled<runge_kutta_cash_karp54<state> >(abs_tol, rel_tol);
   case RUNGE_KUTTA_FEHLBERG78:
@@ -169,14 +173,14 @@ stepper::construct_controlled<vector_stl>(stepper::Type type,
     return make_controlled<runge_kutta_dopri5<state> >(abs_tol, rel_tol);
     // TODO: bulirsch_stoer
   default:
-    stop("Invalid controlled type"); // TODO: print type
+    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    return boost::any();
   }
-  return boost::any();
 }
 
 template <>
 boost::any
-stepper::construct_controlled<vector_ublas>(stepper::Type type,
+stepper::construct_controlled<vector_ublas>(stepper::Algorithm algorithm,
                                             double abs_tol,
                                             double rel_tol) {
   using boost::numeric::odeint::make_controlled;
@@ -185,7 +189,7 @@ stepper::construct_controlled<vector_ublas>(stepper::Type type,
   using boost::numeric::odeint::runge_kutta_dopri5;
   typedef rodeint::vector_ublas state;
 
-  switch(type) {
+  switch(algorithm) {
   case RUNGE_KUTTA_CASH_KARP54:
     return make_controlled<runge_kutta_cash_karp54<state> >(abs_tol, rel_tol);
   case RUNGE_KUTTA_FEHLBERG78:
@@ -196,27 +200,27 @@ stepper::construct_controlled<vector_ublas>(stepper::Type type,
   case ROSENBROCK4:
     return make_controlled<stepper_basic_rosenbrock4_ublas>(abs_tol, rel_tol);
   default:
-    stop("Invalid controlled type"); // TODO: print type
+    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    return boost::any();
   }
-  return boost::any();
 }
 
 } // namespace
 
 // [[Rcpp::export]]
 rodeint::stepper
-stepper__ctor(std::string category, std::string type, bool ublas_state,
+stepper__ctor(std::string category, std::string algorithm, bool ublas_state,
               double abs_tol, double rel_tol) {
-  return rodeint::stepper(category, type, ublas_state, abs_tol, rel_tol);
+  return rodeint::stepper(category, algorithm, ublas_state, abs_tol, rel_tol);
 }
 
 // [[Rcpp::export]]
-Rcpp::CharacterVector stepper__type(rodeint::stepper s) {
+Rcpp::CharacterVector stepper__details(rodeint::stepper s) {
   Rcpp::CharacterVector ret;
   ret.push_back(s.category_name());
-  ret.push_back(s.type_name());
+  ret.push_back(s.algorithm_name());
   ret.attr("category_id")    = static_cast<int>(s.category_id());
-  ret.attr("type_id")        = static_cast<int>(s.type_id());
+  ret.attr("algorithm_id")   = static_cast<int>(s.algorithm_id());
   ret.attr("ublas_state")    = s.has_ublas_state();
   ret.attr("needs_jacobian") = s.needs_jacobian();
   return ret;

@@ -8,16 +8,16 @@
 \alias{stepper_deSolve-class}
 \title{Stepper (deSolve wrappers)}
 \usage{
-make_stepper_deSolve(category, type, ...)
+make_stepper_deSolve(category, algorithm, ...)
 
-make_stepper_deSolve_basic(type)
+make_stepper_deSolve_basic(algorithm)
 
-make_stepper_deSolve_controlled(type, abs_tol = 1e-06, rel_tol = 1e-06)
+make_stepper_deSolve_controlled(algorithm, abs_tol = 1e-06, rel_tol = 1e-06)
 }
 \arguments{
 \item{category}{Either "basic" or "controlled"}
 
-\item{type}{The type of stepper (e.g. "runge_kutta4")}
+\item{algorithm}{The stepper algorithm (e.g. "runge_kutta4")}
 
 \item{...}{Additional parameters passed from \code{make_stepper}
 to either \code{make_stepper_basic} (none allowed) or

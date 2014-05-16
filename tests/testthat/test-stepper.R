@@ -4,31 +4,31 @@ context("stepper")
 
 test_that("stepper lists", {
   expect_that(stepper_categories(), equals(c("basic", "controlled")))
-  expect_that(stepper_basic_types(),
+  expect_that(stepper_basic_algorithms(),
               equals(c("euler", "modified_midpoint", "runge_kutta4",
                        "runge_kutta_cash_karp54",
                        "runge_kutta_fehlberg78",
                        "runge_kutta_dopri5")))
-  expect_that(stepper_controlled_types(),
+  expect_that(stepper_controlled_algorithms(),
               equals(c("runge_kutta_cash_karp54",
                        "runge_kutta_fehlberg78",
                        "runge_kutta_dopri5")))
 
-  expect_that(stepper_basic_types(have_jacobian=TRUE),
-              equals(c(stepper_basic_types(), "rosenbrock4")))
-  expect_that(stepper_controlled_types(have_jacobian=TRUE),
-              equals(c(stepper_controlled_types(), "rosenbrock4")))
+  expect_that(stepper_basic_algorithms(have_jacobian=TRUE),
+              equals(c(stepper_basic_algorithms(), "rosenbrock4")))
+  expect_that(stepper_controlled_algorithms(have_jacobian=TRUE),
+              equals(c(stepper_controlled_algorithms(), "rosenbrock4")))
 
-  expect_that(stepper_types("basic"),
-              is_identical_to(stepper_basic_types()))
-  expect_that(stepper_types("controlled"),
-              is_identical_to(stepper_controlled_types()))
-  expect_that(stepper_types("basic", TRUE),
-              is_identical_to(stepper_basic_types(TRUE)))
-  expect_that(stepper_types("controlled", TRUE),
-              is_identical_to(stepper_controlled_types(TRUE)))
+  expect_that(stepper_algorithms("basic"),
+              is_identical_to(stepper_basic_algorithms()))
+  expect_that(stepper_algorithms("controlled"),
+              is_identical_to(stepper_controlled_algorithms()))
+  expect_that(stepper_algorithms("basic", TRUE),
+              is_identical_to(stepper_basic_algorithms(TRUE)))
+  expect_that(stepper_algorithms("controlled", TRUE),
+              is_identical_to(stepper_controlled_algorithms(TRUE)))
 
-  expect_that(stepper_types("nonexistant"),
+  expect_that(stepper_algorithms("nonexistant"),
               throws_error("Invalid stepper category"))
 })
 
@@ -37,9 +37,9 @@ test_that("corner cases", {
   expect_that(make_stepper("nonexistant", "euler"),
               throws_error("Invalid stepper category"))
   expect_that(make_stepper_basic("nonexistant"),
-              throws_error("Invalid type"))
+              throws_error("Invalid algorithm"))
   expect_that(make_stepper_controlled("nonexistant"),
-              throws_error("Invalid type"))
+              throws_error("Invalid algorithm"))
 
   ## TODO: Expand this out and check nonscalar, negative.
   ## Controlled steppers take tolerance arguments that must be
@@ -53,30 +53,34 @@ test_that("construction", {
   tol_default <- list(basic=rep(NA_real_, 2),
                       controlled=rep(1e-6, 2))
   for (category in stepper_categories()) {
-    for (type in stepper_basic_types()) {
-      if ((category == "basic"      && type %in% stepper_basic_types()) ||
-          (category == "controlled" && type %in% stepper_controlled_types())) {
-        s <- make_stepper(category, type)
+    for (algorithm in stepper_basic_algorithms()) {
+      if ((category == "basic"      &&
+           algorithm %in% stepper_basic_algorithms()) ||
+          (category == "controlled" &&
+           algorithm %in% stepper_controlled_algorithms())) {
+        s <- make_stepper(category, algorithm)
         expect_that(s, is_a("stepper"))
 
         expect_that(s$ptr, is_a("externalptr"))
         expect_that(s$category, equals(category))
-        expect_that(s$type, equals(type))
+        expect_that(s$algorithm, equals(algorithm))
         expect_that(s$abs_tol, equals(tol_default[[category]][[1]]))
         expect_that(s$rel_tol, equals(tol_default[[category]][[2]]))
 
         ## All fields are read only:
         expect_that(s$ptr <- s$ptr, throws_error("read-only"))
         expect_that(s$category <- s$category, throws_error("read-only"))
-        expect_that(s$type <- s$type, throws_error("read-only"))
+        expect_that(s$algorithm <- s$algorithm, throws_error("read-only"))
         expect_that(s$abs_tol <- s$abs_tol, throws_error("read-only"))
         expect_that(s$rel_tol <- s$abs_tol, throws_error("read-only"))
 
         ## Test of internal method & some internal consistency.
         ## Includes attributes.
-        cmp <- structure(c(category, type),
-                         category_id=match(category, stepper_categories()) - 1L,
-                         type_id=match(type, stepper_basic_types()) - 1L,
+        category_id  <- match(category,  stepper_categories()) - 1L
+        algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
+        cmp <- structure(c(category, algorithm),
+                         category_id=category_id,
+                         algorithm_id=algorithm_id,
                          ublas_state=FALSE, needs_jacobian=FALSE)
         expect_that(s$details(), is_identical_to(cmp))
 
@@ -85,7 +89,7 @@ test_that("construction", {
         expect_that(s$show(), not(prints_text("addr:")))
         expect_that(s$show(TRUE), prints_text("addr:"))
       } else {
-        expect_that(make_stepper(category, type),
+        expect_that(make_stepper(category, algorithm),
                     throws_error("Cannot make a controlled stepper"))
       }
     }
@@ -100,26 +104,32 @@ test_that("tolerance", {
                      controlled=tol_given)
 
   for (category in stepper_categories()) {
-    for (type in stepper_basic_types()) {
-      if ((category == "basic"      && type %in% stepper_basic_types()) ||
-          (category == "controlled" && type %in% stepper_controlled_types())) {
+    for (algorithm in stepper_basic_algorithms()) {
+      if ((category == "basic"      &&
+           algorithm %in% stepper_basic_algorithms()) ||
+          (category == "controlled" &&
+           algorithm %in% stepper_controlled_algorithms())) {
         ## Set tolerances and see if they stick
         if (category == "basic") {
-          expect_that(s <- make_stepper(category, type,
+          expect_that(s <- make_stepper(category, algorithm,
                                         tol_given[[1]], tol_given[[2]]),
                       gives_warning("Ignoring provided tolerance"))
           expect_that(s$abs_tol, equals(tol_result[[category]][[1]]))
           expect_that(s$rel_tol, equals(tol_result[[category]][[2]]))
         } else {
-          s <- make_stepper(category, type, tol_given[[1]], tol_given[[2]])
+          s <- make_stepper(category, algorithm,
+                            tol_given[[1]], tol_given[[2]])
           expect_that(s$abs_tol, equals(tol_result[[category]][[1]]))
           expect_that(s$rel_tol, equals(tol_result[[category]][[2]]))
 
-          expect_that(make_stepper(category, type, NA_real_, tol_given[[2]]),
+          expect_that(make_stepper(category, algorithm,
+                                   NA_real_, tol_given[[2]]),
                       throws_error("Tolerances must be non-NA"))
-          expect_that(make_stepper(category, type, tol_given[[1]], NA_real_),
+          expect_that(make_stepper(category, algorithm,
+                                   tol_given[[1]], NA_real_),
                       throws_error("Tolerances must be non-NA"))
-          expect_that(make_stepper(category, type, NA_real_, NA_real_),
+          expect_that(make_stepper(category, algorithm,
+                                   NA_real_, NA_real_),
                       throws_error("Tolerances must be non-NA"))
         }
       }
@@ -129,28 +139,30 @@ test_that("tolerance", {
 
 test_that("stiff steppers (really implicit)", {
   for (category in stepper_categories()) {
-    for (type in stepper_basic_types(TRUE)) {
+    for (algorithm in stepper_basic_algorithms(TRUE)) {
       if ((category == "basic"      &&
-           type %in% stepper_basic_types(TRUE)) ||
+           algorithm %in% stepper_basic_algorithms(TRUE)) ||
           (category == "controlled" &&
-           type %in% stepper_controlled_types(TRUE))) {
-        s <- make_stepper(category, type, ublas_state=TRUE)
+           algorithm %in% stepper_controlled_algorithms(TRUE))) {
+        s <- make_stepper(category, algorithm, ublas_state=TRUE)
         expect_that(s, is_a("stepper"))
         category_id <- match(category, stepper_categories()) - 1L
-        cmp <- structure(c(category, type),
-                         category_id=category_id,
-                         type_id=length(stepper_basic_types())+1L,
-                         ublas_state=TRUE, needs_jacobian=TRUE)
-        if (type == "rosenbrock4") {
-        } else {
-          cmp <- structure(c(category, type),
+        if (algorithm == "rosenbrock4") {
+          algorithm_id <- length(stepper_basic_algorithms()) + 1L
+          cmp <- structure(c(category, algorithm),
                            category_id=category_id,
-                           type_id=match(type, stepper_basic_types()) - 1L,
+                           algorithm_id=algorithm_id,
+                           ublas_state=TRUE, needs_jacobian=TRUE)
+        } else {
+          algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
+          cmp <- structure(c(category, algorithm),
+                           category_id=category_id,
+                           algorithm_id=algorithm_id,
                            ublas_state=TRUE, needs_jacobian=FALSE)
         }
         expect_that(s$details(), is_identical_to(cmp))
       } else {
-        expect_that(make_stepper(category, type),
+        expect_that(make_stepper(category, algorithm),
                     throws_error("Cannot make a controlled stepper"))
       }
     }

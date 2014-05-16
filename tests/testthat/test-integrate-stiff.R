@@ -2,8 +2,8 @@ source("helper-rodeint.R")
 
 context("integrate (stiff)")
 
-expected_tolerance <- function(type) {
-  switch(type,
+expected_tolerance <- function(algorithm) {
+  switch(algorithm,
          euler=0.03, # such inaccuracy
          modified_midpoint=1e-4,
          3e-5)
@@ -27,9 +27,9 @@ test_that("integate_adaptive", {
                       atol=1e-8, rtol=1e-8)[-1,-1])
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category, have_jacobian=TRUE)) {
-      tolerance <- expected_tolerance(type)
-      s <- make_stepper(category, type, ublas_state=TRUE)
+    for (algorithm in stepper_algorithms(category, have_jacobian=TRUE)) {
+      tolerance <- expected_tolerance(algorithm)
+      s <- make_stepper(category, algorithm, ublas_state=TRUE)
 
       ## TODO: Here, and in test-integrate.R, y_r -> y
       y_r <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0)
@@ -71,8 +71,8 @@ test_that("integate_adaptive", {
       ## Check that we still can integrate with a nonstiff stepper.
       ##
       ## This is doing a conversion for us behind the scenes.
-      if (type != "rosenbrock4") {
-        s_nonstiff <- make_stepper(category, type, ublas_state=FALSE)
+      if (algorithm != "rosenbrock4") {
+        s_nonstiff <- make_stepper(category, algorithm, ublas_state=FALSE)
         expect_that(integrate_adaptive(s_nonstiff, ode_r, y0, t0, t1, dt0),
                     is_identical_to(y_r))
         expect_that(integrate_adaptive(s_nonstiff, ode_cpp, y0, t0, t1, dt0),

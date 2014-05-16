@@ -13,8 +13,8 @@ test_that("Time are multiples of dt", {
   times <- seq(t0, by=dt, length.out=n+1)
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_times(s, ode_system, y0, times, dt)
       expect_that(y_r, is_a("matrix"))
@@ -43,8 +43,8 @@ test_that("Time ends in the middle of a step", {
   times <- c(times, last(times) + dt * .33)
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_times(s, ode_system, y0, times, dt)
       expect_that(y_r, is_a("matrix"))
@@ -80,8 +80,8 @@ test_that("Time runs backwards", {
   times <- c(times, last(times) + dt * .33)
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_times(s, ode_system, y0, times, dt)
       expect_that(attr(y_r, "y"), is_identical_to(last_row(y_r)))
@@ -91,7 +91,7 @@ test_that("Time runs backwards", {
       if (interactive()) {
         matplot(attr(y_r, "t"), y_r, type="o",
                 pch=1, cex=.5, xlab="t", ylab="y",
-                main=paste(category, type, sep=" / "))
+                main=paste(category, algorithm, sep=" / "))
         points(rep(last(times), 2), attr(y_r, "y"), pch=4, col=1:2, cex=2)
       }
 

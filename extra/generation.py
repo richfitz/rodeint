@@ -12,23 +12,25 @@ def dappend(d, key, val):
 ## This is going to be common to so many things:
 system_types = ['r', 'cpp', 'class']
 categories = ['basic', 'controlled']
-types_nonstiff = {'basic': ['euler',
-                            'modified_midpoint',
-                            'runge_kutta4',
-                            'runge_kutta_cash_karp54',
-                            'runge_kutta_fehlberg78',
-                            'runge_kutta_dopri5'],
-                  'controlled': ['runge_kutta_cash_karp54',
+algorithms_nonstiff = {'basic': ['euler',
+                                 'modified_midpoint',
+                                 'runge_kutta4',
+                                 'runge_kutta_cash_karp54',
                                  'runge_kutta_fehlberg78',
-                                 'runge_kutta_dopri5']}
-types_stiff = {'basic': types_nonstiff['basic'] + ['rosenbrock4'],
-               'controlled': types_nonstiff['controlled'] + ['rosenbrock4']}
+                                 'runge_kutta_dopri5'],
+                       'controlled': ['runge_kutta_cash_karp54',
+                                      'runge_kutta_fehlberg78',
+                                      'runge_kutta_dopri5']}
+algorithms_stiff = {'basic': algorithms_nonstiff['basic'] +
+                    ['rosenbrock4'],
+                    'controlled': algorithms_nonstiff['controlled'] +
+                    ['rosenbrock4']}
 
 header = '// *** Generated section: do not edit until the end marker'
 
 # Need to switch return type based on if this is integrate_times or
 # not, or just pass it in directly.
-def integrate(return_type, types, storage):
+def integrate(return_type, algorithms, storage):
     method = """
 ${return_type} run() {
   switch(s.category_id()) {${switch}
@@ -46,28 +48,28 @@ ${return_type} run() {
         d['switch'] += tp(switch, dappend(d, 'category', c))
     cog.out(tp(method, d))
     for c in categories:
-        integrate_types(return_type, c, types, storage)
+        integrate_algorithms(return_type, c, algorithms, storage)
 
-def integrate_types(return_type, category, types, storage):
+def integrate_algorithms(return_type, category, algorithms, storage):
     method = """
 ${return_type} run_${category}() {
-  switch(s.type_id()) {${switch}
+  switch(s.algorithm_id()) {${switch}
   default:
-    stop("Unimplemented type"); // TODO: give details
+    stop("Unimplemented algorithm"); // TODO: give details
+    return ${return_type}(); // never get here
   }
-  return ${return_type}(); // never get here
 }"""
     switch = """
-  case stepper::${TYPE}:
-    return run<stepper_${category}_${type}_${storage}>();"""
+  case stepper::${ALGORITHM}:
+    return run<stepper_${category}_${algorithm}_${storage}>();"""
     d = {'return_type': return_type, 'switch': '',
          'category': category, 'storage': storage}
-    for t in types[category]:
-        d['switch'] += tp(switch, dappend(d, 'type', t))
+    for t in algorithms[category]:
+        d['switch'] += tp(switch, dappend(d, 'algorithm', t))
     cog.out(tp(method, d))
 
 def integrate_nonstiff(return_type):
-    integrate(return_type, types_nonstiff, 'stl')
+    integrate(return_type, algorithms_nonstiff, 'stl')
 
 def integrate_stiff(return_type):
-    integrate(return_type, types_stiff, 'ublas')
+    integrate(return_type, algorithms_stiff, 'ublas')

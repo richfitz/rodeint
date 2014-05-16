@@ -27,7 +27,7 @@ namespace rodeint {
 typedef std::vector<double> vector_stl;
 typedef boost::numeric::ublas::vector<double> vector_ublas;
 
-// 1. Basic stepper types.
+// 1. Basic stepper algorithms
 typedef
 boost::numeric::odeint::euler<vector_stl>
 stepper_basic_euler_stl;
@@ -52,7 +52,7 @@ typedef
 boost::numeric::odeint::runge_kutta_dopri5<vector_stl>
 stepper_basic_runge_kutta_dopri5_stl;
 
-// 2. Controlled stepper types
+// 2. Controlled stepper algorithms
 typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_cash_karp54<vector_stl> >
@@ -127,61 +127,56 @@ boost::numeric::odeint::rosenbrock4_dense_output<
   stepper_controlled_rosenbrock4_ublas>
 stepper_dense_rosenbrock4_ublas;
 
-// OK, some terminology:
-//   Category: basic, controlled, dense
-//   Type: The algorithm itself
-//   Stiff: n/y -- *also changes state type!*
-// Later on we'll get multistep methods in here too.
 class stepper {
 public:
   // TODO: No need for these to be in u.c.
   // TODO: Can generate these lists and the ones in the cpp file via
   // cog, which would ensure the order is *always* correct.
   enum Category {BASIC, CONTROLLED, DENSE};
-  enum Type {EULER,
-             MODIFIED_MIDPOINT,
-             RUNGE_KUTTA4,
-             RUNGE_KUTTA_CASH_KARP54,
-             RUNGE_KUTTA_FEHLBERG78,
-             RUNGE_KUTTA_DOPRI5,
-             BULIRSCH_STOER,
-             ROSENBROCK4};
+  enum Algorithm {EULER,
+                  MODIFIED_MIDPOINT,
+                  RUNGE_KUTTA4,
+                  RUNGE_KUTTA_CASH_KARP54,
+                  RUNGE_KUTTA_FEHLBERG78,
+                  RUNGE_KUTTA_DOPRI5,
+                  BULIRSCH_STOER,
+                  ROSENBROCK4};
 
   // Construction from human-readable things (used from R)
-  stepper(std::string category_, std::string type_, bool ublas_state_,
+  stepper(std::string category_, std::string algorithm_, bool ublas_state_,
           double abs_tol_, double rel_tol_)
     : category(category_from_string(category_)),
-      type(type_from_string(type_)),
+      algorithm(algorithm_from_string(algorithm_)),
       ublas_state(ublas_state_),
       abs_tol(abs_tol_), rel_tol(rel_tol_),
-      stepper_odeint(construct(category, type, ublas_state, abs_tol, rel_tol)) {
-  }
+      stepper_odeint(construct(category, algorithm, ublas_state,
+                               abs_tol, rel_tol)) { }
   // Might make this private (also nice if we had delegated
   // constructors)
-  stepper(Category category_, Type type_, bool ublas_state_,
+  stepper(Category category_, Algorithm algorithm_, bool ublas_state_,
           double abs_tol_, double rel_tol_)
-    : category(category_), type(type_), ublas_state(ublas_state_),
+    : category(category_), algorithm(algorithm_), ublas_state(ublas_state_),
       abs_tol(abs_tol_), rel_tol(rel_tol_),
-      stepper_odeint(construct(category, type, ublas_state, abs_tol, rel_tol)) {
-  }
+      stepper_odeint(construct(category, algorithm, ublas_state,
+                               abs_tol, rel_tol)) { }
   std::string category_name() const {
     return category_name(category);
   }
-  std::string type_name() const {
-    return type_name(type);
+  std::string algorithm_name() const {
+    return algorithm_name(algorithm);
   }
   // Used in tests
   Category category_id() const {
     return category;
   }
-  Type type_id() const {
-    return type;
+  Algorithm algorithm_id() const {
+    return algorithm;
   }
   bool has_ublas_state() const {
     return ublas_state;
   }
   bool needs_jacobian() const {
-    return needs_ublas[type];
+    return needs_ublas[algorithm];
   }
 
   // This is the little accessor:
@@ -200,20 +195,20 @@ public:
     // Enforce the right state type
     if (ublas_state != ublas_state_) {
       stepper_odeint =
-        construct(category, type, ublas_state_, abs_tol, rel_tol);
+        construct(category, algorithm, ublas_state_, abs_tol, rel_tol);
     }
     return as<Stepper>();
   }
 private:
   // Actual stepper information.
   Category   category;
-  Type       type;
+  Algorithm  algorithm;
   bool       ublas_state;
   double     abs_tol;
   double     rel_tol;
   boost::any stepper_odeint;
 
-  // Information about the different types.  This idea might change.
+  // Information about the different algorithms.  This idea might change.
   const static bool ok_basic[];
   const static bool ok_controlled[];
   const static bool ok_dense[];
@@ -221,40 +216,42 @@ private:
 
   // Check a bunch of stuff on intitialisation
   static std::string category_name(Category category);
-  static std::string type_name(Type type);
-  static void validate(Category category, Type type, bool ublas_state,
+  static std::string algorithm_name(Algorithm algorithm);
+  static void validate(Category category, Algorithm algorithm,
+                       bool ublas_state,
                        double abs_tol, double rel_tol);
-  static boost::any construct(Category category, Type type, bool ublas_state,
+  static boost::any construct(Category category, Algorithm algorithm,
+                              bool ublas_state,
                               double abs_tol, double rel_tol);
   template <typename T>
-  static boost::any construct(Category category, Type type,
+  static boost::any construct(Category category, Algorithm algorithm,
                               double abs_tol, double rel_tol);
   template <typename T>
-  static boost::any construct_basic(Type typetype);
+  static boost::any construct_basic(Algorithm algorithm);
   template <typename T>
-  static boost::any construct_controlled(Type type,
+  static boost::any construct_controlled(Algorithm algorithm,
                                          double abs_tol, double rel_tol);
   template <typename T>
-  static boost::any construct_dense(Type type,
+  static boost::any construct_dense(Algorithm algorithm,
                                     double abs_tol, double rel_tol);
 
   // Used during initialisation from R to translate names into
   // strings.  The tests will check that we do actually agree.
   static Category category_from_string(const std::string& x);
-  static Type type_from_string(const std::string& x);
+  static Algorithm algorithm_from_string(const std::string& x);
 };
 
 template <typename T>
 boost::any stepper::construct(stepper::Category category,
-                              stepper::Type type,
+                              stepper::Algorithm algorithm,
                               double abs_tol, double rel_tol) {
   switch(category) {
   case BASIC:
-    return construct_basic<T>(type);
+    return construct_basic<T>(algorithm);
   case CONTROLLED:
-    return construct_controlled<T>(type, abs_tol, rel_tol);
+    return construct_controlled<T>(algorithm, abs_tol, rel_tol);
   case DENSE:
-    return construct_dense<T>(type, abs_tol, rel_tol);
+    return construct_dense<T>(algorithm, abs_tol, rel_tol);
   default:
     stop("Invalid category"); // defensive
   }
@@ -262,14 +259,14 @@ boost::any stepper::construct(stepper::Category category,
 }
 
 template <typename T>
-boost::any stepper::construct_dense(stepper::Type /* type */,
+boost::any stepper::construct_dense(stepper::Algorithm /* algorithm */,
                                     double /* abs_tol */,
                                     double /* rel_tol */) {
   // TODO: euler
   // TODO: rosenbrock_dopri5
   // TODO: bulirsch_stoer
   // TODO: rosenbrock4
-  stop("Invalid dense type");
+  stop("Invalid dense algorithm");
   return boost::any();
 }
 

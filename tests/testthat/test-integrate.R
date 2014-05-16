@@ -6,8 +6,8 @@ context("integrate")
 ## probably enough.  We're not really looking to verify that the
 ## integrators work -- that's for odeint to do, and there is a big
 ## test suite there.
-expected_tolerance <- function(type) {
-  switch(type,
+expected_tolerance <- function(algorithm) {
+  switch(algorithm,
          euler=0.03, # such inaccuracy
          modified_midpoint=1e-4,
          1e-5)
@@ -29,9 +29,9 @@ test_that("integrate_const", {
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      tolerance <- expected_tolerance(type)
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      tolerance <- expected_tolerance(algorithm)
+      s <- make_stepper(category, algorithm)
       y_r <- integrate_const(s, ode_r, y0, t0, t1, dt0)
       expect_that(y_r, is_a("numeric"))
       expect_that(y_r, equals(cmp, tolerance=tolerance))
@@ -93,9 +93,9 @@ test_that("integrate_n_steps", {
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      tolerance <- expected_tolerance(type)
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      tolerance <- expected_tolerance(algorithm)
+      s <- make_stepper(category, algorithm)
       y_r <- integrate_n_steps(s, ode_r, y0, t0, dt0, n)
       expect_that(y_r, is_a("numeric"))
       expect_that(y_r, equals(cmp, tolerance=tolerance))
@@ -151,9 +151,9 @@ test_that("integrate_adaptive", {
                       pars)[-1,-1])
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      tolerance <- expected_tolerance(type)
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      tolerance <- expected_tolerance(algorithm)
+      s <- make_stepper(category, algorithm)
 
       ## run with rodeint:
       y_r <- integrate_adaptive(s, ode_r, y0, t0, t1, dt0)
@@ -217,9 +217,9 @@ test_that("integrate_times", {
                       pars)[,-1])
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      tolerance <- expected_tolerance(type)
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      tolerance <- expected_tolerance(algorithm)
+      s <- make_stepper(category, algorithm)
 
       ## run with rodeint:
       y_r_s <- integrate_times(s, ode_r, y0, times, dt0)

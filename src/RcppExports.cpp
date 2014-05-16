@@ -853,33 +853,33 @@ BEGIN_RCPP
 END_RCPP
 }
 // stepper__ctor
-rodeint::stepper stepper__ctor(std::string category, std::string type, bool ublas_state, double abs_tol, double rel_tol);
-RcppExport SEXP rodeint_stepper__ctor(SEXP categorySEXP, SEXP typeSEXP, SEXP ublas_stateSEXP, SEXP abs_tolSEXP, SEXP rel_tolSEXP) {
+rodeint::stepper stepper__ctor(std::string category, std::string algorithm, bool ublas_state, double abs_tol, double rel_tol);
+RcppExport SEXP rodeint_stepper__ctor(SEXP categorySEXP, SEXP algorithmSEXP, SEXP ublas_stateSEXP, SEXP abs_tolSEXP, SEXP rel_tolSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< std::string >::type category(categorySEXP );
-        Rcpp::traits::input_parameter< std::string >::type type(typeSEXP );
+        Rcpp::traits::input_parameter< std::string >::type algorithm(algorithmSEXP );
         Rcpp::traits::input_parameter< bool >::type ublas_state(ublas_stateSEXP );
         Rcpp::traits::input_parameter< double >::type abs_tol(abs_tolSEXP );
         Rcpp::traits::input_parameter< double >::type rel_tol(rel_tolSEXP );
-        rodeint::stepper __result = stepper__ctor(category, type, ublas_state, abs_tol, rel_tol);
+        rodeint::stepper __result = stepper__ctor(category, algorithm, ublas_state, abs_tol, rel_tol);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
     return __sexp_result;
 END_RCPP
 }
-// stepper__type
-Rcpp::CharacterVector stepper__type(rodeint::stepper s);
-RcppExport SEXP rodeint_stepper__type(SEXP sSEXP) {
+// stepper__details
+Rcpp::CharacterVector stepper__details(rodeint::stepper s);
+RcppExport SEXP rodeint_stepper__details(SEXP sSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::CharacterVector __result = stepper__type(s);
+        Rcpp::CharacterVector __result = stepper__details(s);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

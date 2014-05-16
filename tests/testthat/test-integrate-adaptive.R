@@ -13,8 +13,8 @@ test_that("Time ends at multiple of dt", {
   t1 <- t0 + n * dt
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_adaptive(s, ode_system, y0, t0, t1, dt)
       expect_that(y_r, is_a("numeric"))
@@ -47,8 +47,8 @@ test_that("Time ends in the middle of a step", {
   t1 <- t0 + (n + 0.33) * dt
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_adaptive(s, ode_system, y0, t0, t1, dt)
       expect_that(y_r, is_a("numeric"))
@@ -77,7 +77,7 @@ test_that("Time ends in the middle of a step", {
       if (interactive()) {
         matplot(attr(y_r_s_2, "t"), yy_r_s_2, type="o",
                 pch=1, cex=.5, xlab="t", ylab="y",
-                main=paste(category, type, sep=" / "))
+                main=paste(category, algorithm, sep=" / "))
         matpoints(attr(y_r_s_1, "t"), yy_r_s_1, pch=19, cex=.5)
         points(rep(t1, 2), y_r, pch=4, col=1:2, cex=2)
       }
@@ -104,8 +104,8 @@ test_that("Time runs backwards", {
   t1 <- t0 + (n + .33) * dt
 
   for (category in stepper_categories()) {
-    for (type in stepper_types(category)) {
-      s <- make_stepper(category, type)
+    for (algorithm in stepper_algorithms(category)) {
+      s <- make_stepper(category, algorithm)
 
       y_r <- integrate_adaptive(s, ode_system, y0, t0, t1, dt)
       y_r_s_1 <- integrate_adaptive(s, ode_system, y0, t0, t1,    dt, TRUE)
@@ -114,7 +114,7 @@ test_that("Time runs backwards", {
       if (interactive()) {
         matplot(attr(y_r_s_2, "t"), attr(y_r_s_2, "y"), type="o",
                 pch=1, cex=.5, xlab="t", ylab="y",
-                main=paste(category, type, sep=" / "))
+                main=paste(category, algorithm, sep=" / "))
         matpoints(attr(y_r_s_1, "t"), attr(y_r_s_1, "y"), pch=19, cex=.5)
         points(rep(t1, 2), y_r, pch=4, col=1:2, cex=2)
       }
