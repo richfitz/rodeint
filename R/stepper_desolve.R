@@ -8,19 +8,19 @@ stepper_deSolve <- setRefClass("stepper_deSolve",
                                fields=list(
                                  category="character",
                                  type="character",
-                                 atol="numeric",
-                                 rtol="numeric",
+                                 abs_tol="numeric",
+                                 rel_tol="numeric",
                                  method="list"))
-stepper_deSolve$lock(c("category", "type", "atol", "rtol", "method"))
+stepper_deSolve$lock(names(stepper_deSolve$fields()))
 
 ## TODO: When implementing lsoda support, list might not be OK here.
 
 stepper_deSolve$methods(initialize=
-                        function(category, type, atol, rtol, method) {
+                        function(category, type, abs_tol, rel_tol, method) {
   category <<- category
   type <<- type
-  atol <<- atol
-  rtol <<- rtol
+  abs_tol <<- abs_tol
+  rel_tol <<- rel_tol
   method <<- method
 })
 
@@ -51,15 +51,15 @@ make_stepper_deSolve_basic <- function(type) {
                    runge_kutta_fehlberg78=rkMethod("rk78f"),
                    runge_kutta_dopri5=rkMethod("rk45dp7"),
                    stop("Unknown type: ", type))
-  atol <- rtol <- 1
-  stepper_deSolve("basic", type, atol, rtol, method)
+  abs_tol <- rel_tol <- 1
+  stepper_deSolve("basic", type, abs_tol, rel_tol, method)
 }
 
 ##' @rdname stepper_deSolve
 ##' @export
-##' @param atol Absolute tolerance (see deSolve docs for now)
-##' @param rtol Relative tolerance (see deSolve docs for now)
-make_stepper_deSolve_controlled <- function(type, atol=1e-6, rtol=1e-6) {
+##' @param abs_tol Absolute tolerance (see atol in deSolve docs for now)
+##' @param rel_tol Relative tolerance (see rtol in deSolve docs for now)
+make_stepper_deSolve_controlled <- function(type, abs_tol=1e-6, rel_tol=1e-6) {
   ## TODO: Support other types that are in deSolve?  We are definitely
   ## going to want lsoda in here at some point.
   rkMethod <- deSolve::rkMethod
@@ -68,5 +68,5 @@ make_stepper_deSolve_controlled <- function(type, atol=1e-6, rtol=1e-6) {
                    runge_kutta_fehlberg78=rkMethod("rk78f"),
                    runge_kutta_dopri5=rkMethod("rk45dp7"),
                    stop("Unknown type: ", type))
-  stepper_deSolve("controlled", type, atol, rtol, method)
+  stepper_deSolve("controlled", type, abs_tol, rel_tol, method)
 }

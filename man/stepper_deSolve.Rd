@@ -12,7 +12,7 @@ make_stepper_deSolve(category, type, ...)
 
 make_stepper_deSolve_basic(type)
 
-make_stepper_deSolve_controlled(type, atol = 1e-06, rtol = 1e-06)
+make_stepper_deSolve_controlled(type, abs_tol = 1e-06, rel_tol = 1e-06)
 }
 \arguments{
 \item{category}{Either "basic" or "controlled"}
@@ -23,9 +23,9 @@ make_stepper_deSolve_controlled(type, atol = 1e-06, rtol = 1e-06)
 to either \code{make_stepper_basic} (none allowed) or
 \code{make_stepper_controlled}.}
 
-\item{atol}{Absolute tolerance (see deSolve docs for now)}
+\item{abs_tol}{Absolute tolerance (see atol in deSolve docs for now)}
 
-\item{rtol}{Relative tolerance (see deSolve docs for now)}
+\item{rel_tol}{Relative tolerance (see rtol in deSolve docs for now)}
 }
 \description{
 Stepper (documentation coming)

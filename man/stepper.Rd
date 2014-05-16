@@ -8,18 +8,18 @@
 \alias{stepper-class}
 \title{Stepper}
 \usage{
-make_stepper_basic(type, atol = NA_real_, rtol = NA_real_,
+make_stepper_basic(type, abs_tol = NA_real_, rel_tol = NA_real_,
   stiff_state = NA)
 
-make_stepper_controlled(type, atol = 1e-06, rtol = 1e-06,
+make_stepper_controlled(type, abs_tol = 1e-06, rel_tol = 1e-06,
   stiff_state = NA)
 
 make_stepper(category, type, ...)
 }
 \arguments{
-\item{atol}{Absolute tolerance (see odeint docs for now)}
+\item{abs_tol}{Absolute tolerance (see odeint docs for now)}
 
-\item{rtol}{Relative tolerance (see odeint docs for now)}
+\item{rel_tol}{Relative tolerance (see odeint docs for now)}
 
 \item{stiff_state}{Logical, indicating on whether the stepper
 should use the internal data structures required by the stiff

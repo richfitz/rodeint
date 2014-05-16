@@ -76,9 +76,9 @@ stepper_categories <- function() {
 
 ##' @rdname stepper
 ##' @export
-make_stepper_basic <- function(type, atol=NA_real_, rtol=NA_real_,
+make_stepper_basic <- function(type, abs_tol=NA_real_, rel_tol=NA_real_,
                                stiff_state=NA) {
-  if (!is.na(atol) || !is.na(rtol)) {
+  if (!is.na(abs_tol) || !is.na(rel_tol)) {
     warning("Ignoring provided tolerance arguments")
   }
   if (is.na(stiff_state)) {
@@ -90,8 +90,8 @@ make_stepper_basic <- function(type, atol=NA_real_, rtol=NA_real_,
 ## TODO: See the comment about stiff_state below.
 ##' @rdname stepper
 ##' @export
-##' @param atol Absolute tolerance (see odeint docs for now)
-##' @param rtol Relative tolerance (see odeint docs for now)
+##' @param abs_tol Absolute tolerance (see odeint docs for now)
+##' @param rel_tol Relative tolerance (see odeint docs for now)
 ##' @param stiff_state Logical, indicating on whether the stepper
 ##' should use the internal data structures required by the stiff
 ##' systems.  This is likely to disappear soon, as it depends entirely
@@ -100,12 +100,12 @@ make_stepper_basic <- function(type, atol=NA_real_, rtol=NA_real_,
 ##' stepper.  However, to use other steppers with the stiff system, we
 ##' need to set up normal steppers similarly.  So probably at runtime
 ##' this will just rebuild the stepper for us.
-make_stepper_controlled <- function(type, atol=1e-6, rtol=1e-6,
+make_stepper_controlled <- function(type, abs_tol=1e-6, rel_tol=1e-6,
                                     stiff_state=NA) {
   if (is.na(stiff_state)) {
     stiff_state <- type == "rosenbrock4"
   }
-  stepper("controlled", type, stiff_state, atol, rtol)
+  stepper("controlled", type, stiff_state, abs_tol, rel_tol)
 }
 
 ##' @rdname stepper

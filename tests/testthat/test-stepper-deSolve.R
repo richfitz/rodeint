@@ -13,11 +13,11 @@ test_that("basic steppers", {
     expect_that(s$type, equals(type))
     expect_that(s$type <- s$type, throws_error("read-only"))
 
-    expect_that(s$atol, equals(1.0)) # NOTE: might change
-    expect_that(s$atol <- s$atol, throws_error("read-only"))
+    expect_that(s$abs_tol, equals(1.0)) # NOTE: might change
+    expect_that(s$abs_tol <- s$abs_tol, throws_error("read-only"))
 
-    expect_that(s$rtol, equals(1.0)) # NOTE: might change
-    expect_that(s$rtol <- s$atol, throws_error("read-only"))
+    expect_that(s$rel_tol, equals(1.0)) # NOTE: might change
+    expect_that(s$rel_tol <- s$abs_tol, throws_error("read-only"))
 
     expect_that(s$method, is_a("list"))
     expect_that(s$method, is_a("rkMethod"))
@@ -36,21 +36,21 @@ test_that("controlled steppers", {
     expect_that(s$type, equals(type))
     expect_that(s$type <- s$type, throws_error("read-only"))
 
-    expect_that(s$atol, equals(1e-6))
-    expect_that(s$atol <- s$atol, throws_error("read-only"))
+    expect_that(s$abs_tol, equals(1e-6))
+    expect_that(s$abs_tol <- s$abs_tol, throws_error("read-only"))
 
-    expect_that(s$rtol, equals(1e-6))
-    expect_that(s$rtol <- s$atol, throws_error("read-only"))
+    expect_that(s$rel_tol, equals(1e-6))
+    expect_that(s$rel_tol <- s$abs_tol, throws_error("read-only"))
 
     expect_that(s$method, is_a("list"))
     expect_that(s$method, is_a("rkMethod"))
     expect_that(s$method <- s$method, throws_error("read-only"))
 
-    ## Test setting atol/rtol
-    atol <- 1e-10
-    rtol <- 1e-04
-    s <- make_stepper_deSolve_controlled(type, atol, rtol)
-    expect_that(s$atol, equals(atol))
-    expect_that(s$rtol, equals(rtol))
+    ## Test setting abs_tol/rel_tol
+    abs_tol <- 1e-10
+    rel_tol <- 1e-04
+    s <- make_stepper_deSolve_controlled(type, abs_tol, rel_tol)
+    expect_that(s$abs_tol, equals(abs_tol))
+    expect_that(s$rel_tol, equals(rel_tol))
   }
 })
