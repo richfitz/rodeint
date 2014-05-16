@@ -2,7 +2,6 @@
 ##' @title Stepper
 ##' @aliases stepper
 ##' @rdname stepper
-##' @export stepper
 ##' @export
 stepper <- setRefClass("stepper",
                        fields=list(
@@ -23,6 +22,10 @@ stepper$methods(initialize=function(category, type, ublas_state,
   rel_tol <<- rel_tol
   ptr <<- stepper__ctor(category, type, ublas_state,
                         abs_tol, rel_tol)
+})
+
+stepper$methods(details = function() {
+  stepper__type(ptr)
 })
 
 ## This is going to change at some point, but this is a list of the

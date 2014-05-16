@@ -80,9 +80,7 @@ test_that("integate_adaptive", {
         expect_that(integrate_adaptive(s_nonstiff, ode_class, y0, t0, t1, dt0),
                     is_identical_to(y_r))
         ## Pass-by-value leaves stepper unchanged.
-        expect_that(attr(rodeint:::stepper__type(s_nonstiff$ptr),
-                         "ublas_state"),
-                    is_false())
+        expect_that(attr(s_nonstiff$details(), "ublas_state"), is_false())
       }
     }
   }

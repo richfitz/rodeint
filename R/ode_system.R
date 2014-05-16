@@ -153,7 +153,7 @@ ode_system$methods(jacobian = function(y, t) {
   .jacobian(ptr, y, t)
 })
 
-ode_system$methods(copy=function() {
+ode_system$methods(copy = function() {
   "Generate a copy of the object.  If you do not use this, then
 the objects created by simple assignment will share parameters (i.e.,
 setting parameters in the first object sets them in the second object

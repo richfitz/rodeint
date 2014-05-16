@@ -2,7 +2,6 @@
 ##' @title Stepper (deSolve wrappers)
 ##' @aliases stepper_deSolve
 ##' @rdname stepper_deSolve
-##' @export stepper_deSolve
 ##' @export
 stepper_deSolve <- setRefClass("stepper_deSolve",
                                fields=list(

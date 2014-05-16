@@ -78,7 +78,7 @@ test_that("construction", {
                          category_id=match(category, stepper_categories()) - 1L,
                          type_id=match(type, stepper_basic_types()) - 1L,
                          ublas_state=FALSE, needs_jacobian=FALSE)
-        expect_that(rodeint:::stepper__type(s$ptr), is_identical_to(cmp))
+        expect_that(s$details(), is_identical_to(cmp))
       } else {
         expect_that(make_stepper(category, type),
                     throws_error("Cannot make a controlled stepper"))
@@ -143,7 +143,7 @@ test_that("stiff steppers (really implicit)", {
                            type_id=match(type, stepper_basic_types()) - 1L,
                            ublas_state=TRUE, needs_jacobian=FALSE)
         }
-        expect_that(rodeint:::stepper__type(s$ptr), is_identical_to(cmp))
+        expect_that(s$details(), is_identical_to(cmp))
       } else {
         expect_that(make_stepper(category, type),
                     throws_error("Cannot make a controlled stepper"))
