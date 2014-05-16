@@ -20,6 +20,16 @@ test_that("derivatives", {
               is_identical_to(harmonic_oscillator_r(y0, t0, pars)))
 })
 
+test_that("jacobian", {
+  pars <- 0.5
+  obj <- ode_system(harmonic_oscillator_class, pars)
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  expect_that(obj$has_jacobian, is_false())
+  expect_that(obj$jacobian(y0, t0),
+              throws_error("System does not contain Jacobian"))
+})
+
 test_that("parameters", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_class, pars)
@@ -42,7 +52,7 @@ test_that("parameters", {
 test_that("parameter validation", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_class, pars,
-                    positive_scalar_numeric)
+                    validate=positive_scalar_numeric)
   ## Will throw on set:
   expect_that(obj$set_pars(-pars),         throws_error("Not positive"))
   expect_that(obj$set_pars(c(pars, pars)), throws_error("Not scalar"))
@@ -52,19 +62,19 @@ test_that("parameter validation", {
 
   ## And on creation:
   expect_that(ode_system(harmonic_oscillator_r, -pars,
-                         positive_scalar_numeric),
+                         validate=positive_scalar_numeric),
               throws_error("Not positive"))
   expect_that(ode_system(harmonic_oscillator_r, c(pars, pars),
-                         positive_scalar_numeric),
+                         validate=positive_scalar_numeric),
               throws_error("Not scalar"))
   expect_that(ode_system(harmonic_oscillator_r, numeric(0),
-                         positive_scalar_numeric),
+                         validate=positive_scalar_numeric),
               throws_error("Not scalar"))
   expect_that(ode_system(harmonic_oscillator_r, "pars",
-                         positive_scalar_numeric),
+                         validate=positive_scalar_numeric),
               throws_error("Not numeric"))
   expect_that(ode_system(harmonic_oscillator_r, list(pars),
-                         positive_scalar_numeric),
+                         validate=positive_scalar_numeric),
               throws_error("Not numeric"))
 })
 

@@ -21,20 +21,28 @@ ode_system, this is the parameters passed in to the object and is not
 necessarily the same as the way you are choosing to store processed
 parameters.}
 
-\item{\code{initialize(generator, pars, validate = NULL, deSolve_style = FALSE)}}{\itemize{
-\item \code{generator} Either
+\item{\code{initialize(derivs, pars, jacobian = NULL, validate = NULL,
+  deSolve_style = FALSE)}}{\itemize{
+\item \code{derivs} Either
 \itemize{
 \item an R function of three parameters \code{(y, t, pars)} that
 returns a vector of derivatives (dy/dt), the same length as \code{y}.
 \item as R function that, when run with the single argument
 \code{pars} returns a special object that will point at compiled
 functions (\code{ode_system_cpp}) or a compiled class
-\code{ode_system_class}.  There will be more extensive documentation
+\code{ode_system_class}. There will be more extensive documentation
 coming on this soon.
 }
 \item \code{pars} the initial parameters, as accepted by your
 function.  Generally this will be a numeric vector, but see
-\code{set_pars}.
+\code{set_pars}.  This exists so that we can establish the correct
+parameter vector length, and to ensure that all systems have
+\emph{something} initialised to prevent possible crashes or
+unexpected behaviour.
+\item \code{jacobian} If you are specifiying an R system and have
+the jacobian, then this allows you to use stiff solvers
+(e.g. \code{rosenbrock4}).  It needs to be an R function of three
+parameters \code{(y, t, pars)} and return the Jacobian matrix.
 \item \code{validate} optional function to run on parameters each
 time they are set (see \code{set_pars}).  Useful for checking length,
 positivity, etc.  The function should throw an error (stop) if the
@@ -45,6 +53,8 @@ is in deSolve style rather than rodeint style (i.e., parameters
 \code{(t, y, pars)} and returning a \emph{list} with the first
 element being the derivatives).
 }}
+
+\item{\code{jacobian(y, t)}}{Compute the Jacobian.  Not all systems can do this}
 
 \item{\code{set_pars(pars)}}{Set parameters within the object.
 

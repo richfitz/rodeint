@@ -11,9 +11,10 @@ expected_tolerance <- function(type) {
 
 test_that("integate_adaptive", {
   pars <- numeric(0)
-  ode_r <- ode_system_stiff(stiff_r, pars)
-  ode_cpp <- ode_system_stiff(stiff_cpp, pars)
-  ode_class <- ode_system_stiff(stiff_class, pars)
+  ode_r <- ode_system(stiff_r_derivs, pars,
+                      jacobian=stiff_r_jacobian)
+  ode_cpp <- ode_system(stiff_cpp, pars)
+  ode_class <- ode_system(stiff_class, pars)
 
   set.seed(1)
   y0 <- runif(2)

@@ -12,18 +12,21 @@ template<>
 inline SEXP wrap(const rodeint::ode_system_r& obj) {
   XPtr<rodeint::ode_system_r> ret(new rodeint::ode_system_r(obj), true);
   ret.attr("type") = "ode_system_r";
+  ret.attr("has_jacobian") = false;
   return wrap(ret);
 }
 template<>
 inline SEXP wrap(const rodeint::ode_system_cpp& obj) {
   XPtr<rodeint::ode_system_cpp> ret(new rodeint::ode_system_cpp(obj), true);
   ret.attr("type") = "ode_system_cpp";
+  ret.attr("has_jacobian") = false;
   return wrap(ret);
 }
 template<>
 inline SEXP wrap(const rodeint::ode_system_class& obj) {
   XPtr<rodeint::ode_system_class> ret(new rodeint::ode_system_class(obj), true);
   ret.attr("type") = "ode_system_class";
+  ret.attr("has_jacobian") = false;
   return wrap(ret);
 }
 
@@ -32,6 +35,7 @@ inline SEXP wrap(const rodeint::ode_system_stiff_r& obj) {
   XPtr<rodeint::ode_system_stiff_r>
     ret(new rodeint::ode_system_stiff_r(obj), true);
   ret.attr("type") = "ode_system_stiff_r";
+  ret.attr("has_jacobian") = true;
   return wrap(ret);
 }
 template <>
@@ -39,6 +43,7 @@ inline SEXP wrap(const rodeint::ode_system_stiff_cpp& obj) {
   XPtr<rodeint::ode_system_stiff_cpp>
     ret(new rodeint::ode_system_stiff_cpp(obj), true);
   ret.attr("type") = "ode_system_stiff_cpp";
+  ret.attr("has_jacobian") = true;
   return wrap(ret);
 }
 template <>
@@ -46,6 +51,7 @@ inline SEXP wrap(const rodeint::ode_system_stiff_class& obj) {
   XPtr<rodeint::ode_system_stiff_class>
     ret(new rodeint::ode_system_stiff_class(obj), true);
   ret.attr("type") = "ode_system_stiff_class";
+  ret.attr("has_jacobian") = true;
   return wrap(ret);
 }
 
