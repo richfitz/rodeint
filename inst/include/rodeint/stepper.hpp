@@ -13,6 +13,7 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_cash_karp54.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/generation.hpp>
 #endif
@@ -68,6 +69,10 @@ boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_dopri5<vector_stl> >
 stepper_controlled_runge_kutta_dopri5_stl;
 
+typedef
+boost::numeric::odeint::bulirsch_stoer<vector_stl>
+stepper_controlled_bulirsch_stoer_stl;
+
 // uBLAS things
 // 1. Basic steppers
 typedef
@@ -114,6 +119,10 @@ typedef
 boost::numeric::odeint::controlled_runge_kutta<
   boost::numeric::odeint::runge_kutta_dopri5<vector_ublas> >
 stepper_controlled_runge_kutta_dopri5_ublas;
+
+typedef
+boost::numeric::odeint::bulirsch_stoer<vector_ublas>
+stepper_controlled_bulirsch_stoer_ublas;
 
 // NOTE: Not available for stl steppers
 typedef

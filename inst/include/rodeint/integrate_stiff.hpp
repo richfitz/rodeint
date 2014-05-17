@@ -100,6 +100,8 @@ struct integrate_const_stiff_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
     default:
@@ -197,6 +199,8 @@ struct integrate_n_steps_stiff_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
     default:
@@ -285,6 +289,8 @@ struct integrate_adaptive_stiff_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
     default:
@@ -393,6 +399,8 @@ struct integrate_times_stiff_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_ublas>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
     default:

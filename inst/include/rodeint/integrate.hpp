@@ -103,6 +103,8 @@ struct integrate_const_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -194,6 +196,8 @@ struct integrate_n_steps_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -280,6 +284,8 @@ struct integrate_adaptive_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -382,6 +388,8 @@ struct integrate_times_data {
       return run<stepper_controlled_runge_kutta_fehlberg78_stl>();
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_controlled_runge_kutta_dopri5_stl>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here

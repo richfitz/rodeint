@@ -162,6 +162,7 @@ stepper::construct_controlled<vector_stl>(stepper::Algorithm algorithm,
   using boost::numeric::odeint::runge_kutta_cash_karp54;
   using boost::numeric::odeint::runge_kutta_fehlberg78;
   using boost::numeric::odeint::runge_kutta_dopri5;
+  using boost::numeric::odeint::bulirsch_stoer;
   typedef rodeint::vector_stl state;
 
   switch(algorithm) {
@@ -171,7 +172,8 @@ stepper::construct_controlled<vector_stl>(stepper::Algorithm algorithm,
     return make_controlled<runge_kutta_fehlberg78<state> >(abs_tol, rel_tol);
   case RUNGE_KUTTA_DOPRI5:
     return make_controlled<runge_kutta_dopri5<state> >(abs_tol, rel_tol);
-    // TODO: bulirsch_stoer
+  case BULIRSCH_STOER:
+    return bulirsch_stoer<state>(abs_tol, rel_tol);
   default:
     stop("Invalid controlled algorithm"); // TODO: print algorithm
     return boost::any();
@@ -187,6 +189,7 @@ stepper::construct_controlled<vector_ublas>(stepper::Algorithm algorithm,
   using boost::numeric::odeint::runge_kutta_cash_karp54;
   using boost::numeric::odeint::runge_kutta_fehlberg78;
   using boost::numeric::odeint::runge_kutta_dopri5;
+  using boost::numeric::odeint::bulirsch_stoer;
   typedef rodeint::vector_ublas state;
 
   switch(algorithm) {
@@ -196,7 +199,8 @@ stepper::construct_controlled<vector_ublas>(stepper::Algorithm algorithm,
     return make_controlled<runge_kutta_fehlberg78<state> >(abs_tol, rel_tol);
   case RUNGE_KUTTA_DOPRI5:
     return make_controlled<runge_kutta_dopri5<state> >(abs_tol, rel_tol);
-    // TODO: bulirsch_stoer
+  case BULIRSCH_STOER:
+    return bulirsch_stoer<state>(abs_tol, rel_tol);
   case ROSENBROCK4:
     return make_controlled<stepper_basic_rosenbrock4_ublas>(abs_tol, rel_tol);
   default:

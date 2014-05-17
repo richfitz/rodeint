@@ -2,10 +2,12 @@ source("helper-rodeint.R")
 
 context("integrate (stiff)")
 
+## Not sure *who* is inaccurate here.
 expected_tolerance <- function(algorithm) {
   switch(algorithm,
          euler=0.03, # such inaccuracy
          modified_midpoint=1e-4,
+         bulirsch_stoer=3e-4,
          3e-5)
 }
 

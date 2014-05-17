@@ -20,7 +20,8 @@ algorithms_nonstiff = {'basic': ['euler',
                                  'runge_kutta_dopri5'],
                        'controlled': ['runge_kutta_cash_karp54',
                                       'runge_kutta_fehlberg78',
-                                      'runge_kutta_dopri5']}
+                                      'runge_kutta_dopri5',
+                                      'bulirsch_stoer']}
 algorithms_stiff = {'basic': algorithms_nonstiff['basic'] +
                     ['rosenbrock4'],
                     'controlled': algorithms_nonstiff['controlled'] +

@@ -93,6 +93,7 @@ stepper_controlled_algorithms <- function(have_jacobian=FALSE) {
   c("runge_kutta_cash_karp54",
     "runge_kutta_fehlberg78",
     "runge_kutta_dopri5",
+    "bulirsch_stoer",
     if(have_jacobian) "rosenbrock4")
 }
 

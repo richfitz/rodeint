@@ -12,7 +12,8 @@ test_that("stepper lists", {
   expect_that(stepper_controlled_algorithms(),
               equals(c("runge_kutta_cash_karp54",
                        "runge_kutta_fehlberg78",
-                       "runge_kutta_dopri5")))
+                       "runge_kutta_dopri5",
+                       "bulirsch_stoer")))
 
   expect_that(stepper_basic_algorithms(have_jacobian=TRUE),
               equals(c(stepper_basic_algorithms(), "rosenbrock4")))
@@ -77,6 +78,10 @@ test_that("construction", {
         ## Includes attributes.
         category_id  <- match(category,  stepper_categories()) - 1L
         algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
+        if (algorithm == "bulirsch_stoer") {
+          algorithm_id <- length(stepper_basic_algorithms())
+        }
+
         cmp <- structure(c(category, algorithm),
                          category_id=category_id,
                          algorithm_id=algorithm_id,
@@ -89,7 +94,7 @@ test_that("construction", {
         expect_that(s$show(TRUE), prints_text("addr:"))
       } else {
         expect_that(make_stepper(category, algorithm),
-                    throws_error("Cannot make a controlled stepper"))
+                    throws_error("Cannot make a"))
       }
     }
   }
@@ -154,6 +159,10 @@ test_that("stiff steppers (really implicit)", {
                            ublas_state=TRUE, needs_jacobian=TRUE)
         } else {
           algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
+          if (algorithm == "bulirsch_stoer") {
+            algorithm_id <- length(stepper_basic_algorithms())
+          }
+
           cmp <- structure(c(category, algorithm),
                            category_id=category_id,
                            algorithm_id=algorithm_id,
@@ -162,7 +171,7 @@ test_that("stiff steppers (really implicit)", {
         expect_that(s$details(), is_identical_to(cmp))
       } else {
         expect_that(make_stepper(category, algorithm),
-                    throws_error("Cannot make a controlled stepper"))
+                    throws_error("Cannot make a"))
       }
     }
   }

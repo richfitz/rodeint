@@ -23,7 +23,9 @@ test_that("Time are multiples of dt", {
 
       if (category == "basic") {
         ## I do not know why this is the case:
-        expect_that(attr(y_r, "steps"), equals(n+2))
+        expect_that(attr(y_r, "steps"), equals(n+2L))
+      } else if (algorithm == "bulirsch_stoer") {
+        expect_that(attr(y_r, "steps"), equals(n+1L))
       } else {
         expect_that(attr(y_r, "steps"), not(is_more_than(n)))
       }
@@ -53,6 +55,8 @@ test_that("Time ends in the middle of a step", {
       if (category == "basic") {
         ## I do not know why this is the case:
         expect_that(attr(y_r, "steps"), equals(n+2))
+      } else if (algorithm == "bulirsch_stoer") {
+        expect_that(attr(y_r, "steps"), equals(n+1L))
       } else {
         expect_that(attr(y_r, "steps"), not(is_more_than(n)))
       }
