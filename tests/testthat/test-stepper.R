@@ -181,7 +181,6 @@ test_that("serialisation", {
   saveRDS(s, f)
   restored <- readRDS(f)
   expect_that(rodeint:::ptr_valid(restored$ptr), is_false())
-  expect_that(rodeint:::ptr_address(restored$ptr), equals("0x0"))
   expect_that(restored$details(), throws_error(NULL))
   restored$rebuild()
   expect_that(rodeint:::ptr_valid(restored$ptr), is_true())
