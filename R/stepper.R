@@ -1,5 +1,101 @@
-##' Stepper (documentation coming)
-##' @title Stepper
+##' These functions, and the class \code{stepper} create a "stepper"
+##' object for solving a system of ordinary differential equations
+##' created with \code{\link{ode_system}}.  They cannot yet be used
+##' for directly manually stepping a system of ODEs, but essentially
+##' act as placeholders collecting information about algorithms.
+##'
+##' There are three "categories" of stepper.  These are the broadest
+##' class of distinctions between approaches
+##'
+##' \itemize{
+##' \item \code{basic}: step with a fixed step size
+##' \item \code{controlled}: step with a step size that is tuned based
+##' on errors reported by the stepper
+##' \item \code{dense}: as for \code{controlled}, but it can make use
+##' of "dense output" to interpolate points \emph{between} steps where
+##' needed.
+##' }
+##'
+##' These correspond to the concepts "Stepper", "Controlled Stepper",
+##' and "Dense Output Stepper" in the
+##' \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html}{odeint
+##' documentation}.
+##'
+##' Within steppers there are "algorithms" - these are the
+##' mathematical rules used to advance the system.  Almost all the
+##' algorithms in odeint are supported by rodeint.  There are many
+##' \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview}{possible
+##' algorithms}!
+##'
+##' The functions \code{stepper_basic_algorithms},
+##' \code{stepper_controlled_algorithms} and
+##' \code{stepper_dense_algorithms} return vectors of valid
+##' algorithms.
+##'
+##' The \code{runge_kutta_dopri5} stepper is described by \code{odint}
+##' as possibly "the best default stepper", so probably start with
+##' that and see the \code{odeint} documentation for when the other
+##' types might be more appropriate.
+##'
+##' If your system has a Jacobian associated with it, you can also use
+##' the \code{rosenbrock4} algorithm (for any of the three
+##' categories).
+##'
+##' Steppers in the "controlled" and "dense" categories adjust their
+##' step size according the detected error, in an effort to take as
+##' big a step as possible while keeping the error to within some
+##' specified bounds.  The precise that this affects the stepper
+##' depends on the algorithm, and is described in the
+##' \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.controlled_steppers}{odeint
+##' documentation}.  The parameter \code{abs_tol} changes the
+##' tolerance for \emph{absolute} error while \code{abs_tol} changes
+##' the tolerance for \emph{relative} error.  For the Runge Kutta
+##' steppers the interpretation is similar, though I believe not
+##' identical, to the steppers in \code{deSolve}.
+##'
+##' Some algorithms in odeint are not supported yet:
+##' \itemize{
+##' \item Any of the multistep steppers (\code{adams_bashforth},
+##' \code{adams_moulton}, \code{adams_bashforth_moulton}) because
+##' these require explicit initialisation from another stepper and so
+##' represent an interface challenge.  However, they are apparently
+##' good for expensive functions, so might end up in the package soon.
+##' \item Any of the "symplectic" steppers (\code{symplectic_euler},
+##' \code{symplectic_rkn_sb3a_mclachlan},
+##' \code{symplectic_rkn_sb3a_m4_mclachlan}) because I've never done
+##' any work with Hamiltonian systems.  If these are implemented they
+##' will get a new category.
+##' \item The \code{velocity_verlet} stepper for second order systems.
+##' \item The \code{implicit_euler} stepper for stiff systems.
+##' }
+##'
+##' @examples
+##'
+##' ## The three stepper categories are:
+##' stepper_categories()
+##'
+##' ## There are two ways of listing valid algorithms for a particular
+##' ## category: using stepper_algorithms(category):
+##' stepper_algorithms("controlled")
+##'
+##' ## ...or using stepper_<category>_algorithms()
+##' stepper_controlled_algorithms()
+##'
+##' ## If you add have_jacobian=TRUE to these calls you'll get the
+##' ## "rosenbrock4" stepper added to the list
+##' stepper_algorithms("controlled", have_jacobian=TRUE)
+##'
+##' ## To build a stepper use the "make_stepper" function:
+##' s <- make_stepper("controlled", "runge_kutta_dopri5")
+##' print(s)
+##'
+##' ## The tolerances can be adjusted by passing in optional arguments
+##' ## "abs_tol" and "rel_tol"
+##' s <- make_stepper("controlled", "runge_kutta_dopri5",
+##'                   abs_tol=1e-4, rel_tol=1e-8)
+##' print(s)
+##'
+##' @title Create ODE Stepper
 ##' @aliases stepper
 ##' @rdname stepper
 ##' @export
@@ -33,11 +129,11 @@ stepper$methods(show = function(details=FALSE) {
   }
 })
 
-stepper$methods(initialize=function(category, algorithm, ublas_state,
+stepper$methods(initialize=function(category, algorithm, has_jacobian,
                   abs_tol, rel_tol) {
   category <<- category
   algorithm <<- algorithm
-  ublas_state <<- ublas_state
+  ublas_state <<- has_jacobian
   abs_tol <<- abs_tol
   rel_tol <<- rel_tol
   ptr <<- stepper__ctor(category, algorithm, ublas_state,
@@ -62,7 +158,7 @@ stepper$methods(details = function() {
 ##' @title Lists of Stepper Algorithms
 ##' @author Rich FitzJohn
 ##' @export
-##' @rdname stepper_algorithms
+##' @rdname stepper
 ##' @param category Either "basic" or "controlled"
 ##' @param have_jacobian Logical indicating if the stepper will work
 ##' on problems with a Jacobian (this is a superset: every problem
@@ -77,7 +173,7 @@ stepper_algorithms <- function(category, have_jacobian=FALSE) {
 }
 
 ##' @export
-##' @rdname stepper_algorithms
+##' @rdname stepper
 stepper_basic_algorithms <- function(have_jacobian=FALSE) {
   c("euler",
     "modified_midpoint",
@@ -89,7 +185,7 @@ stepper_basic_algorithms <- function(have_jacobian=FALSE) {
 }
 
 ##' @export
-##' @rdname stepper_algorithms
+##' @rdname stepper
 stepper_controlled_algorithms <- function(have_jacobian=FALSE) {
   c("runge_kutta_cash_karp54",
     "runge_kutta_fehlberg78",
@@ -99,7 +195,7 @@ stepper_controlled_algorithms <- function(have_jacobian=FALSE) {
 }
 
 ##' @export
-##' @rdname stepper_algorithms
+##' @rdname stepper
 stepper_dense_algorithms <- function(have_jacobian=FALSE) {
   c("euler",
     "runge_kutta_dopri5",
@@ -108,7 +204,7 @@ stepper_dense_algorithms <- function(have_jacobian=FALSE) {
 }
 
 ##' @export
-##' @rdname stepper_algorithms
+##' @rdname stepper
 stepper_categories <- function() {
   c("basic", "controlled", "dense")
 }
@@ -116,22 +212,22 @@ stepper_categories <- function() {
 ##' @rdname stepper
 ##' @export
 make_stepper_basic <- function(algorithm, abs_tol=NA_real_, rel_tol=NA_real_,
-                               ublas_state=NA) {
+                               has_jacobian=NA) {
   if (!is.na(abs_tol) || !is.na(rel_tol)) {
     warning("Ignoring provided tolerance arguments")
   }
-  if (is.na(ublas_state)) {
-    ublas_state <- algorithm == "rosenbrock4"
+  if (is.na(has_jacobian)) {
+    has_jacobian <- algorithm == "rosenbrock4"
   }
-  stepper("basic", algorithm, ublas_state, NA_real_, NA_real_)
+  stepper("basic", algorithm, has_jacobian, NA_real_, NA_real_)
 }
 
-## TODO: See the comment about ublas_state below.
+## TODO: See the comment about has_jacobian below.
 ##' @rdname stepper
 ##' @export
 ##' @param abs_tol Absolute tolerance (see odeint docs for now)
 ##' @param rel_tol Relative tolerance (see odeint docs for now)
-##' @param ublas_state Logical, indicating on whether the stepper
+##' @param has_jacobian Logical, indicating on whether the stepper
 ##' should use the internal data structures required by the stiff
 ##' systems.  This is likely to disappear soon, as it depends entirely
 ##' on the system itself.  The default, NA, will switch based on the
@@ -140,21 +236,21 @@ make_stepper_basic <- function(algorithm, abs_tol=NA_real_, rel_tol=NA_real_,
 ##' need to set up normal steppers similarly.  So probably at runtime
 ##' this will just rebuild the stepper for us.
 make_stepper_controlled <- function(algorithm, abs_tol=1e-6, rel_tol=1e-6,
-                                    ublas_state=NA) {
-  if (is.na(ublas_state)) {
-    ublas_state <- algorithm == "rosenbrock4"
+                                    has_jacobian=NA) {
+  if (is.na(has_jacobian)) {
+    has_jacobian <- algorithm == "rosenbrock4"
   }
-  stepper("controlled", algorithm, ublas_state, abs_tol, rel_tol)
+  stepper("controlled", algorithm, has_jacobian, abs_tol, rel_tol)
 }
 
 ##' @rdname stepper
 ##' @export
 make_stepper_dense <- function(algorithm, abs_tol=1e-6, rel_tol=1e-6,
-                               ublas_state=NA) {
-  if (is.na(ublas_state)) {
-    ublas_state <- algorithm == "rosenbrock4"
+                               has_jacobian=NA) {
+  if (is.na(has_jacobian)) {
+    has_jacobian <- algorithm == "rosenbrock4"
   }
-  stepper("dense", algorithm, ublas_state, abs_tol, rel_tol)
+  stepper("dense", algorithm, has_jacobian, abs_tol, rel_tol)
 }
 
 ##' @rdname stepper
