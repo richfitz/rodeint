@@ -67,8 +67,7 @@ test_that("construction", {
         expect_that(s$abs_tol, equals(tol_default[[category]][[1]]))
         expect_that(s$rel_tol, equals(tol_default[[category]][[2]]))
 
-        ## All fields are read only:
-        expect_that(s$ptr <- s$ptr, throws_error("read-only"))
+        ## All fields are read only (except ptr)
         expect_that(s$category <- s$category, throws_error("read-only"))
         expect_that(s$algorithm <- s$algorithm, throws_error("read-only"))
         expect_that(s$abs_tol <- s$abs_tol, throws_error("read-only"))
@@ -174,4 +173,17 @@ test_that("Can't make stiff stepper with nonstiff state", {
     expect_that(make_stepper(category, "rosenbrock4", ublas_state=FALSE),
                 throws_error("requires a uBLAS state"))
   }
+})
+
+test_that("serialisation", {
+  s <- make_stepper("basic", "euler")
+  f <- tempfile(fileext=".rds")
+  saveRDS(s, f)
+  restored <- readRDS(f)
+  expect_that(rodeint:::ptr_valid(restored$ptr), is_false())
+  expect_that(rodeint:::ptr_address(restored$ptr), equals("0x0"))
+  expect_that(restored$details(), throws_error(NULL))
+  restored$rebuild()
+  expect_that(rodeint:::ptr_valid(restored$ptr), is_true())
+  expect_that(restored$details(), is_identical_to(s$details()))
 })

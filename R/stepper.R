@@ -11,7 +11,7 @@ stepper <- setRefClass("stepper",
                          abs_tol="numeric",
                          rel_tol="numeric",
                          ptr="externalptr"))
-stepper$lock(names(stepper$fields()))
+stepper$lock(setdiff(names(stepper$fields()), "ptr"))
 
 stepper$methods(show = function(details=FALSE) {
   cat("A stepper for solving ordinary differential equations\n\n")
@@ -40,6 +40,11 @@ stepper$methods(initialize=function(category, algorithm, ublas_state,
   ublas_state <<- ublas_state
   abs_tol <<- abs_tol
   rel_tol <<- rel_tol
+  ptr <<- stepper__ctor(category, algorithm, ublas_state,
+                        abs_tol, rel_tol)
+})
+
+stepper$methods(rebuild = function() {
   ptr <<- stepper__ctor(category, algorithm, ublas_state,
                         abs_tol, rel_tol)
 })
