@@ -21,7 +21,7 @@ to_rcpp_matrix_by_row(const std::vector<T>& x) {
   Rcpp::NumericMatrix ret(static_cast<int>(nr),
                           static_cast<int>(x.begin()->size()));
   for (size_t i = 0; i < nr; ++i) {
-    Rcpp::NumericMatrix::Row r = ret(i, Rcpp::_);
+    Rcpp::NumericMatrix::Row r = ret(static_cast<int>(i), Rcpp::_);
     std::copy(x[i].begin(), x[i].end(), r.begin());
   }
   return ret;

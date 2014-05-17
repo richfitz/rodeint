@@ -22,7 +22,7 @@ void run_ode_system(double *y, double *dydt, double t, int neq) {
   typedef typename OdeSystem::state_type state_type;
 
   ode_system_ptr ode_system(Rcpp::as<ode_system_ptr>(deSolve_parameters));
-  state_type cpp_y(y, y + neq), cpp_dydt(neq);
+  state_type cpp_y(y, y + neq), cpp_dydt(static_cast<size_t>(neq));
   (*ode_system)(cpp_y, cpp_dydt, t);
   std::copy(cpp_dydt.begin(), cpp_dydt.end(), dydt);
 }
