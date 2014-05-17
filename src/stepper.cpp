@@ -87,6 +87,10 @@ void stepper::validate(stepper::Category category,
       stop("Cannot make a dense stepper of algorithm " +
            algorithm_name(algorithm));
     }
+    // NOTE: These are ignored by euler though...
+    if (R_IsNA(abs_tol) || R_IsNA(rel_tol)) {
+      stop("Tolerances must be non-NA");
+    }
   }
   if (!ublas_state && needs_ublas[algorithm]) { //
     stop("The stepper algorithm " + algorithm_name(algorithm) +

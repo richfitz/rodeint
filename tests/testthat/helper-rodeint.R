@@ -56,3 +56,7 @@ positive_scalar_numeric <- function(x) {
     stop("Not positive")
   }
 }
+
+can_make_stepper <- function(category, algorithm, have_jacobian=FALSE) {
+  algorithm %in% stepper_algorithms(category, have_jacobian)
+}

@@ -4,6 +4,7 @@
 \alias{stepper_basic_algorithms}
 \alias{stepper_categories}
 \alias{stepper_controlled_algorithms}
+\alias{stepper_dense_algorithms}
 \title{Lists of Stepper Algorithms}
 \usage{
 stepper_algorithms(category, have_jacobian = FALSE)
@@ -11,6 +12,8 @@ stepper_algorithms(category, have_jacobian = FALSE)
 stepper_basic_algorithms(have_jacobian = FALSE)
 
 stepper_controlled_algorithms(have_jacobian = FALSE)
+
+stepper_dense_algorithms(have_jacobian = FALSE)
 
 stepper_categories()
 }

@@ -72,6 +72,7 @@ stepper_algorithms <- function(category, have_jacobian=FALSE) {
   switch(category,
          basic=stepper_basic_algorithms(have_jacobian),
          controlled=stepper_controlled_algorithms(have_jacobian),
+         dense=stepper_dense_algorithms(have_jacobian),
          stop("Invalid stepper category"))
 }
 
@@ -99,8 +100,17 @@ stepper_controlled_algorithms <- function(have_jacobian=FALSE) {
 
 ##' @export
 ##' @rdname stepper_algorithms
+stepper_dense_algorithms <- function(have_jacobian=FALSE) {
+  c("euler",
+    "runge_kutta_dopri5",
+    "bulirsch_stoer",
+    if(have_jacobian) "rosenbrock4")
+}
+
+##' @export
+##' @rdname stepper_algorithms
 stepper_categories <- function() {
-  c("basic", "controlled")
+  c("basic", "controlled", "dense")
 }
 
 ##' @rdname stepper

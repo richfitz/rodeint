@@ -3,7 +3,8 @@ source("helper-rodeint.R")
 context("stepper")
 
 test_that("stepper lists", {
-  expect_that(stepper_categories(), equals(c("basic", "controlled")))
+  expect_that(stepper_categories(),
+              equals(c("basic", "controlled", "dense")))
   expect_that(stepper_basic_algorithms(),
               equals(c("euler", "modified_midpoint", "runge_kutta4",
                        "runge_kutta_cash_karp54",
@@ -14,20 +15,30 @@ test_that("stepper lists", {
                        "runge_kutta_fehlberg78",
                        "runge_kutta_dopri5",
                        "bulirsch_stoer")))
+  expect_that(stepper_dense_algorithms(),
+              equals(c("euler",
+                       "runge_kutta_dopri5",
+                       "bulirsch_stoer")))
 
   expect_that(stepper_basic_algorithms(have_jacobian=TRUE),
               equals(c(stepper_basic_algorithms(), "rosenbrock4")))
   expect_that(stepper_controlled_algorithms(have_jacobian=TRUE),
               equals(c(stepper_controlled_algorithms(), "rosenbrock4")))
+  expect_that(stepper_dense_algorithms(have_jacobian=TRUE),
+              equals(c(stepper_dense_algorithms(), "rosenbrock4")))
 
   expect_that(stepper_algorithms("basic"),
               is_identical_to(stepper_basic_algorithms()))
   expect_that(stepper_algorithms("controlled"),
               is_identical_to(stepper_controlled_algorithms()))
+  expect_that(stepper_algorithms("dense"),
+              is_identical_to(stepper_dense_algorithms()))
   expect_that(stepper_algorithms("basic", TRUE),
               is_identical_to(stepper_basic_algorithms(TRUE)))
   expect_that(stepper_algorithms("controlled", TRUE),
               is_identical_to(stepper_controlled_algorithms(TRUE)))
+  expect_that(stepper_algorithms("dense", TRUE),
+              is_identical_to(stepper_dense_algorithms(TRUE)))
 
   expect_that(stepper_algorithms("nonexistant"),
               throws_error("Invalid stepper category"))
@@ -51,13 +62,11 @@ test_that("corner cases", {
 test_that("construction", {
   ## What is set by default:
   tol_default <- list(basic=rep(NA_real_, 2),
-                      controlled=rep(1e-6, 2))
+                      controlled=rep(1e-6, 2),
+                      dense=rep(1e-6, 2))
   for (category in stepper_categories()) {
     for (algorithm in stepper_basic_algorithms()) {
-      if ((category == "basic"      &&
-           algorithm %in% stepper_basic_algorithms()) ||
-          (category == "controlled" &&
-           algorithm %in% stepper_controlled_algorithms())) {
+      if (can_make_stepper(category, algorithm)) {
         s <- make_stepper(category, algorithm)
         expect_that(s, is_a("stepper"))
 
@@ -74,7 +83,8 @@ test_that("construction", {
         expect_that(s$rel_tol <- s$abs_tol, throws_error("read-only"))
 
         ## Test of internal method & some internal consistency.
-        ## Includes attributes.
+        ## Includes attributes.  This is just to make sure the stepper
+        ## really was created correctly.  Don't rely on these numbers.
         category_id  <- match(category,  stepper_categories()) - 1L
         algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
         if (algorithm == "bulirsch_stoer") {
@@ -104,14 +114,12 @@ test_that("tolerance", {
   tol_given   <- c(1e-8, 1e-9)
   ## What we expect back:
   tol_result <- list(basic=rep(NA_real_, 2),
-                     controlled=tol_given)
+                     controlled=tol_given,
+                     dense=tol_given)
 
   for (category in stepper_categories()) {
     for (algorithm in stepper_basic_algorithms()) {
-      if ((category == "basic"      &&
-           algorithm %in% stepper_basic_algorithms()) ||
-          (category == "controlled" &&
-           algorithm %in% stepper_controlled_algorithms())) {
+      if (can_make_stepper(category, algorithm)) {
         ## Set tolerances and see if they stick
         if (category == "basic") {
           expect_that(s <- make_stepper(category, algorithm,
@@ -143,10 +151,7 @@ test_that("tolerance", {
 test_that("stiff steppers (really implicit)", {
   for (category in stepper_categories()) {
     for (algorithm in stepper_basic_algorithms(TRUE)) {
-      if ((category == "basic"      &&
-           algorithm %in% stepper_basic_algorithms(TRUE)) ||
-          (category == "controlled" &&
-           algorithm %in% stepper_controlled_algorithms(TRUE))) {
+      if (can_make_stepper(category, algorithm, TRUE)) {
         s <- make_stepper(category, algorithm, ublas_state=TRUE)
         expect_that(s, is_a("stepper"))
         category_id <- match(category, stepper_categories()) - 1L
