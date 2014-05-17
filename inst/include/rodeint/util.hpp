@@ -11,11 +11,13 @@ void check_dt(double t0, double t1, double dt);
 
 namespace util {
 
+// Longer term this should be transparent to the user, but I don't
+// think it's worth checking all the time.  Perhaps it is?
 template <typename T>
 void check_ptr_valid(Rcpp::XPtr<T> p) {
   T* test = p;
   if (test == NULL) {
-    Rcpp::stop("Pointer is NULL - not using this");
+    Rcpp::stop("Pointer is NULL - please run rebuild()");
   }
 }
 

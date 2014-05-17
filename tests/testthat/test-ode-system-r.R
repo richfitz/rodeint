@@ -7,8 +7,6 @@ test_that("construction", {
   obj <- ode_system(harmonic_oscillator_r, pars)
   expect_that(obj, is_a("ode_system"))
   expect_that(obj$type, is_identical_to("ode_system_r"))
-  expect_that(obj$ptr <- obj$ptr,
-              throws_error("read-only"))
 })
 
 test_that("show / print", {
@@ -117,6 +115,22 @@ test_that("serialisation", {
   expect_that(restored$get_pars(), throws_error("NULL"))
   expect_that(restored$set_pars(pars), throws_error("NULL"))
   expect_that(restored$derivs(y0, t0), throws_error("NULL"))
+  restored$rebuild()
+  expect_that(restored$get_pars(),
+              is_identical_to(obj$get_pars()))
+  expect_that(restored$derivs(y0, t0),
+              is_identical_to(obj$derivs(y0, t0)))
+
+  ## And again after setting parameters:
+  pars2 <- pi
+  obj$set_pars(pi)
+  saveRDS(obj, f)
+  restored <- readRDS(f)
+  expect_that(restored$get_pars(), throws_error("NULL"))
+  restored$rebuild()
+  expect_that(rodeint:::ptr_valid(restored$ptr), is_true())
+  expect_that(restored$get_pars(),
+              is_identical_to(obj$get_pars()))
 })
 
 test_that("deSolve interface", {

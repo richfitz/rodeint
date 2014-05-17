@@ -11,6 +11,7 @@ ode_system <- setRefClass("ode_system",
                             type="character",
                             ptr="externalptr",
                             validate="function",
+                            last_pars="ANY",
                             # See explanation below
                             .get_pars="function",
                             .set_pars="function",
@@ -32,8 +33,11 @@ ode_system <- setRefClass("ode_system",
 ## initialize().  The actual method just passes the parameter to this
 ## function.
 
-## Lock all fields:
-ode_system$lock(names(ode_system$fields()))
+## Lock all fields, except for last_pars and ptr.  We use last_pars to
+## track the last used parameters, which is in turn used to rebuild
+## the pointer if the object is serialised.
+ode_system$lock(setdiff(names(ode_system$fields()),
+                        c("ptr", "last_pars")))
 
 ode_system$methods(show = function(details=FALSE) {
   cat("A system of ordinary differential equations\n\n")
@@ -97,6 +101,7 @@ element being the derivatives).
   ptr       <<- obj$ptr
   validate  <<- validate_init(validate)
   validate(pars)
+  last_pars <<- pars
   ## TODO: Tests.
   has_jacobian <<- attr(ptr, "has_jacobian")
 
@@ -155,6 +160,7 @@ impled by the conversion using \\code{Rcpp::as<your_type>(SEXP)}.
 "
   validate(pars)
   .set_pars(ptr, pars)
+  last_pars <<- pars
 })
 
 ## TODO: Optionally pass a system size parameter to the initialisation
@@ -177,6 +183,10 @@ the objects created by simple assignment will share parameters (i.e.,
 setting parameters in the first object sets them in the second object
 - or rather, they are the \\emph{same} object"
   ode_system$new(generator, get_pars(), validate=validate)
+})
+
+ode_system$methods(rebuild = function() {
+  ptr <<- generator(last_pars)
 })
 
 ode_system$methods(deSolve_info = function() {

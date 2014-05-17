@@ -7,8 +7,6 @@ test_that("construction", {
   obj <- ode_system(stiff_r_derivs, pars, jacobian=stiff_r_jacobian)
   expect_that(obj, is_a("ode_system"))
   expect_that(obj$type, is_identical_to("ode_system_stiff_r"))
-  expect_that(obj$ptr <- obj$ptr,
-              throws_error("read-only"))
 })
 
 test_that("show / print", {
@@ -94,7 +92,7 @@ test_that("parameter validation", {
 })
 
 test_that("copying", {
-  pars <- 0.5
+  pars <- numeric(0)
   obj <- ode_system(stiff_r_derivs, pars, jacobian=stiff_r_jacobian)
   expect_that(obj$get_pars(), is_identical_to(pars))
 
@@ -113,6 +111,37 @@ test_that("copying", {
   obj.copy$set_pars(pars3)
   expect_that(obj.same$get_pars(), is_identical_to(pars2))
   expect_that(obj.copy$get_pars(), is_identical_to(pars3))
+})
+
+test_that("serialisation", {
+  pars <- numeric(0)
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  obj <- ode_system(stiff_r_derivs, pars, jacobian=stiff_r_jacobian)
+  f <- tempfile(fileext=".rds")
+  saveRDS(obj, f)
+  restored <- readRDS(f)
+  expect_that(rodeint:::ptr_valid(restored$ptr), is_false())
+  expect_that(rodeint:::ptr_address(restored$ptr), equals("0x0"))
+  expect_that(restored$get_pars(), throws_error("NULL"))
+  expect_that(restored$set_pars(pars), throws_error("NULL"))
+  expect_that(restored$derivs(y0, t0), throws_error("NULL"))
+  restored$rebuild()
+  expect_that(rodeint:::ptr_valid(restored$ptr), is_true())
+  expect_that(restored$get_pars(),
+              is_identical_to(obj$get_pars()))
+  expect_that(restored$derivs(y0, t0),
+              is_identical_to(obj$derivs(y0, t0)))
+
+  ## And again after setting parameters:
+  pars2 <- pi
+  obj$set_pars(pi)
+  saveRDS(obj, f)
+  restored <- readRDS(f)
+  expect_that(restored$get_pars(), throws_error("NULL"))
+  restored$rebuild()
+  expect_that(restored$get_pars(),
+              is_identical_to(obj$get_pars()))
 })
 
 test_that("deSolve interface", {
