@@ -1,6 +1,8 @@
 #ifndef _RODEINT_STEPPER_HPP_
 #define _RODEINT_STEPPER_HPP_
 
+#define ODEINT_INCLUDE_EVERYTHING
+
 // Following advice here
 //   http://www.boost.org/doc/libs/1_55_0/libs/numeric/odeint/doc/html/boost_numeric_odeint/getting_started/usage__compilation__headers.html
 // though I suspect we use so much of odeint that it's a lost cause.
@@ -14,7 +16,9 @@
 #include <boost/numeric/odeint/stepper/runge_kutta_fehlberg78.hpp>
 #include <boost/numeric/odeint/stepper/runge_kutta_dopri5.hpp>
 #include <boost/numeric/odeint/stepper/bulirsch_stoer.hpp>
+#include <boost/numeric/odeint/stepper/bulirsch_stoer_dense_out.hpp>
 #include <boost/numeric/odeint/stepper/controlled_runge_kutta.hpp>
+#include <boost/numeric/odeint/stepper/dense_output_runge_kutta.hpp>
 #include <boost/numeric/odeint/stepper/generation.hpp>
 #endif
 
@@ -72,6 +76,18 @@ stepper_controlled_runge_kutta_dopri5_stl;
 typedef
 boost::numeric::odeint::bulirsch_stoer<vector_stl>
 stepper_controlled_bulirsch_stoer_stl;
+
+// 3. Dense stepper algorithms
+typedef stepper_basic_euler_stl stepper_dense_euler_stl;
+
+typedef
+boost::numeric::odeint::dense_output_runge_kutta<
+  stepper_controlled_runge_kutta_dopri5_stl>
+stepper_dense_runge_kutta_dopri5_stl;
+
+typedef
+boost::numeric::odeint::bulirsch_stoer_dense_out<vector_stl>
+stepper_dense_bulirsch_stoer_stl;
 
 // uBLAS things
 // 1. Basic steppers
@@ -131,6 +147,17 @@ boost::numeric::odeint::rosenbrock4_controller<
 stepper_controlled_rosenbrock4_ublas;
 
 // 3. Dense steppers
+typedef stepper_basic_euler_ublas stepper_dense_euler_ublas;
+
+typedef
+boost::numeric::odeint::dense_output_runge_kutta<
+  stepper_controlled_runge_kutta_dopri5_ublas>
+stepper_dense_runge_kutta_dopri5_ublas;
+
+typedef
+boost::numeric::odeint::bulirsch_stoer_dense_out<vector_ublas>
+stepper_dense_bulirsch_stoer_ublas;
+
 typedef
 boost::numeric::odeint::rosenbrock4_dense_output<
   stepper_controlled_rosenbrock4_ublas>
@@ -265,18 +292,6 @@ boost::any stepper::construct(stepper::Category category,
     stop("Invalid category"); // defensive
   }
   return boost::any(); // Won't get here.
-}
-
-template <typename T>
-boost::any stepper::construct_dense(stepper::Algorithm /* algorithm */,
-                                    double /* abs_tol */,
-                                    double /* rel_tol */) {
-  // TODO: euler
-  // TODO: rosenbrock_dopri5
-  // TODO: bulirsch_stoer
-  // TODO: rosenbrock4
-  stop("Invalid dense algorithm");
-  return boost::any();
 }
 
 }

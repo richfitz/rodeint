@@ -209,6 +209,56 @@ stepper::construct_controlled<vector_ublas>(stepper::Algorithm algorithm,
   }
 }
 
+template <>
+boost::any
+stepper::construct_dense<vector_stl>(stepper::Algorithm algorithm,
+                                     double abs_tol,
+                                     double rel_tol) {
+  using boost::numeric::odeint::make_dense_output;
+  using boost::numeric::odeint::bulirsch_stoer_dense_out;
+
+  switch(algorithm) {
+  case EULER:
+    return stepper_dense_euler_stl();
+  case RUNGE_KUTTA_DOPRI5:
+    return
+      make_dense_output<stepper_basic_runge_kutta_dopri5_stl>
+      (abs_tol, rel_tol);
+  case BULIRSCH_STOER:
+    return bulirsch_stoer_dense_out<vector_stl>(abs_tol, rel_tol);
+  default:
+    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    return boost::any();
+  }
+}
+
+template <>
+boost::any
+stepper::construct_dense<vector_ublas>(stepper::Algorithm algorithm,
+                                       double abs_tol,
+                                       double rel_tol) {
+  using boost::numeric::odeint::make_dense_output;
+  using boost::numeric::odeint::bulirsch_stoer_dense_out;
+  using boost::numeric::odeint::rosenbrock4_dense_output;
+
+  switch(algorithm) {
+  case EULER:
+    return stepper_dense_euler_ublas();
+  case RUNGE_KUTTA_DOPRI5:
+    make_dense_output<stepper_basic_runge_kutta_dopri5_ublas>
+      (abs_tol, rel_tol);
+  case BULIRSCH_STOER:
+    return bulirsch_stoer_dense_out<vector_ublas>(abs_tol, rel_tol);
+  case ROSENBROCK4:
+    return make_dense_output<stepper_basic_rosenbrock4_ublas
+                             >(abs_tol, rel_tol);
+  default:
+    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    return boost::any();
+  }
+}
+
+
 } // namespace
 
 // [[Rcpp::export]]
