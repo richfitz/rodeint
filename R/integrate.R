@@ -57,6 +57,10 @@ integrate_n_steps <- function(stepper, ode_system, y, t0, dt, n,
 ##' @rdname rodeint_integrate
 integrate_adaptive <- function(stepper, ode_system, y, t0, t1, dt,
                                save_state=FALSE) {
+  if (inherits(stepper, "stepper_deSolve")) {
+    return(integrate_adaptive_deSolve(stepper, ode_system, y, t0, t1, dt,
+                                      save_state))
+  }
   assert_stepper(stepper)
   assert_ode_system(ode_system)
   assert_numeric(y)

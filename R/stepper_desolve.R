@@ -71,3 +71,32 @@ make_stepper_deSolve_controlled <- function(algorithm,
                    stop("Unknown algorithm: ", algorithm))
   stepper_deSolve("controlled", algorithm, abs_tol, rel_tol, method)
 }
+
+## Proof of concept only
+integrate_adaptive_deSolve <- function(stepper, ode_system, y,
+                                       t0, t1, dt, save_state=FALSE) {
+  assert_ode_system(ode_system)
+  assert_numeric(y)
+  assert_scalar_numeric(t0)
+  assert_scalar_numeric(t1)
+  assert_scalar_numeric(dt)
+  if (save_state) {
+    stop("save_state=TRUE not supported")
+  }
+
+  fakepars <- NULL
+  hmin <- 0
+  hmax <- NULL
+  hini <- dt
+
+  info <- ode_system$deSolve_info()
+  ## Adaptive
+  times <- c(t0, t1)
+  res <- deSolve::ode(y, times, info$func, fakepars, # jacfunc=info$jacfunc,
+                      hini=hini, hmin=hmin, hmax=hmax,
+                      method=stepper$method,
+                      atol=stepper$abs_tol, rtol=stepper$rel_tol,
+                      initfunc=info$initfunc, initpar=info$initpar,
+                      dllname=info$dllname)
+  unname(res[-1,-1,drop=TRUE])
+}
