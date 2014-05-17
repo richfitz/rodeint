@@ -11,7 +11,7 @@ def dappend(d, key, val):
 
 ## This is going to be common to so many things:
 system_types = ['r', 'cpp', 'class']
-categories = ['basic', 'controlled']
+categories = ['basic', 'controlled', 'dense']
 algorithms_nonstiff = {'basic': ['euler',
                                  'modified_midpoint',
                                  'runge_kutta4',
@@ -21,10 +21,15 @@ algorithms_nonstiff = {'basic': ['euler',
                        'controlled': ['runge_kutta_cash_karp54',
                                       'runge_kutta_fehlberg78',
                                       'runge_kutta_dopri5',
-                                      'bulirsch_stoer']}
+                                      'bulirsch_stoer'],
+                       'dense': ['euler',
+                                 'runge_kutta_dopri5',
+                                 'bulirsch_stoer']}
 algorithms_stiff = {'basic': algorithms_nonstiff['basic'] +
                     ['rosenbrock4'],
                     'controlled': algorithms_nonstiff['controlled'] +
+                    ['rosenbrock4'],
+                    'dense': algorithms_nonstiff['dense'] +
                     ['rosenbrock4']}
 
 header = '// *** Generated section: do not edit until the end marker'

@@ -254,8 +254,8 @@ stepper::construct_dense<vector_ublas>(stepper::Algorithm algorithm,
   case BULIRSCH_STOER:
     return bulirsch_stoer_dense_out<vector_ublas>(abs_tol, rel_tol);
   case ROSENBROCK4:
-    return make_dense_output<stepper_basic_rosenbrock4_ublas
-                             >(abs_tol, rel_tol);
+    return make_dense_output<stepper_basic_rosenbrock4_ublas>
+      (abs_tol, rel_tol);
   default:
     stop("Invalid controlled algorithm"); // TODO: print algorithm
     return boost::any();

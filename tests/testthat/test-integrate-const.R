@@ -29,7 +29,11 @@ test_that("Time ends at multiple of dt", {
 
       t_expected <- seq(t0, t1, by=dt)
       expect_that(attr(y_r_s, "t"), is_identical_to(t_expected))
-      expect_that(attr(y_r_s, "steps"), equals(n))
+      if (category == "dense" && algorithm != "euler") {
+        expect_that(attr(y_r_s, "steps"), is_less_than(n))
+      } else {
+        expect_that(attr(y_r_s, "steps"), equals(n))
+      }
     }
   }
 })
@@ -57,8 +61,15 @@ test_that("Time ends in the middle of a step", {
 
       t_expected <- seq(t0, t1, by=dt)
       expect_that(attr(y_r_s_1, "t"), is_identical_to(t_expected))
-      expect_that(attr(y_r_s_1, "steps"), equals(length(t_expected) - 1))
-      expect_that(attr(y_r_s_2, "steps"), equals(length(t_expected)))
+      if (category == "dense" && algorithm != "euler") {
+        expect_that(attr(y_r_s_1, "steps"),
+                    is_less_than(length(t_expected) - 1))
+        expect_that(attr(y_r_s_2, "steps"),
+                    is_less_than(length(t_expected)))
+      } else {
+        expect_that(attr(y_r_s_1, "steps"), equals(length(t_expected) - 1))
+        expect_that(attr(y_r_s_2, "steps"), equals(length(t_expected)))
+      }
 
       ## Now, the estimate y_r should be between the last two points:
       expect_that(y_r,

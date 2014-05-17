@@ -23,7 +23,7 @@ test_that("Time ends at multiple of dt", {
       ## NOTE: In contrast with integrate_const()
       expect_that(as.numeric(y_r_s), is_identical_to(y_r))
 
-      if (category == "basic") {
+      if (category == "basic" || algorithm == "euler") {
         t_expected <- seq(t0, t1, by=dt)
         expect_that(attr(y_r_s, "steps"), equals(n))
         expect_that(attr(y_r_s, "t"), is_identical_to(t_expected))
@@ -59,18 +59,18 @@ test_that("Time ends in the middle of a step", {
       yy_r_s_1 <- attr(y_r_s_1, "y")
       yy_r_s_2 <- attr(y_r_s_2, "y")
 
-      if (category == "controlled") {
-        expect_that(nrow(yy_r_s_1), equals(attr(y_r_s_1, "steps") + 1))
-        expect_that(nrow(yy_r_s_2), equals(attr(y_r_s_2, "steps") + 1))
-
-        i <- seq_len(nrow(yy_r_s_1) - 1)
-        expect_that(yy_r_s_1[i,], is_identical_to(yy_r_s_2[i,]))
-      } else {
+      if (category == "basic" || algorithm == "euler") {
         t_expected <- c(seq(t0, t1, by=dt), t1)
         expect_that(attr(y_r_s_1, "t"), is_identical_to(t_expected))
         expect_that(attr(y_r_s_1, "steps"), equals(length(t_expected) - 1))
         expect_that(attr(y_r_s_2, "steps"), equals(length(t_expected)))
         expect_that(y_r, is_identical_to(last_row(yy_r_s_1)))
+      } else {
+        expect_that(nrow(yy_r_s_1), equals(attr(y_r_s_1, "steps") + 1))
+        expect_that(nrow(yy_r_s_2), equals(attr(y_r_s_2, "steps") + 1))
+
+        i <- seq_len(nrow(yy_r_s_1) - 1)
+        expect_that(yy_r_s_1[i,], is_identical_to(yy_r_s_2[i,]))
       }
 
       ## Graphical illustration of what is going on:

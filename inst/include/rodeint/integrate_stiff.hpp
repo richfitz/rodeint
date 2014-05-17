@@ -66,6 +66,8 @@ struct integrate_const_stiff_data {
       return run_basic();
     case stepper::CONTROLLED:
       return run_controlled();
+    case stepper::DENSE:
+      return run_dense();
     default:
       stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -104,6 +106,21 @@ struct integrate_const_stiff_data {
       return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
+    default:
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
+    }
+  }
+  Rcpp::NumericVector run_dense() {
+    switch(s.algorithm_id()) {
+    case stepper::EULER:
+      return run<stepper_dense_euler_ublas>();
+    case stepper::RUNGE_KUTTA_DOPRI5:
+      return run<stepper_dense_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_dense_bulirsch_stoer_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_dense_rosenbrock4_ublas>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -165,6 +182,8 @@ struct integrate_n_steps_stiff_data {
       return run_basic();
     case stepper::CONTROLLED:
       return run_controlled();
+    case stepper::DENSE:
+      return run_dense();
     default:
       stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -203,6 +222,21 @@ struct integrate_n_steps_stiff_data {
       return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
+    default:
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
+    }
+  }
+  Rcpp::NumericVector run_dense() {
+    switch(s.algorithm_id()) {
+    case stepper::EULER:
+      return run<stepper_dense_euler_ublas>();
+    case stepper::RUNGE_KUTTA_DOPRI5:
+      return run<stepper_dense_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_dense_bulirsch_stoer_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_dense_rosenbrock4_ublas>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -255,6 +289,8 @@ struct integrate_adaptive_stiff_data {
       return run_basic();
     case stepper::CONTROLLED:
       return run_controlled();
+    case stepper::DENSE:
+      return run_dense();
     default:
       stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -293,6 +329,21 @@ struct integrate_adaptive_stiff_data {
       return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
+    default:
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericVector(); // never get here
+    }
+  }
+  Rcpp::NumericVector run_dense() {
+    switch(s.algorithm_id()) {
+    case stepper::EULER:
+      return run<stepper_dense_euler_ublas>();
+    case stepper::RUNGE_KUTTA_DOPRI5:
+      return run<stepper_dense_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_dense_bulirsch_stoer_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_dense_rosenbrock4_ublas>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
@@ -365,6 +416,8 @@ struct integrate_times_stiff_data {
       return run_basic();
     case stepper::CONTROLLED:
       return run_controlled();
+    case stepper::DENSE:
+      return run_dense();
     default:
       stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here
@@ -403,6 +456,21 @@ struct integrate_times_stiff_data {
       return run<stepper_controlled_bulirsch_stoer_ublas>();
     case stepper::ROSENBROCK4:
       return run<stepper_controlled_rosenbrock4_ublas>();
+    default:
+      stop("Unimplemented algorithm"); // TODO: give details
+      return Rcpp::NumericMatrix(); // never get here
+    }
+  }
+  Rcpp::NumericMatrix run_dense() {
+    switch(s.algorithm_id()) {
+    case stepper::EULER:
+      return run<stepper_dense_euler_ublas>();
+    case stepper::RUNGE_KUTTA_DOPRI5:
+      return run<stepper_dense_runge_kutta_dopri5_ublas>();
+    case stepper::BULIRSCH_STOER:
+      return run<stepper_dense_bulirsch_stoer_ublas>();
+    case stepper::ROSENBROCK4:
+      return run<stepper_dense_rosenbrock4_ublas>();
     default:
       stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here

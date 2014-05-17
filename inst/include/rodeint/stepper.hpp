@@ -1,8 +1,6 @@
 #ifndef _RODEINT_STEPPER_HPP_
 #define _RODEINT_STEPPER_HPP_
 
-#define ODEINT_INCLUDE_EVERYTHING
-
 // Following advice here
 //   http://www.boost.org/doc/libs/1_55_0/libs/numeric/odeint/doc/html/boost_numeric_odeint/getting_started/usage__compilation__headers.html
 // though I suspect we use so much of odeint that it's a lost cause.
