@@ -40,9 +40,10 @@
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>make_stepper_basic(type, abs_tol&nbsp;=&nbsp;NA_real_, rel_tol&nbsp;=&nbsp;NA_real_, ublas_state&nbsp;=&nbsp;NA)</div>
-<div>make_stepper_controlled(type, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, ublas_state&nbsp;=&nbsp;NA)</div>
-<div>make_stepper(category, type, ...)</div></pre>
+    <pre><div>make_stepper_basic(algorithm, abs_tol&nbsp;=&nbsp;NA_real_, rel_tol&nbsp;=&nbsp;NA_real_, ublas_state&nbsp;=&nbsp;NA)</div>
+<div>make_stepper_controlled(algorithm, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, ublas_state&nbsp;=&nbsp;NA)</div>
+<div>make_stepper_dense(algorithm, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, ublas_state&nbsp;=&nbsp;NA)</div>
+<div>make_stepper(category, algorithm, ...)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
@@ -55,14 +56,15 @@
 should use the internal data structures required by the stiff
 systems.  This is likely to disappear soon, as it depends entirely
 on the system itself.  The default, NA, will switch based on the
-<code>type</code> argument -- <code>rosenbrock4</code> is the stiff system
+<code>algorithm</code> argument -- <code>rosenbrock4</code> is the stiff system
 stepper.  However, to use other steppers with the stiff system, we
 need to set up normal steppers similarly.  So probably at runtime
 this will just rebuild the stepper for us.</dd>
       <dt>category</dt>
       <dd>Either "basic" or "controlled"</dd>
-      <dt>type</dt>
-      <dd>The type of stepper (e.g. "runge_kutta4")</dd>
+      <dt>algorithm</dt>
+      <dd>The stepper algorithm (e.g. "runge_kutta4") - see
+lists in <code><a href='stepper_algorithms.html'>stepper_algorithms</a></code></dd>
       <dt>...</dt>
       <dd>Additional parameters passed from <code>make_stepper</code>
 to either <code>make_stepper_basic</code> (none allowed) or
@@ -83,7 +85,7 @@ to either <code>make_stepper_basic</code> (none allowed) or
       </div>
   <div class="span4">
     <!-- <ul>
-      <li>make_stepper</li><li>make_stepper_basic</li><li>make_stepper_controlled</li><li>stepper</li><li>stepper-class</li>
+      <li>make_stepper</li><li>make_stepper_basic</li><li>make_stepper_controlled</li><li>make_stepper_dense</li><li>stepper</li><li>stepper-class</li>
     </ul>
     <ul>
       

@@ -2,9 +2,11 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-<title>stepper_deSolve-class. rodeint 0.1</title>
+<title>stepper_algorithms. rodeint 0.1</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="author" content="">
+<meta name="author" content="
+Rich FitzJohn
+">
 
 <link href="css/bootstrap.css" rel="stylesheet">
 <link href="css/bootstrap-responsive.css" rel="stylesheet">
@@ -35,52 +37,54 @@
         
       </header>
       
-      <h1>Stepper (deSolve wrappers)</h1>
+      <h1>Lists of Stepper Algorithms</h1>
 
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>make_stepper_deSolve(category, algorithm, ...)</div>
-<div>make_stepper_deSolve_basic(algorithm)</div>
-<div>make_stepper_deSolve_controlled(algorithm, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06)</div></pre>
+    <pre><div>stepper_algorithms(category, have_jacobian&nbsp;=&nbsp;FALSE)</div>
+<div>stepper_basic_algorithms(have_jacobian&nbsp;=&nbsp;FALSE)</div>
+<div>stepper_controlled_algorithms(have_jacobian&nbsp;=&nbsp;FALSE)</div>
+<div>stepper_dense_algorithms(have_jacobian&nbsp;=&nbsp;FALSE)</div>
+<div>stepper_categories()</div></pre>
     
     <h2>Arguments</h2>
     <dl>
       <dt>category</dt>
       <dd>Either "basic" or "controlled"</dd>
-      <dt>algorithm</dt>
-      <dd>The stepper algorithm (e.g. "runge_kutta4")</dd>
-      <dt>...</dt>
-      <dd>Additional parameters passed from <code>make_stepper</code>
-to either <code>make_stepper_basic</code> (none allowed) or
-<code>make_stepper_controlled</code>.</dd>
-      <dt>abs_tol</dt>
-      <dd>Absolute tolerance (see atol in deSolve docs for now)</dd>
-      <dt>rel_tol</dt>
-      <dd>Relative tolerance (see rtol in deSolve docs for now)</dd>
+      <dt>have_jacobian</dt>
+      <dd>Logical indicating if the stepper will work
+on problems with a Jacobian (this is a superset: every problem
+that provides a Jacobian will work fine with steppers that don't
+require a Jacobian).</dd>
     </dl>
     
-    <div class="Stepper (deSolve wrappers)">
-      <h2>Stepper (deSolve wrappers)</h2>
+    <div class="Lists of Stepper Algorithms">
+      <h2>Lists of Stepper Algorithms</h2>
       
     </div>
 
     <div class="Description">
       <h2>Description</h2>
       
-      <p>Stepper (documentation coming)</p>
+      <p>Valid values for making a <code><a href='stepper.html'>stepper</a></code>.</p>
   
     </div>
       </div>
   <div class="span4">
     <!-- <ul>
-      <li>make_stepper_deSolve</li><li>make_stepper_deSolve_basic</li><li>make_stepper_deSolve_controlled</li><li>stepper_deSolve</li><li>stepper_deSolve-class</li>
+      <li>stepper_algorithms</li><li>stepper_basic_algorithms</li><li>stepper_categories</li><li>stepper_controlled_algorithms</li><li>stepper_dense_algorithms</li>
     </ul>
     <ul>
       
     </ul> -->
       
-        
+    
+    <h2>Author</h2>
+    
+Rich FitzJohn
+
+    
   </div>
 </div>
       
