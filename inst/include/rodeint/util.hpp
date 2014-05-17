@@ -12,6 +12,14 @@ void check_dt(double t0, double t1, double dt);
 namespace util {
 
 template <typename T>
+void check_ptr_valid(Rcpp::XPtr<T> p) {
+  T* test = p;
+  if (test == NULL) {
+    Rcpp::stop("Pointer is NULL - not using this");
+  }
+}
+
+template <typename T>
 Rcpp::NumericMatrix
 to_rcpp_matrix_by_row(const std::vector<T>& x) {
   const size_t nr = x.size();

@@ -22,6 +22,7 @@ test_that("show / print", {
   expect_that(obj$show(TRUE), prints_text("ode_system_r"))
 })
 
+
 test_that("derivatives", {
   pars <- 0.5
   obj <- ode_system(harmonic_oscillator_r, pars)
@@ -101,6 +102,21 @@ test_that("copying", {
   obj.copy$set_pars(pars3)
   expect_that(obj.same$get_pars(), is_identical_to(pars2))
   expect_that(obj.copy$get_pars(), is_identical_to(pars3))
+})
+
+test_that("serialisation", {
+  pars <- 0.5
+  y0 <- c(0, 1)
+  t0 <- 0.0
+  obj <- ode_system(harmonic_oscillator_r, pars)
+  f <- tempfile(fileext=".rds")
+  saveRDS(obj, f)
+  restored <- readRDS(f)
+  expect_that(rodeint:::ptr_valid(restored$ptr), is_false())
+  expect_that(rodeint:::ptr_address(restored$ptr), equals("0x0"))
+  expect_that(restored$get_pars(), throws_error("NULL"))
+  expect_that(restored$set_pars(pars), throws_error("NULL"))
+  expect_that(restored$derivs(y0, t0), throws_error("NULL"))
 })
 
 test_that("deSolve interface", {

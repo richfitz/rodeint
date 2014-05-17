@@ -45,3 +45,9 @@ std::string ptr_address(SEXP ptr) {
   void* p = R_ExternalPtrAddr(ptr);
   return rodeint::util::to_string(p);
 }
+
+// [[Rcpp::export]]
+bool ptr_valid(SEXP ptr) {
+  void* p = R_ExternalPtrAddr(ptr);
+  return p != NULL;
+}

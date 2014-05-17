@@ -59,32 +59,38 @@ inline SEXP wrap(const rodeint::ode_system_stiff_class& obj) {
 template<>
 inline rodeint::ode_system_r as(SEXP obj) {
   XPtr<rodeint::ode_system_r> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 template<>
 inline rodeint::ode_system_cpp as(SEXP obj) {
   XPtr<rodeint::ode_system_cpp> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 template<>
 inline rodeint::ode_system_class as(SEXP obj) {
   XPtr<rodeint::ode_system_class> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 
 template<>
 inline rodeint::ode_system_stiff_r as(SEXP obj) {
   XPtr<rodeint::ode_system_stiff_r> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 template<>
 inline rodeint::ode_system_stiff_cpp as(SEXP obj) {
   XPtr<rodeint::ode_system_stiff_cpp> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 template<>
 inline rodeint::ode_system_stiff_class as(SEXP obj) {
   XPtr<rodeint::ode_system_stiff_class> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 
@@ -123,6 +129,7 @@ inline SEXP wrap(const rodeint::stepper& obj) {
 template<>
 inline rodeint::stepper as(SEXP obj) {
   XPtr<rodeint::stepper> xp(obj);
+  rodeint::util::check_ptr_valid(xp);
   return *xp;
 }
 #endif
