@@ -258,7 +258,6 @@ stepper::construct_dense<vector_ublas>(stepper::Algorithm algorithm,
   }
 }
 
-
 } // namespace
 
 // [[Rcpp::export]]

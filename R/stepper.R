@@ -139,6 +139,16 @@ make_stepper_controlled <- function(algorithm, abs_tol=1e-6, rel_tol=1e-6,
 
 ##' @rdname stepper
 ##' @export
+make_stepper_dense <- function(algorithm, abs_tol=1e-6, rel_tol=1e-6,
+                               ublas_state=NA) {
+  if (is.na(ublas_state)) {
+    ublas_state <- algorithm == "rosenbrock4"
+  }
+  stepper("dense", algorithm, ublas_state, abs_tol, rel_tol)
+}
+
+##' @rdname stepper
+##' @export
 ##' @param category Either "basic" or "controlled"
 ##' @param algorithm The stepper algorithm (e.g. "runge_kutta4") - see
 ##' lists in \code{\link{stepper_algorithms}}
@@ -149,6 +159,7 @@ make_stepper <- function(category, algorithm, ...) {
   make <- switch(category,
                  basic=make_stepper_basic,
                  controlled=make_stepper_controlled,
+                 dense=make_stepper_dense,
                  stop("Invalid stepper category"))
   make(algorithm, ...)
 }

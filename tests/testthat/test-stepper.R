@@ -33,7 +33,6 @@ test_that("stepper lists", {
               throws_error("Invalid stepper category"))
 })
 
-## TODO: error messages are inconsistent.
 test_that("corner cases", {
   expect_that(make_stepper("nonexistant", "euler"),
               throws_error("Invalid stepper category"))

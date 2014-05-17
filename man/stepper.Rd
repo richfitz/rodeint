@@ -4,6 +4,7 @@
 \alias{make_stepper}
 \alias{make_stepper_basic}
 \alias{make_stepper_controlled}
+\alias{make_stepper_dense}
 \alias{stepper}
 \alias{stepper-class}
 \title{Stepper}
@@ -12,6 +13,9 @@ make_stepper_basic(algorithm, abs_tol = NA_real_, rel_tol = NA_real_,
   ublas_state = NA)
 
 make_stepper_controlled(algorithm, abs_tol = 1e-06, rel_tol = 1e-06,
+  ublas_state = NA)
+
+make_stepper_dense(algorithm, abs_tol = 1e-06, rel_tol = 1e-06,
   ublas_state = NA)
 
 make_stepper(category, algorithm, ...)
