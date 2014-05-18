@@ -30,14 +30,14 @@ template <typename OdeSystem>
 struct integrate_const_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   double t0, t1, dt;
   bool save_state;
-  integrate_const_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_const_data(stepper s_, OdeSystem ode_system_, state_type y_,
                        double t0_, double t1_, double dt_,
                        bool save_state_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), t0(t0_), t1(t1_), dt(dt_), save_state(save_state_) {}
 
   // This function actually unpacks the stepper to it's true type, and
@@ -51,9 +51,9 @@ struct integrate_const_data {
     state_saver<state_type> state;
     if (save_state) {
       state.steps =
-        integrate_const(s_typed, system, y, t0, t1, dt, state.obs);
+        integrate_const(s_typed, ode_system, y, t0, t1, dt, state.obs);
     } else {
-      integrate_const(s_typed, system, y, t0, t1, dt);
+      integrate_const(s_typed, ode_system, y, t0, t1, dt);
     }
     return integration_state(y, state, save_state);
   }
@@ -133,15 +133,15 @@ template <typename OdeSystem>
 struct integrate_n_steps_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   double t0, dt;
   size_t n;
   bool save_state;
-  integrate_n_steps_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_n_steps_data(stepper s_, OdeSystem ode_system_, state_type y_,
                          double t0_, double dt_, size_t n_,
                          bool save_state_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), t0(t0_), dt(dt_), n(n_), save_state(save_state_) {}
 
   // This function actually unpacks the stepper to it's true type, and
@@ -158,10 +158,10 @@ struct integrate_n_steps_data {
     state_saver<state_type> state;
     if (save_state) {
       // NOTE: here, the final time is returned instead of n_steps
-      integrate_n_steps(s_typed, system, y, t0, dt, n, state.obs);
+      integrate_n_steps(s_typed, ode_system, y, t0, dt, n, state.obs);
       state.steps = n;
     } else {
-      integrate_n_steps(s_typed, system, y, t0, dt, n);
+      integrate_n_steps(s_typed, ode_system, y, t0, dt, n);
     }
     return integration_state(y, state, save_state);
   }
@@ -241,14 +241,14 @@ template <typename OdeSystem>
 struct integrate_adaptive_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   double t0, t1, dt;
   bool save_state;
-  integrate_adaptive_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_adaptive_data(stepper s_, OdeSystem ode_system_, state_type y_,
                           double t0_, double t1_, double dt_,
                           bool save_state_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), t0(t0_), t1(t1_), dt(dt_), save_state(save_state_) {}
 
   // This function actually unpacks the stepper to it's true type, and
@@ -262,9 +262,9 @@ struct integrate_adaptive_data {
     state_saver<state_type> state;
     if (save_state) {
       state.steps =
-        integrate_adaptive(s_typed, system, y, t0, t1, dt, state.obs);
+        integrate_adaptive(s_typed, ode_system, y, t0, t1, dt, state.obs);
     } else {
-      integrate_adaptive(s_typed, system, y, t0, t1, dt);
+      integrate_adaptive(s_typed, ode_system, y, t0, t1, dt);
     }
     return integration_state(y, state, save_state);
   }
@@ -350,13 +350,13 @@ template <typename OdeSystem>
 struct integrate_times_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   std::vector<double> times;
   double dt;
-  integrate_times_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_times_data(stepper s_, OdeSystem ode_system_, state_type y_,
                        std::vector<double> times_, double dt_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), times(times_), dt(dt_) {}
 
   // This function actually unpacks the stepper to it's true type, and
@@ -378,7 +378,7 @@ struct integrate_times_data {
     Stepper s_typed = s.template as<Stepper>();
     state_saver<state_type> state;
     state.steps =
-      integrate_times(s_typed, system, y,
+      integrate_times(s_typed, ode_system, y,
                       times.begin(), times.end(), dt, state.obs);
 
     Rcpp::NumericMatrix ret = util::to_rcpp_matrix_by_row(state.y);
@@ -463,33 +463,33 @@ struct integrate_times_data {
 // data object together and pass it along.
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_const(stepper s, OdeSystem system,
+r_integrate_const(stepper s, OdeSystem ode_system,
                   typename OdeSystem::state_type y,
                   double t0, double t1, double dt,
                   bool save_state) {
-  integrate_const_data<OdeSystem> data(s, system, y,
+  integrate_const_data<OdeSystem> data(s, ode_system, y,
                                        t0, t1, dt, save_state);
   return data.run();
 }
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_n_steps(stepper s, OdeSystem system,
+r_integrate_n_steps(stepper s, OdeSystem ode_system,
                     typename OdeSystem::state_type y,
                     double t0, double dt, size_t n,
                     bool save_state) {
-  integrate_n_steps_data<OdeSystem> data(s, system, y,
+  integrate_n_steps_data<OdeSystem> data(s, ode_system, y,
                                          t0, dt, n, save_state);
   return data.run();
 }
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_adaptive(stepper s, OdeSystem system,
+r_integrate_adaptive(stepper s, OdeSystem ode_system,
                      typename OdeSystem::state_type y,
                      double t0, double t1, double dt,
                      bool save_state) {
-  integrate_adaptive_data<OdeSystem> data(s, system, y,
+  integrate_adaptive_data<OdeSystem> data(s, ode_system, y,
                                           t0, t1, dt, save_state);
   return data.run();
 }
@@ -500,10 +500,10 @@ r_integrate_adaptive(stepper s, OdeSystem system,
 // 'y' with the final state saved as an attribute "y".
 template <typename OdeSystem>
 Rcpp::NumericMatrix
-r_integrate_times(stepper s, OdeSystem system,
+r_integrate_times(stepper s, OdeSystem ode_system,
                   typename OdeSystem::state_type y,
                   std::vector<double> times, double dt) {
-  integrate_times_data<OdeSystem> data(s, system, y,
+  integrate_times_data<OdeSystem> data(s, ode_system, y,
                                        times, dt);
   return data.run();
 }

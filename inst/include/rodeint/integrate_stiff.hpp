@@ -27,14 +27,15 @@ template <typename OdeSystem>
 struct integrate_const_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   double t0, t1, dt;
   bool save_state;
-  integrate_const_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_const_stiff_data(stepper s_, OdeSystem ode_system_,
+                             state_type y_,
                              double t0_, double t1_, double dt_,
                              bool save_state_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), t0(t0_), t1(t1_), dt(dt_), save_state(save_state_) {}
 
   template <typename Stepper>
@@ -43,8 +44,8 @@ struct integrate_const_stiff_data {
     check_dt(t0, t1, dt);
     Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
-    // NOTE: This line is special to stiff systems.
-    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
+    // NOTE: This line is special to stiff ode_systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(ode_system);
     if (save_state) {
       state.steps =
         integrate_const(s_typed, sys, y, t0, t1, dt, state.obs);
@@ -134,15 +135,16 @@ template <typename OdeSystem>
 struct integrate_n_steps_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   double t0, dt;
   size_t n;
   bool save_state;
-  integrate_n_steps_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_n_steps_stiff_data(stepper s_, OdeSystem ode_system_,
+                               state_type y_,
                                double t0_, double dt_, size_t n_,
                                bool save_state_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), t0(t0_), dt(dt_), n(n_), save_state(save_state_) {}
 
   // This function actually unpacks the stepper to it's true type, and
@@ -157,8 +159,8 @@ struct integrate_n_steps_stiff_data {
     }
     Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
-    // NOTE: This line is special to stiff systems.
-    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
+    // NOTE: This line is special to stiff ode_systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(ode_system);
     if (save_state) {
       // NOTE: here, the final time is returned instead of n_steps
       integrate_n_steps(s_typed, sys, y, t0, dt, n, state.obs);
@@ -250,14 +252,15 @@ template <typename OdeSystem>
 struct integrate_adaptive_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   double t0, t1, dt;
   bool save_state;
-  integrate_adaptive_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_adaptive_stiff_data(stepper s_, OdeSystem ode_system_,
+                                state_type y_,
                                 double t0_, double t1_, double dt_,
                                 bool save_state_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), t0(t0_), t1(t1_), dt(dt_), save_state(save_state_) {}
 
   template <typename Stepper>
@@ -266,8 +269,8 @@ struct integrate_adaptive_stiff_data {
     check_dt(t0, t1, dt);
     Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
-    // NOTE: This line is special to stiff systems.
-    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
+    // NOTE: This line is special to stiff ode_systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(ode_system);
     if (save_state) {
       state.steps =
         integrate_adaptive(s_typed, sys, y, t0, t1, dt, state.obs);
@@ -363,13 +366,14 @@ template <typename OdeSystem>
 struct integrate_times_stiff_data {
   typedef typename OdeSystem::state_type state_type;
   stepper s;
-  OdeSystem system;
+  OdeSystem ode_system;
   state_type y;
   std::vector<double> times;
   double dt;
-  integrate_times_stiff_data(stepper s_, OdeSystem system_, state_type y_,
+  integrate_times_stiff_data(stepper s_, OdeSystem ode_system_,
+                             state_type y_,
                              std::vector<double> times_, double dt_)
-    : s(s_), system(system_),
+    : s(s_), ode_system(ode_system_),
       y(y_), times(times_), dt(dt_) {}
 
   // This function actually unpacks the stepper to it's true type, and
@@ -390,8 +394,8 @@ struct integrate_times_stiff_data {
 
     Stepper s_typed = s.template as<Stepper>(true);
     state_saver<state_type> state;
-    // NOTE: This line is special to stiff systems.
-    rodeint::ode_system_stiff_odeint<OdeSystem> sys(system);
+    // NOTE: This line is special to stiff ode_systems.
+    rodeint::ode_system_stiff_odeint<OdeSystem> sys(ode_system);
     state.steps =
       integrate_times(s_typed, sys, y,
                       times.begin(), times.end(), dt, state.obs);
@@ -484,33 +488,33 @@ struct integrate_times_stiff_data {
 // data object together and pass it along.
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_const_stiff(stepper s, OdeSystem system,
+r_integrate_const_stiff(stepper s, OdeSystem ode_system,
                         typename OdeSystem::state_type y,
                         double t0, double t1, double dt,
                         bool save_state) {
-  integrate_const_stiff_data<OdeSystem> data(s, system, y,
+  integrate_const_stiff_data<OdeSystem> data(s, ode_system, y,
                                              t0, t1, dt, save_state);
   return data.run();
 }
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_n_steps_stiff(stepper s, OdeSystem system,
+r_integrate_n_steps_stiff(stepper s, OdeSystem ode_system,
                           typename OdeSystem::state_type y,
                           double t0, double dt, size_t n,
                           bool save_state) {
-  integrate_n_steps_stiff_data<OdeSystem> data(s, system, y,
+  integrate_n_steps_stiff_data<OdeSystem> data(s, ode_system, y,
                                                t0, dt, n, save_state);
   return data.run();
 }
 
 template <typename OdeSystem>
 Rcpp::NumericVector
-r_integrate_adaptive_stiff(stepper s, OdeSystem system,
+r_integrate_adaptive_stiff(stepper s, OdeSystem ode_system,
                            typename OdeSystem::state_type y,
                            double t0, double t1, double dt,
                            bool save_state) {
-  integrate_adaptive_stiff_data<OdeSystem> data(s, system, y,
+  integrate_adaptive_stiff_data<OdeSystem> data(s, ode_system, y,
                                                 t0, t1, dt, save_state);
   return data.run();
 }
@@ -521,10 +525,10 @@ r_integrate_adaptive_stiff(stepper s, OdeSystem system,
 // 'y' with the final state saved as an attribute "y".
 template <typename OdeSystem>
 Rcpp::NumericMatrix
-r_integrate_times_stiff(stepper s, OdeSystem system,
+r_integrate_times_stiff(stepper s, OdeSystem ode_system,
                         typename OdeSystem::state_type y,
                         std::vector<double> times, double dt) {
-  integrate_times_stiff_data<OdeSystem> data(s, system, y,
+  integrate_times_stiff_data<OdeSystem> data(s, ode_system, y,
                                              times, dt);
   return data.run();
 }

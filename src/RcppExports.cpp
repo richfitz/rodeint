@@ -7,20 +7,20 @@
 using namespace Rcpp;
 
 // integrate_const_stiff_r
-Rcpp::NumericVector integrate_const_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r system, rodeint::ode_system_stiff_r::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_const_stiff_r(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_const_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_integrate_const_stiff_r(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_const_stiff_r(s, system, y, t0, t1, dt, save_state);
+        Rcpp::NumericVector __result = integrate_const_stiff_r(s, ode_system, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -28,20 +28,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_const_stiff_cpp
-Rcpp::NumericVector integrate_const_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_const_stiff_cpp(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_const_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_integrate_const_stiff_cpp(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_const_stiff_cpp(s, system, y, t0, t1, dt, save_state);
+        Rcpp::NumericVector __result = integrate_const_stiff_cpp(s, ode_system, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -49,20 +49,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_const_stiff_class
-Rcpp::NumericVector integrate_const_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class system, rodeint::ode_system_stiff_class::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_const_stiff_class(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_const_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_integrate_const_stiff_class(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_const_stiff_class(s, system, y, t0, t1, dt, save_state);
+        Rcpp::NumericVector __result = integrate_const_stiff_class(s, ode_system, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -70,20 +70,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_n_steps_stiff_r
-Rcpp::NumericVector integrate_n_steps_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r system, rodeint::ode_system_stiff_r::state_type y, double t0, double dt, int n, bool save_state);
-RcppExport SEXP rodeint_integrate_n_steps_stiff_r(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_n_steps_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t0, double dt, int n, bool save_state);
+RcppExport SEXP rodeint_integrate_n_steps_stiff_r(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< int >::type n(nSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_n_steps_stiff_r(s, system, y, t0, dt, n, save_state);
+        Rcpp::NumericVector __result = integrate_n_steps_stiff_r(s, ode_system, y, t0, dt, n, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -91,20 +91,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_n_steps_stiff_cpp
-Rcpp::NumericVector integrate_n_steps_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double dt, int n, bool save_state);
-RcppExport SEXP rodeint_integrate_n_steps_stiff_cpp(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_n_steps_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double dt, int n, bool save_state);
+RcppExport SEXP rodeint_integrate_n_steps_stiff_cpp(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< int >::type n(nSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_n_steps_stiff_cpp(s, system, y, t0, dt, n, save_state);
+        Rcpp::NumericVector __result = integrate_n_steps_stiff_cpp(s, ode_system, y, t0, dt, n, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -112,20 +112,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_n_steps_stiff_class
-Rcpp::NumericVector integrate_n_steps_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class system, rodeint::ode_system_stiff_class::state_type y, double t0, double dt, int n, bool save_state);
-RcppExport SEXP rodeint_integrate_n_steps_stiff_class(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_n_steps_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t0, double dt, int n, bool save_state);
+RcppExport SEXP rodeint_integrate_n_steps_stiff_class(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP dtSEXP, SEXP nSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< int >::type n(nSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_n_steps_stiff_class(s, system, y, t0, dt, n, save_state);
+        Rcpp::NumericVector __result = integrate_n_steps_stiff_class(s, ode_system, y, t0, dt, n, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -133,20 +133,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_adaptive_stiff_r
-Rcpp::NumericVector integrate_adaptive_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r system, rodeint::ode_system_stiff_r::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_adaptive_stiff_r(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_adaptive_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_integrate_adaptive_stiff_r(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_adaptive_stiff_r(s, system, y, t0, t1, dt, save_state);
+        Rcpp::NumericVector __result = integrate_adaptive_stiff_r(s, ode_system, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -154,20 +154,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_adaptive_stiff_cpp
-Rcpp::NumericVector integrate_adaptive_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_adaptive_stiff_cpp(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_adaptive_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_integrate_adaptive_stiff_cpp(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_adaptive_stiff_cpp(s, system, y, t0, t1, dt, save_state);
+        Rcpp::NumericVector __result = integrate_adaptive_stiff_cpp(s, ode_system, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -175,20 +175,20 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_adaptive_stiff_class
-Rcpp::NumericVector integrate_adaptive_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class system, rodeint::ode_system_stiff_class::state_type y, double t0, double t1, double dt, bool save_state);
-RcppExport SEXP rodeint_integrate_adaptive_stiff_class(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
+Rcpp::NumericVector integrate_adaptive_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t0, double t1, double dt, bool save_state);
+RcppExport SEXP rodeint_integrate_adaptive_stiff_class(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP t0SEXP, SEXP t1SEXP, SEXP dtSEXP, SEXP save_stateSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t0(t0SEXP );
         Rcpp::traits::input_parameter< double >::type t1(t1SEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
         Rcpp::traits::input_parameter< bool >::type save_state(save_stateSEXP );
-        Rcpp::NumericVector __result = integrate_adaptive_stiff_class(s, system, y, t0, t1, dt, save_state);
+        Rcpp::NumericVector __result = integrate_adaptive_stiff_class(s, ode_system, y, t0, t1, dt, save_state);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -196,18 +196,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_times_stiff_r
-Rcpp::NumericMatrix integrate_times_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r system, rodeint::ode_system_stiff_r::state_type y, std::vector<double> times, double dt);
-RcppExport SEXP rodeint_integrate_times_stiff_r(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
+Rcpp::NumericMatrix integrate_times_stiff_r(rodeint::stepper s, rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, std::vector<double> times, double dt);
+RcppExport SEXP rodeint_integrate_times_stiff_r(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::NumericMatrix __result = integrate_times_stiff_r(s, system, y, times, dt);
+        Rcpp::NumericMatrix __result = integrate_times_stiff_r(s, ode_system, y, times, dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -215,18 +215,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_times_stiff_cpp
-Rcpp::NumericMatrix integrate_times_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp system, rodeint::ode_system_stiff_cpp::state_type y, std::vector<double> times, double dt);
-RcppExport SEXP rodeint_integrate_times_stiff_cpp(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
+Rcpp::NumericMatrix integrate_times_stiff_cpp(rodeint::stepper s, rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, std::vector<double> times, double dt);
+RcppExport SEXP rodeint_integrate_times_stiff_cpp(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::NumericMatrix __result = integrate_times_stiff_cpp(s, system, y, times, dt);
+        Rcpp::NumericMatrix __result = integrate_times_stiff_cpp(s, ode_system, y, times, dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -234,18 +234,18 @@ BEGIN_RCPP
 END_RCPP
 }
 // integrate_times_stiff_class
-Rcpp::NumericMatrix integrate_times_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class system, rodeint::ode_system_stiff_class::state_type y, std::vector<double> times, double dt);
-RcppExport SEXP rodeint_integrate_times_stiff_class(SEXP sSEXP, SEXP systemSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
+Rcpp::NumericMatrix integrate_times_stiff_class(rodeint::stepper s, rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, std::vector<double> times, double dt);
+RcppExport SEXP rodeint_integrate_times_stiff_class(SEXP sSEXP, SEXP ode_systemSEXP, SEXP ySEXP, SEXP timesSEXP, SEXP dtSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
         Rcpp::traits::input_parameter< rodeint::stepper >::type s(sSEXP );
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< std::vector<double> >::type times(timesSEXP );
         Rcpp::traits::input_parameter< double >::type dt(dtSEXP );
-        Rcpp::NumericMatrix __result = integrate_times_stiff_class(s, system, y, times, dt);
+        Rcpp::NumericMatrix __result = integrate_times_stiff_class(s, ode_system, y, times, dt);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -499,14 +499,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_r__get_pars
-SEXP ode_system_stiff_r__get_pars(rodeint::ode_system_stiff_r system);
-RcppExport SEXP rodeint_ode_system_stiff_r__get_pars(SEXP systemSEXP) {
+SEXP ode_system_stiff_r__get_pars(rodeint::ode_system_stiff_r ode_system);
+RcppExport SEXP rodeint_ode_system_stiff_r__get_pars(SEXP ode_systemSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
-        SEXP __result = ode_system_stiff_r__get_pars(system);
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_stiff_r__get_pars(ode_system);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -514,29 +514,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_r__set_pars
-void ode_system_stiff_r__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_r> system, SEXP pars);
-RcppExport SEXP rodeint_ode_system_stiff_r__set_pars(SEXP systemSEXP, SEXP parsSEXP) {
+void ode_system_stiff_r__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_r> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_stiff_r__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_r> >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_r> >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
-        ode_system_stiff_r__set_pars(system, pars);
+        ode_system_stiff_r__set_pars(ode_system, pars);
     }
     return R_NilValue;
 END_RCPP
 }
 // ode_system_stiff_r__derivs
-rodeint::ode_system_stiff_r::state_type ode_system_stiff_r__derivs(rodeint::ode_system_stiff_r system, rodeint::ode_system_stiff_r::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_stiff_r__derivs(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_stiff_r::state_type ode_system_stiff_r__derivs(rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_r__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_stiff_r::state_type __result = ode_system_stiff_r__derivs(system, y, t);
+        rodeint::ode_system_stiff_r::state_type __result = ode_system_stiff_r__derivs(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -544,16 +544,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_r__jacobian
-rodeint::ode_system_stiff_r::matrix_type ode_system_stiff_r__jacobian(rodeint::ode_system_stiff_r system, rodeint::ode_system_stiff_r::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_stiff_r__jacobian(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_stiff_r::matrix_type ode_system_stiff_r__jacobian(rodeint::ode_system_stiff_r ode_system, rodeint::ode_system_stiff_r::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_r__jacobian(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_stiff_r::matrix_type __result = ode_system_stiff_r__jacobian(system, y, t);
+        rodeint::ode_system_stiff_r::matrix_type __result = ode_system_stiff_r__jacobian(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -578,14 +578,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_cpp__get_pars
-SEXP ode_system_stiff_cpp__get_pars(rodeint::ode_system_stiff_cpp system);
-RcppExport SEXP rodeint_ode_system_stiff_cpp__get_pars(SEXP systemSEXP) {
+SEXP ode_system_stiff_cpp__get_pars(rodeint::ode_system_stiff_cpp ode_system);
+RcppExport SEXP rodeint_ode_system_stiff_cpp__get_pars(SEXP ode_systemSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
-        SEXP __result = ode_system_stiff_cpp__get_pars(system);
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_stiff_cpp__get_pars(ode_system);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -593,29 +593,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_cpp__set_pars
-void ode_system_stiff_cpp__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_cpp> system, SEXP pars);
-RcppExport SEXP rodeint_ode_system_stiff_cpp__set_pars(SEXP systemSEXP, SEXP parsSEXP) {
+void ode_system_stiff_cpp__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_cpp> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_stiff_cpp__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_cpp> >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_cpp> >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
-        ode_system_stiff_cpp__set_pars(system, pars);
+        ode_system_stiff_cpp__set_pars(ode_system, pars);
     }
     return R_NilValue;
 END_RCPP
 }
 // ode_system_stiff_cpp__derivs
-rodeint::ode_system_stiff_cpp::state_type ode_system_stiff_cpp__derivs(rodeint::ode_system_stiff_cpp system, rodeint::ode_system_stiff_cpp::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_stiff_cpp__derivs(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_stiff_cpp::state_type ode_system_stiff_cpp__derivs(rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_cpp__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_stiff_cpp::state_type __result = ode_system_stiff_cpp__derivs(system, y, t);
+        rodeint::ode_system_stiff_cpp::state_type __result = ode_system_stiff_cpp__derivs(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -623,16 +623,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_cpp__jacobian
-rodeint::ode_system_stiff_cpp::matrix_type ode_system_stiff_cpp__jacobian(rodeint::ode_system_stiff_cpp system, rodeint::ode_system_stiff_cpp::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_stiff_cpp__jacobian(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_stiff_cpp::matrix_type ode_system_stiff_cpp__jacobian(rodeint::ode_system_stiff_cpp ode_system, rodeint::ode_system_stiff_cpp::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_cpp__jacobian(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_stiff_cpp::matrix_type __result = ode_system_stiff_cpp__jacobian(system, y, t);
+        rodeint::ode_system_stiff_cpp::matrix_type __result = ode_system_stiff_cpp__jacobian(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -640,14 +640,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_class__get_pars
-SEXP ode_system_stiff_class__get_pars(rodeint::ode_system_stiff_class system);
-RcppExport SEXP rodeint_ode_system_stiff_class__get_pars(SEXP systemSEXP) {
+SEXP ode_system_stiff_class__get_pars(rodeint::ode_system_stiff_class ode_system);
+RcppExport SEXP rodeint_ode_system_stiff_class__get_pars(SEXP ode_systemSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
-        SEXP __result = ode_system_stiff_class__get_pars(system);
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_stiff_class__get_pars(ode_system);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -655,29 +655,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_class__set_pars
-void ode_system_stiff_class__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_class> system, SEXP pars);
-RcppExport SEXP rodeint_ode_system_stiff_class__set_pars(SEXP systemSEXP, SEXP parsSEXP) {
+void ode_system_stiff_class__set_pars(Rcpp::XPtr<rodeint::ode_system_stiff_class> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_stiff_class__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_class> >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_stiff_class> >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
-        ode_system_stiff_class__set_pars(system, pars);
+        ode_system_stiff_class__set_pars(ode_system, pars);
     }
     return R_NilValue;
 END_RCPP
 }
 // ode_system_stiff_class__derivs
-rodeint::ode_system_stiff_class::state_type ode_system_stiff_class__derivs(rodeint::ode_system_stiff_class system, rodeint::ode_system_stiff_class::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_stiff_class__derivs(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_stiff_class::state_type ode_system_stiff_class__derivs(rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_class__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_stiff_class::state_type __result = ode_system_stiff_class__derivs(system, y, t);
+        rodeint::ode_system_stiff_class::state_type __result = ode_system_stiff_class__derivs(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -685,16 +685,16 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_stiff_class__jacobian
-rodeint::ode_system_stiff_class::matrix_type ode_system_stiff_class__jacobian(rodeint::ode_system_stiff_class system, rodeint::ode_system_stiff_class::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_stiff_class__jacobian(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_stiff_class::matrix_type ode_system_stiff_class__jacobian(rodeint::ode_system_stiff_class ode_system, rodeint::ode_system_stiff_class::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_stiff_class__jacobian(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_stiff_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_stiff_class::matrix_type __result = ode_system_stiff_class__jacobian(system, y, t);
+        rodeint::ode_system_stiff_class::matrix_type __result = ode_system_stiff_class__jacobian(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -702,14 +702,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_r__get_pars
-SEXP ode_system_r__get_pars(rodeint::ode_system_r system);
-RcppExport SEXP rodeint_ode_system_r__get_pars(SEXP systemSEXP) {
+SEXP ode_system_r__get_pars(rodeint::ode_system_r ode_system);
+RcppExport SEXP rodeint_ode_system_r__get_pars(SEXP ode_systemSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_r >::type system(systemSEXP );
-        SEXP __result = ode_system_r__get_pars(system);
+        Rcpp::traits::input_parameter< rodeint::ode_system_r >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_r__get_pars(ode_system);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -717,29 +717,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_r__set_pars
-void ode_system_r__set_pars(Rcpp::XPtr<rodeint::ode_system_r> system, SEXP pars);
-RcppExport SEXP rodeint_ode_system_r__set_pars(SEXP systemSEXP, SEXP parsSEXP) {
+void ode_system_r__set_pars(Rcpp::XPtr<rodeint::ode_system_r> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_r__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_r> >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_r> >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
-        ode_system_r__set_pars(system, pars);
+        ode_system_r__set_pars(ode_system, pars);
     }
     return R_NilValue;
 END_RCPP
 }
 // ode_system_r__derivs
-rodeint::ode_system_r::state_type ode_system_r__derivs(rodeint::ode_system_r system, rodeint::ode_system_r::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_r__derivs(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_r::state_type ode_system_r__derivs(rodeint::ode_system_r ode_system, rodeint::ode_system_r::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_r__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_r >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_r >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_r::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_r::state_type __result = ode_system_r__derivs(system, y, t);
+        rodeint::ode_system_r::state_type __result = ode_system_r__derivs(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -763,14 +763,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_cpp__get_pars
-SEXP ode_system_cpp__get_pars(rodeint::ode_system_cpp system);
-RcppExport SEXP rodeint_ode_system_cpp__get_pars(SEXP systemSEXP) {
+SEXP ode_system_cpp__get_pars(rodeint::ode_system_cpp ode_system);
+RcppExport SEXP rodeint_ode_system_cpp__get_pars(SEXP ode_systemSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_cpp >::type system(systemSEXP );
-        SEXP __result = ode_system_cpp__get_pars(system);
+        Rcpp::traits::input_parameter< rodeint::ode_system_cpp >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_cpp__get_pars(ode_system);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -778,29 +778,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_cpp__set_pars
-void ode_system_cpp__set_pars(Rcpp::XPtr<rodeint::ode_system_cpp> system, SEXP pars);
-RcppExport SEXP rodeint_ode_system_cpp__set_pars(SEXP systemSEXP, SEXP parsSEXP) {
+void ode_system_cpp__set_pars(Rcpp::XPtr<rodeint::ode_system_cpp> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_cpp__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_cpp> >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_cpp> >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
-        ode_system_cpp__set_pars(system, pars);
+        ode_system_cpp__set_pars(ode_system, pars);
     }
     return R_NilValue;
 END_RCPP
 }
 // ode_system_cpp__derivs
-rodeint::ode_system_cpp::state_type ode_system_cpp__derivs(rodeint::ode_system_cpp system, rodeint::ode_system_cpp::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_cpp__derivs(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_cpp::state_type ode_system_cpp__derivs(rodeint::ode_system_cpp ode_system, rodeint::ode_system_cpp::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_cpp__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_cpp >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_cpp >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_cpp::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_cpp::state_type __result = ode_system_cpp__derivs(system, y, t);
+        rodeint::ode_system_cpp::state_type __result = ode_system_cpp__derivs(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -808,14 +808,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_class__get_pars
-SEXP ode_system_class__get_pars(rodeint::ode_system_class system);
-RcppExport SEXP rodeint_ode_system_class__get_pars(SEXP systemSEXP) {
+SEXP ode_system_class__get_pars(rodeint::ode_system_class ode_system);
+RcppExport SEXP rodeint_ode_system_class__get_pars(SEXP ode_systemSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_class >::type system(systemSEXP );
-        SEXP __result = ode_system_class__get_pars(system);
+        Rcpp::traits::input_parameter< rodeint::ode_system_class >::type ode_system(ode_systemSEXP );
+        SEXP __result = ode_system_class__get_pars(ode_system);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);
@@ -823,29 +823,29 @@ BEGIN_RCPP
 END_RCPP
 }
 // ode_system_class__set_pars
-void ode_system_class__set_pars(Rcpp::XPtr<rodeint::ode_system_class> system, SEXP pars);
-RcppExport SEXP rodeint_ode_system_class__set_pars(SEXP systemSEXP, SEXP parsSEXP) {
+void ode_system_class__set_pars(Rcpp::XPtr<rodeint::ode_system_class> ode_system, SEXP pars);
+RcppExport SEXP rodeint_ode_system_class__set_pars(SEXP ode_systemSEXP, SEXP parsSEXP) {
 BEGIN_RCPP
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_class> >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< Rcpp::XPtr<rodeint::ode_system_class> >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< SEXP >::type pars(parsSEXP );
-        ode_system_class__set_pars(system, pars);
+        ode_system_class__set_pars(ode_system, pars);
     }
     return R_NilValue;
 END_RCPP
 }
 // ode_system_class__derivs
-rodeint::ode_system_class::state_type ode_system_class__derivs(rodeint::ode_system_class system, rodeint::ode_system_class::state_type y, double t);
-RcppExport SEXP rodeint_ode_system_class__derivs(SEXP systemSEXP, SEXP ySEXP, SEXP tSEXP) {
+rodeint::ode_system_class::state_type ode_system_class__derivs(rodeint::ode_system_class ode_system, rodeint::ode_system_class::state_type y, double t);
+RcppExport SEXP rodeint_ode_system_class__derivs(SEXP ode_systemSEXP, SEXP ySEXP, SEXP tSEXP) {
 BEGIN_RCPP
     SEXP __sexp_result;
     {
         Rcpp::RNGScope __rngScope;
-        Rcpp::traits::input_parameter< rodeint::ode_system_class >::type system(systemSEXP );
+        Rcpp::traits::input_parameter< rodeint::ode_system_class >::type ode_system(ode_systemSEXP );
         Rcpp::traits::input_parameter< rodeint::ode_system_class::state_type >::type y(ySEXP );
         Rcpp::traits::input_parameter< double >::type t(tSEXP );
-        rodeint::ode_system_class::state_type __result = ode_system_class__derivs(system, y, t);
+        rodeint::ode_system_class::state_type __result = ode_system_class__derivs(ode_system, y, t);
         PROTECT(__sexp_result = Rcpp::wrap(__result));
     }
     UNPROTECT(1);

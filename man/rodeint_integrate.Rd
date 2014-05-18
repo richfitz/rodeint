@@ -18,7 +18,7 @@ integrate_times(stepper, ode_system, y, times, dt)
 \item{stepper}{A \code{stepper} object, created by
 \code{\link{make_stepper}}}
 
-\item{ode_system}{The ode_system system, created by
+\item{ode_system}{A system of ODEs, created by
 \code{\link{ode_system}}}
 
 \item{y}{Initial conditions}
