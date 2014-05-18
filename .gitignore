@@ -2,3 +2,4 @@ extra
 tests/testthat/.Rprofile
 tasks.md
 inst/web
+wiki
