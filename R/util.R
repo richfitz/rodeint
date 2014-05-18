@@ -15,6 +15,11 @@ assert_stepper <- function(x, name=deparse(substitute(x))) {
   assert_inherits(x, c("stepper", "stepper_stiff"), name)
 }
 
+assert_stepper_category <- function(category) {
+  match_arg(category, stepper_categories(),
+            "Invalid stepper category: %s must be one of %s")
+}
+
 assert_ode_system <- function(x, name=deparse(substitute(x))) {
   assert_inherits(x, c("ode_system", "ode_system_stiff"), name)
 }
@@ -102,4 +107,16 @@ assert_named <- function(x, empty_can_be_unnamed=TRUE,
 
 collapse <- function(x, sep=", ") {
   paste(x, collapse=sep)
+}
+
+## Like match.arg(), but does not allow for abbreviation.
+match_arg <- function(arg, choices, msg=NULL) {
+  assert_scalar(arg)
+  if (!(arg %in% choices)) {
+    if (is.null(msg)) {
+      stop("'arg' must be one of ", collapse(dQuote(choices)))
+    } else {
+      stop(sprintf(msg, arg, collapse(dQuote(choices))))
+    }
+  }
 }

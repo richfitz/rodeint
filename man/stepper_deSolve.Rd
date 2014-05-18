@@ -19,9 +19,7 @@ make_stepper_deSolve_controlled(algorithm, abs_tol = 1e-06, rel_tol = 1e-06)
 
 \item{algorithm}{The stepper algorithm (e.g. "runge_kutta4")}
 
-\item{...}{Additional parameters passed from \code{make_stepper}
-to either \code{make_stepper_basic} (none allowed) or
-\code{make_stepper_controlled}.}
+\item{...}{Additional parameters (still under development)}
 
 \item{abs_tol}{Absolute tolerance (see atol in deSolve docs for now)}
 

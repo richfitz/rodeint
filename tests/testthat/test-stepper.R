@@ -5,40 +5,26 @@ context("stepper")
 test_that("stepper lists", {
   expect_that(stepper_categories(),
               equals(c("basic", "controlled", "dense")))
-  expect_that(stepper_basic_algorithms(),
+  expect_that(stepper_algorithms("basic"),
               equals(c("euler", "modified_midpoint", "runge_kutta4",
                        "runge_kutta_cash_karp54",
                        "runge_kutta_fehlberg78",
                        "runge_kutta_dopri5")))
-  expect_that(stepper_controlled_algorithms(),
+  expect_that(stepper_algorithms("controlled"),
               equals(c("runge_kutta_cash_karp54",
                        "runge_kutta_fehlberg78",
                        "runge_kutta_dopri5",
                        "bulirsch_stoer")))
-  expect_that(stepper_dense_algorithms(),
+  expect_that(stepper_algorithms("dense"),
               equals(c("euler",
                        "runge_kutta_dopri5",
                        "bulirsch_stoer")))
 
-  expect_that(stepper_basic_algorithms(have_jacobian=TRUE),
-              equals(c(stepper_basic_algorithms(), "rosenbrock4")))
-  expect_that(stepper_controlled_algorithms(have_jacobian=TRUE),
-              equals(c(stepper_controlled_algorithms(), "rosenbrock4")))
-  expect_that(stepper_dense_algorithms(have_jacobian=TRUE),
-              equals(c(stepper_dense_algorithms(), "rosenbrock4")))
-
-  expect_that(stepper_algorithms("basic"),
-              is_identical_to(stepper_basic_algorithms()))
-  expect_that(stepper_algorithms("controlled"),
-              is_identical_to(stepper_controlled_algorithms()))
-  expect_that(stepper_algorithms("dense"),
-              is_identical_to(stepper_dense_algorithms()))
-  expect_that(stepper_algorithms("basic", TRUE),
-              is_identical_to(stepper_basic_algorithms(TRUE)))
-  expect_that(stepper_algorithms("controlled", TRUE),
-              is_identical_to(stepper_controlled_algorithms(TRUE)))
-  expect_that(stepper_algorithms("dense", TRUE),
-              is_identical_to(stepper_dense_algorithms(TRUE)))
+  for (category in stepper_categories()) {
+    expect_that(stepper_algorithms(category, has_jacobian=TRUE),
+                equals(c(stepper_algorithms(category),
+                         "rosenbrock4")))
+  }
 
   expect_that(stepper_algorithms("nonexistant"),
               throws_error("Invalid stepper category"))
@@ -47,15 +33,10 @@ test_that("stepper lists", {
 test_that("corner cases", {
   expect_that(make_stepper("nonexistant", "euler"),
               throws_error("Invalid stepper category"))
-  expect_that(make_stepper_basic("nonexistant"),
-              throws_error("Invalid algorithm"))
-  expect_that(make_stepper_controlled("nonexistant"),
-              throws_error("Invalid algorithm"))
-
   ## TODO: Expand this out and check nonscalar, negative.
   ## Controlled steppers take tolerance arguments that must be
   ## numeric:
-  expect_that(make_stepper_controlled("runge_kutta_cash_karp54", "a"),
+  expect_that(make_stepper("controlled", "runge_kutta_cash_karp54", "a"),
               throws_error("numeric"))
 })
 
@@ -65,7 +46,7 @@ test_that("construction", {
                       controlled=rep(1e-6, 2),
                       dense=rep(1e-6, 2))
   for (category in stepper_categories()) {
-    for (algorithm in stepper_basic_algorithms()) {
+    for (algorithm in stepper_algorithms("basic")) {
       if (can_make_stepper(category, algorithm)) {
         s <- make_stepper(category, algorithm)
         expect_that(s, is_a("stepper"))
@@ -86,9 +67,9 @@ test_that("construction", {
         ## Includes attributes.  This is just to make sure the stepper
         ## really was created correctly.  Don't rely on these numbers.
         category_id  <- match(category,  stepper_categories()) - 1L
-        algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
+        algorithm_id <- match(algorithm, stepper_algorithms("basic")) - 1L
         if (algorithm == "bulirsch_stoer") {
-          algorithm_id <- length(stepper_basic_algorithms())
+          algorithm_id <- length(stepper_algorithms("basic"))
         }
 
         cmp <- structure(c(category, algorithm),
@@ -118,7 +99,7 @@ test_that("tolerance", {
                      dense=tol_given)
 
   for (category in stepper_categories()) {
-    for (algorithm in stepper_basic_algorithms()) {
+    for (algorithm in stepper_algorithms("basic")) {
       if (can_make_stepper(category, algorithm)) {
         ## Set tolerances and see if they stick
         if (category == "basic") {
@@ -150,21 +131,21 @@ test_that("tolerance", {
 
 test_that("stiff steppers (really implicit)", {
   for (category in stepper_categories()) {
-    for (algorithm in stepper_basic_algorithms(TRUE)) {
+    for (algorithm in stepper_algorithms("basic", TRUE)) {
       if (can_make_stepper(category, algorithm, TRUE)) {
-        s <- make_stepper(category, algorithm, ublas_state=TRUE)
+        s <- make_stepper(category, algorithm, has_jacobian=TRUE)
         expect_that(s, is_a("stepper"))
         category_id <- match(category, stepper_categories()) - 1L
         if (algorithm == "rosenbrock4") {
-          algorithm_id <- length(stepper_basic_algorithms()) + 1L
+          algorithm_id <- length(stepper_algorithms("basic")) + 1L
           cmp <- structure(c(category, algorithm),
                            category_id=category_id,
                            algorithm_id=algorithm_id,
                            ublas_state=TRUE, needs_jacobian=TRUE)
         } else {
-          algorithm_id <- match(algorithm, stepper_basic_algorithms()) - 1L
+          algorithm_id <- match(algorithm, stepper_algorithms("basic")) - 1L
           if (algorithm == "bulirsch_stoer") {
-            algorithm_id <- length(stepper_basic_algorithms())
+            algorithm_id <- length(stepper_algorithms("basic"))
           }
 
           cmp <- structure(c(category, algorithm),
@@ -183,8 +164,8 @@ test_that("stiff steppers (really implicit)", {
 
 test_that("Can't make stiff stepper with nonstiff state", {
   for (category in stepper_categories()) {
-    expect_that(make_stepper(category, "rosenbrock4", ublas_state=FALSE),
-                throws_error("requires a uBLAS state"))
+    expect_that(make_stepper(category, "rosenbrock4", has_jacobian=FALSE),
+                throws_error("requires a Jacobian"))
   }
 })
 

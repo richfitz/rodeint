@@ -8,7 +8,7 @@ namespace rodeint {
 const bool stepper::ok_basic[]      = {true, true, true, true, true, true, false,true};
 const bool stepper::ok_controlled[] = {false,false,false,true, true, true, true, true};
 const bool stepper::ok_dense[]      = {true, false,false,false,false,true, true, true};
-const bool stepper::needs_ublas[]   = {false,false,false,false,false,false,false,true};
+const bool stepper::needs_jacobian[]= {false,false,false,false,false,false,false,true};
 
 std::string stepper::category_name(stepper::Category category) {
   std::string ret;
@@ -92,9 +92,9 @@ void stepper::validate(stepper::Category category,
       stop("Tolerances must be non-NA");
     }
   }
-  if (!ublas_state && needs_ublas[algorithm]) { //
+  if (!ublas_state && needs_jacobian[algorithm]) {
     stop("The stepper algorithm " + algorithm_name(algorithm) +
-         " requires a uBLAS state");
+         " requires a Jacobian");
   }
 }
 
@@ -279,6 +279,6 @@ Rcpp::CharacterVector stepper__details(rodeint::stepper s) {
   ret.attr("category_id")    = static_cast<int>(s.category_id());
   ret.attr("algorithm_id")   = static_cast<int>(s.algorithm_id());
   ret.attr("ublas_state")    = s.has_ublas_state();
-  ret.attr("needs_jacobian") = s.needs_jacobian();
+  ret.attr("needs_jacobian") = s.algorithm_needs_jacobian();
   return ret;
 }

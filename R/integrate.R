@@ -56,7 +56,7 @@
 ##' sys <- ode_system(derivs, pars)
 ##'
 ##' ## We also need a stepper (see the ?stepper help page)
-##' s <- make_stepper_dense("runge_kutta_dopri5")
+##' s <- make_stepper("dense", "runge_kutta_dopri5")
 ##'
 ##' ## Suppose we want output at these times:
 ##' times <- seq(0, 10, length=101)
@@ -214,7 +214,7 @@ integrate_times <- function(stepper, ode_system, y, times, dt) {
 make_integrate <- function(ode_system, ..., stepper=NULL,
                            integrate=integrate_adaptive) {
   if (is.null(stepper)) {
-    stepper <- make_stepper_controlled("runge_kutta_dopri5")
+    stepper <- make_stepper("controlled", "runge_kutta_dopri5")
   }
   assert_stepper(stepper)
   assert_ode_system(ode_system)

@@ -78,7 +78,7 @@ pars <- 0.5
 sys <- ode_system(derivs, pars)
 
 ## We also need a stepper (see the ?stepper help page)
-s <- make_stepper_dense("runge_kutta_dopri5")
+s <- make_stepper("dense", "runge_kutta_dopri5")
 
 ## Suppose we want output at these times:
 times <- seq(0, 10, length=101)

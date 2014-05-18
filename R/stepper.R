@@ -27,10 +27,8 @@
 ##' \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview}{possible
 ##' algorithms}!
 ##'
-##' The functions \code{stepper_basic_algorithms},
-##' \code{stepper_controlled_algorithms} and
-##' \code{stepper_dense_algorithms} return vectors of valid
-##' algorithms.
+##' The function \code{stepper_algorithms} return vectors of valid
+##' algorithms for a given category.
 ##'
 ##' The \code{runge_kutta_dopri5} stepper is described by \code{odint}
 ##' as possibly "the best default stepper", so probably start with
@@ -74,14 +72,10 @@
 ##' ## The three stepper categories are:
 ##' stepper_categories()
 ##'
-##' ## There are two ways of listing valid algorithms for a particular
-##' ## category: using stepper_algorithms(category):
+##' ## To return valid algorithms, use stepper_algorithms(category):
 ##' stepper_algorithms("controlled")
 ##'
-##' ## ...or using stepper_<category>_algorithms()
-##' stepper_controlled_algorithms()
-##'
-##' ## If you add have_jacobian=TRUE to these calls you'll get the
+##' ## If you add have_jacobian=TRUE to this call you'll get the
 ##' ## "rosenbrock4" stepper added to the list
 ##' stepper_algorithms("controlled", have_jacobian=TRUE)
 ##'
@@ -149,58 +143,42 @@ stepper$methods(details = function() {
   stepper__details(ptr)
 })
 
-## This is going to change at some point, but this is a list of the
-## possible controlled stepper algorithms.  Once I work out what to do
-## about non-controlled steppers (dense output, etc), then this might
-## change.
-
-##' Valid values for making a \code{\link{stepper}}.
-##' @title Lists of Stepper Algorithms
-##' @author Rich FitzJohn
-##' @export
 ##' @rdname stepper
-##' @param category Either "basic" or "controlled"
-##' @param have_jacobian Logical indicating if the stepper will work
-##' on problems with a Jacobian (this is a superset: every problem
-##' that provides a Jacobian will work fine with steppers that don't
-##' require a Jacobian).
-stepper_algorithms <- function(category, have_jacobian=FALSE) {
-  switch(category,
-         basic=stepper_basic_algorithms(have_jacobian),
-         controlled=stepper_controlled_algorithms(have_jacobian),
-         dense=stepper_dense_algorithms(have_jacobian),
-         stop("Invalid stepper category"))
-}
-
 ##' @export
-##' @rdname stepper
-stepper_basic_algorithms <- function(have_jacobian=FALSE) {
-  c("euler",
-    "modified_midpoint",
-    "runge_kutta4",
-    "runge_kutta_cash_karp54",
-    "runge_kutta_fehlberg78",
-    "runge_kutta_dopri5",
-    if (have_jacobian) "rosenbrock4")
-}
-
-##' @export
-##' @rdname stepper
-stepper_controlled_algorithms <- function(have_jacobian=FALSE) {
-  c("runge_kutta_cash_karp54",
-    "runge_kutta_fehlberg78",
-    "runge_kutta_dopri5",
-    "bulirsch_stoer",
-    if(have_jacobian) "rosenbrock4")
-}
-
-##' @export
-##' @rdname stepper
-stepper_dense_algorithms <- function(have_jacobian=FALSE) {
-  c("euler",
-    "runge_kutta_dopri5",
-    "bulirsch_stoer",
-    if(have_jacobian) "rosenbrock4")
+##' @param category Broad stepper strategy: "basic", "controlled" or
+##' "dense" (see details below)
+##' @param algorithm The stepper algorithm (e.g. "runge_kutta_dopri5"
+##' or "rosenbrock4").  Possible values are returned by
+##' \code{stepper_algorithms} and are described in the details below.
+##' @param abs_tol Absolute tolerance, used in the adaptive step
+##' size.  See the \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.controlled_steppers}{odeint
+##' documentation} for interpretation, but bigger numbers allow bigger
+##' steps at the cost of lower absolute accuracy.
+##' @param rel_tol As for \code{abs_tol}, but for \emph{relative}
+##' tolerance.
+##' @param has_jacobian Logical, indicating on whether the stepper
+##' should use the internal data structures required by the stiff
+##' systems.  This is likely to disappear soon, as it depends entirely
+##' on the system itself.  The default, NA, will switch based on the
+##' \code{algorithm} argument -- \code{rosenbrock4} is the stiff
+##' system stepper, and on the ode system itself.  To use other
+##' steppers with the stiff system, we need to set up normal steppers
+##' similarly.  At runtime we rebuild steppers if they are specfied
+##' incorrectly, so this argument will disappear soon.
+make_stepper <- function(category, algorithm,
+                         abs_tol=1e-6, rel_tol=1e-6,
+                         has_jacobian=NA) {
+  assert_stepper_category(category)
+  if (is.na(has_jacobian)) {
+    has_jacobian <- algorithm == "rosenbrock4"
+  }
+  if (category == "basic") {
+    if (!missing(abs_tol) || !missing(rel_tol)) {
+      warning("Ignoring provided tolerance arguments")
+    }
+    abs_tol <- rel_tol <- NA_real_
+  }
+  stepper(category, algorithm, has_jacobian, abs_tol, rel_tol)
 }
 
 ##' @export
@@ -209,63 +187,32 @@ stepper_categories <- function() {
   c("basic", "controlled", "dense")
 }
 
-##' @rdname stepper
 ##' @export
-make_stepper_basic <- function(algorithm, abs_tol=NA_real_, rel_tol=NA_real_,
-                               has_jacobian=NA) {
-  if (!is.na(abs_tol) || !is.na(rel_tol)) {
-    warning("Ignoring provided tolerance arguments")
-  }
-  if (is.na(has_jacobian)) {
-    has_jacobian <- algorithm == "rosenbrock4"
-  }
-  stepper("basic", algorithm, has_jacobian, NA_real_, NA_real_)
-}
-
-## TODO: See the comment about has_jacobian below.
 ##' @rdname stepper
-##' @export
-##' @param abs_tol Absolute tolerance (see odeint docs for now)
-##' @param rel_tol Relative tolerance (see odeint docs for now)
-##' @param has_jacobian Logical, indicating on whether the stepper
-##' should use the internal data structures required by the stiff
-##' systems.  This is likely to disappear soon, as it depends entirely
-##' on the system itself.  The default, NA, will switch based on the
-##' \code{algorithm} argument -- \code{rosenbrock4} is the stiff system
-##' stepper.  However, to use other steppers with the stiff system, we
-##' need to set up normal steppers similarly.  So probably at runtime
-##' this will just rebuild the stepper for us.
-make_stepper_controlled <- function(algorithm, abs_tol=1e-6, rel_tol=1e-6,
-                                    has_jacobian=NA) {
-  if (is.na(has_jacobian)) {
-    has_jacobian <- algorithm == "rosenbrock4"
-  }
-  stepper("controlled", algorithm, has_jacobian, abs_tol, rel_tol)
-}
-
-##' @rdname stepper
-##' @export
-make_stepper_dense <- function(algorithm, abs_tol=1e-6, rel_tol=1e-6,
-                               has_jacobian=NA) {
-  if (is.na(has_jacobian)) {
-    has_jacobian <- algorithm == "rosenbrock4"
-  }
-  stepper("dense", algorithm, has_jacobian, abs_tol, rel_tol)
-}
-
-##' @rdname stepper
-##' @export
-##' @param category Either "basic" or "controlled"
-##' @param algorithm The stepper algorithm (e.g. "runge_kutta4") - see
-##' lists in \code{\link{stepper_algorithms}}
-##' @param ... Additional parameters passed from \code{make_stepper}
-##' to either \code{make_stepper_basic} (none allowed) or
-##' \code{make_stepper_controlled}.
-make_stepper <- function(category, algorithm, ...) {
-  make <- switch(category,
-                 basic=make_stepper_basic,
-                 controlled=make_stepper_controlled,
-                 dense=make_stepper_dense,
-                 stop("Invalid stepper category"))
-  make(algorithm, ...)
+stepper_algorithms <- function(category, has_jacobian=FALSE) {
+  assert_stepper_category(category)
+  ## TODO: This can simplify if we build a small table with actual
+  ## stepper information in it - the same stuff that is in
+  ## src/stepper.cpp.
+  basic <- c("euler",
+             "modified_midpoint",
+             "runge_kutta4",
+             "runge_kutta_cash_karp54",
+             "runge_kutta_fehlberg78",
+             "runge_kutta_dopri5",
+             if (has_jacobian) "rosenbrock4")
+  controlled <- c("runge_kutta_cash_karp54",
+                  "runge_kutta_fehlberg78",
+                  "runge_kutta_dopri5",
+                  "bulirsch_stoer",
+                  if(has_jacobian) "rosenbrock4")
+  dense <- c("euler",
+             "runge_kutta_dopri5",
+             "bulirsch_stoer",
+             if(has_jacobian) "rosenbrock4")
+  switch(category,
+         basic=basic,
+         controlled=controlled,
+         dense=dense,
+         stop("Invalid stepper category")) # Can't get here.
 }

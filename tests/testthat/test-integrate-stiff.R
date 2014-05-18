@@ -29,9 +29,9 @@ test_that("integate_adaptive", {
                       atol=1e-8, rtol=1e-8)[-1,-1])
 
   for (category in stepper_categories()) {
-    for (algorithm in stepper_algorithms(category, have_jacobian=TRUE)) {
+    for (algorithm in stepper_algorithms(category, has_jacobian=TRUE)) {
       tolerance <- expected_tolerance(algorithm)
-      s <- make_stepper(category, algorithm, ublas_state=TRUE)
+      s <- make_stepper(category, algorithm, has_jacobian=TRUE)
 
       ## TODO: This is a bug
       if (category == "dense" && algorithm == "runge_kutta_dopri5") {
@@ -81,7 +81,7 @@ test_that("integate_adaptive", {
       ##
       ## This is doing a conversion for us behind the scenes.
       if (algorithm != "rosenbrock4") {
-        s_nonstiff <- make_stepper(category, algorithm, ublas_state=FALSE)
+        s_nonstiff <- make_stepper(category, algorithm, has_jacobian=FALSE)
         expect_that(integrate_adaptive(s_nonstiff, ode_r, y0, t0, t1, dt0),
                     is_identical_to(y_r))
         expect_that(integrate_adaptive(s_nonstiff, ode_cpp, y0, t0, t1, dt0),

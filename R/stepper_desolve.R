@@ -28,9 +28,7 @@ stepper_deSolve$methods(initialize=
 ##' @export
 ##' @param category Either "basic" or "controlled"
 ##' @param algorithm The stepper algorithm (e.g. "runge_kutta4")
-##' @param ... Additional parameters passed from \code{make_stepper}
-##' to either \code{make_stepper_basic} (none allowed) or
-##' \code{make_stepper_controlled}.
+##' @param ... Additional parameters (still under development)
 make_stepper_deSolve <- function(category, algorithm, ...) {
   make <- switch(category,
                  basic=make_stepper_deSolve_basic,

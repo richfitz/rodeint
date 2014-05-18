@@ -287,8 +287,8 @@ test_that("make_integrate", {
   dt0 <- 0.05
 
   ## Same as the default
-  s1 <- make_stepper_controlled("runge_kutta_dopri5")
-  s2 <- make_stepper_basic("runge_kutta4")
+  s1 <- make_stepper("controlled", "runge_kutta_dopri5")
+  s2 <- make_stepper("basic", "runge_kutta4")
 
   for (ode_system in list(ode_r, ode_cpp, ode_class)) {
     ## First, make my favourite thing about this -- converting f'(y, t)

@@ -209,8 +209,8 @@ public:
   bool has_ublas_state() const {
     return ublas_state;
   }
-  bool needs_jacobian() const {
-    return needs_ublas[algorithm];
+  bool algorithm_needs_jacobian() const {
+    return needs_jacobian[algorithm];
   }
 
   // This is the little accessor:
@@ -246,7 +246,7 @@ private:
   const static bool ok_basic[];
   const static bool ok_controlled[];
   const static bool ok_dense[];
-  const static bool needs_ublas[];
+  const static bool needs_jacobian[];
 
   // Check a bunch of stuff on intitialisation
   static std::string category_name(Category category);

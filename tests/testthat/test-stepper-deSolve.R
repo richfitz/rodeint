@@ -3,7 +3,7 @@ source("helper-rodeint.R")
 context("stepper_deSolve")
 
 test_that("basic steppers", {
-  for (algorithm in stepper_basic_algorithms()) {
+  for (algorithm in stepper_algorithms("basic")) {
     s <- make_stepper_deSolve_basic(algorithm)
     expect_that(s, is_a("stepper_deSolve"))
 
@@ -26,7 +26,7 @@ test_that("basic steppers", {
 })
 
 test_that("controlled steppers", {
-  for (algorithm in stepper_controlled_algorithms()) {
+  for (algorithm in stepper_algorithms("controlled")) {
     if (algorithm != "bulirsch_stoer") {
       s <- make_stepper_deSolve_controlled(algorithm)
       expect_that(s, is_a("stepper_deSolve"))
