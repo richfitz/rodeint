@@ -1,3 +1,5 @@
 figure
 cache
 .ghwiki
+compiled.Rmd
+compiled.md
