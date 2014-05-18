@@ -28,7 +28,7 @@
 ##' @title Integrate a System of ODEs
 ##' @param stepper A \code{stepper} object, created by
 ##' \code{\link{make_stepper}}
-##' @param ode_system The ode_system system, created by
+##' @param ode_system A system of ODEs, created by
 ##' \code{\link{ode_system}}
 ##' @param y Initial conditions
 ##' @param t0 Time to start the integration
