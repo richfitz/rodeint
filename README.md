@@ -7,7 +7,7 @@
 An R interface to [odeint](http://headmyshoulder.github.io/odeint-v2/downloads.html), using [Rcpp](http://www.rcpp.org/) for glue.
 
 ## Documentation
-Reference documentation is available here [here](http://richfitz.github.io/rodeint/) (generated with [staticdocs](https://github.com/hadley/staticdocs)).  Tutorial documentation and documentation for using compiled systems is not available yet.
+Reference documentation is available here [here](http://richfitz.github.io/rodeint/) (generated with [staticdocs](https://github.com/hadley/staticdocs)).  A tutorial introduction to making compiled systems is available [on the wiki](https://github.com/richfitz/rodeint/wiki/compiled).  General tutorial documentation is not available yet.
 
 As an example of what I'm aiming for, [here](https://github.com/richfitz/rodeint/blob/master/inst/examples/harmonic_oscillator_cpp.cpp) is a simple harmonic oscillator, implemented as a function.  The embedded R code at the bottom will run when passed through `Rcpp::sourceCpp`.
 
