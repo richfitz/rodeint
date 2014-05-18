@@ -135,7 +135,190 @@ impled by the conversion using <code>Rcpp::as<your_type>(SEXP)</code>.
 </dl></p>
   
     </div>
-      </div>
+
+    <div class="Warning">
+      <h2>Warning</h2>
+      
+      <p></p>
+  
+      <p>For performance reasons, we do not check that the function
+returned the correct length of derivatives.  If your function
+returns fewer than the correct number you'll get uninitialised
+values (which will cause the integration to fail) and if you
+return too many then you can crash R.  I might add better
+checking in a future version.</p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## Define a harmonic oscillator.  If you&#39;ve used deSolve, beware that
+## the function here differs in two respects: the order of the
+## arguments &#39;y&#39; and &#39;t&#39; are different (we take &#39;y&#39; first) and the
+## function does not return a list, but just the vector of
+## derivatives.  These changes are to match the design of the odeint
+## package.
+derivs &lt;- function(y, t, pars) {
+  c(y[2],
+    -y[1] - pars * y[2])
+}
+
+## You also must provide a starting parameter vector.
+pars &lt;- 0.5
+
+## Here is the system of differential equations:
+sys &lt;- ode_system(derivs, pars)
+
+## You can call the derivative function (not that you&#39;ll need to).  It
+## no longer takes a parameter argument, as that is kept within the
+## object.
+y &lt;- c(0, 1)
+t &lt;- 0
+sys$derivs(y, t)
+</div>
+<div class='output'>[1]  1.0 -0.5
+</div>
+<div class='input'>derivs(y, t, pars)
+</div>
+<div class='output'>[1]  1.0 -0.5
+</div>
+<div class='input'>
+## You can ask what parameters are stored in the object using the
+## &quot;get_pars()&quot; method
+sys$get_pars()
+</div>
+<div class='output'>[1] 0.5
+</div>
+<div class='input'>
+## And set new parameters with &quot;set_pars()&quot;
+sys$set_pars(pi)
+sys$derivs(y, t)
+</div>
+<div class='output'>[1]  1.000000 -3.141593
+</div>
+<div class='input'>
+## Running sys$show() or print(sys) (or just writing sys) will tell
+## you a little about the object
+print(sys)
+</div>
+<div class='output'>A system of ordinary differential equations
+
+Useful methods include:
+	derivs(y, t) -- compute dy/dt
+	set_pars(pars) -- set parameters
+	copy() -- create an independent copy of this system
+
+Integrate this system with functions in ?rodeint_integrate
+</div>
+<div class='input'>
+## It&#39;s important to know that these are &quot;reference class&quot; objects.
+## They don&#39;t obey R&#39;s usual copy semantics.  So if you do
+sys2 &lt;- sys
+
+## sys2 and sys are the *same* object.  If you set the parameers in
+## one it will set them in the other:
+sys2$set_pars(1)
+sys2$get_pars() # these have the same
+</div>
+<div class='output'>[1] 1
+</div>
+<div class='input'>sys$get_pars()  # parameters now
+</div>
+<div class='output'>[1] 1
+</div>
+<div class='input'>
+## To make an independent copy, use the &quot;copy()&quot; method
+sys2 &lt;- sys$copy() # sys2 is now independent from sys
+
+sys2$set_pars(2)
+sys2$get_pars() # these have *different*
+</div>
+<div class='output'>[1] 2
+</div>
+<div class='input'>sys$get_pars()  # parameters now
+</div>
+<div class='output'>[1] 1
+</div>
+<div class='input'>
+## If you know the Jacobian you can use that information with some
+## solvers.  The entry [i,j] in the Jacobian must be the derivative of
+## the ith equation with respect to the jth variable.
+jacobian &lt;- function(y, t, pars) {
+  rbind(c(0,  1),
+        c(-1, pars))
+}
+
+## Build the system like this:
+sys &lt;- ode_system(derivs, pars, jacobian)
+
+## Now print(sys) will tell you that there is a jacobian available.
+## You can call it the same way as derivs
+sys$jacobian(y, t)
+</div>
+<div class='output'>     [,1] [,2]
+[1,]    0  1.0
+[2,]   -1  0.5
+</div>
+<div class='input'>jacobian(y, t, pars)
+</div>
+<div class='output'>     [,1] [,2]
+[1,]    0  1.0
+[2,]   -1  0.5
+</div>
+<div class='input'>
+## You can also specify a &quot;validator&quot; for parameters.  This will check
+## that the parameters are reasonable before setting them.  If it
+## fails then parameters will not be set and will remain unmodified.
+## The function must take a single (the new parameters) and must throw
+## an error if it fails.  It need not return anything.
+##
+## For example, this function will check that all parameters are
+## non-negative.
+assert_nonnegative &lt;- function(pars) {
+  if (all(pars &lt; 0)) {
+    stop(&quot;Parameters must be non-negative&quot;)
+  }
+}
+
+## Then build the system as before.
+sys &lt;- ode_system(derivs, pars, validate=assert_nonnegative)
+
+## &lt;strong&gt;Not run&lt;/strong&gt;: 
+# ## Then if negative parameters are set we get an error
+# try(sys$set_pars(-1))
+# ## ...and the original parameters are unchanged:
+# sys$get_pars()
+# ## &lt;strong&gt;End(Not run)&lt;/strong&gt;
+
+## It is possible to directly use functions that were developed for
+## use with deSolve.  The deSolve-style equivalent of the above
+## derivatives function looks like this:
+derivs_deSolve &lt;- function(t, y, pars) {
+  dydt &lt;- c(y[2],
+            -y[1] - pars * y[2])
+  list(dydt)
+}
+
+## Using the argument &quot;deSolve_style&quot; we can tell ode_system that this
+## is a deSolve-style function:
+sys_deSolve &lt;- ode_system(derivs_deSolve, pars, deSolve_style=TRUE)
+
+## This will now behave in the way that rodeint expects systems to
+## behave and can be used as if it was not a deSolve style function.
+sys_deSolve$derivs(y, t)
+</div>
+<div class='output'>[1]  1.0 -0.5
+</div>
+<div class='input'>sys$derivs(y, t)
+</div>
+<div class='output'>[1]  1.0 -0.5
+</div>
+<div class='input'>
+## Notice that the y and t arguments are now in odeint order.
+
+## Using compiled systems is beyond the scope of the examples.  A
+## tutorial is coming soon.
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
       <li>ode_system</li><li>ode_system-class</li>
@@ -144,6 +327,11 @@ impled by the conversion using <code>Rcpp::as<your_type>(SEXP)</code>.
       
     </ul> -->
       
+    <h2>See also</h2>
+    
+<code><a href='rodeint_integrate.html'>integrate_adaptive</a></code>, which documents
+different ways of integrating objects generated by this function.
+
         
   </div>
 </div>

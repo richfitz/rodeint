@@ -43,17 +43,19 @@
 
 <p><img src="https://github.com/richfitz/rodeint/raw/master/extra/rodeint.png" alt="rodeint logo"/></p>
 
-<p>An R interface to <a href="http://headmyshoulder.github.io/odeint-v2/downloads.html">odeint</a>, using Rcpp for glue.</p>
+<p>An R interface to <a href="http://headmyshoulder.github.io/odeint-v2/downloads.html">odeint</a>, using <a href="http://www.rcpp.org/">Rcpp</a> for glue.</p>
 
-<p>This is under development and nothing is guaranteed to stay the same for any length of time.  Use at your own risk!</p>
+<h2>Documentation</h2>
+
+<p>Reference documentation is available here <a href="http://richfitz.github.io/rodeint/">here</a> (generated with <a href="https://github.com/hadley/staticdocs">staticdocs</a>).  Tutorial documentation and documentation for using compiled systems is not available yet.</p>
 
 <p>As an example of what I&#39;m aiming for, <a href="https://github.com/richfitz/rodeint/blob/master/inst/examples/harmonic_oscillator_cpp.cpp">here</a> is a simple harmonic oscillator, implemented as a function.  The embedded R code at the bottom will run when passed through <code>Rcpp::sourceCpp</code>.</p>
 
 <p>Similarly, <a href="https://github.com/richfitz/rodeint/blob/master/inst/examples/harmonic_oscillator_class.cpp">here</a> is the same system implemented as a small class.  The book-keeping here is slightly greater, but allows for arbitrary calculations after parameters are set (e.g., precomputing values that would be used at all times).</p>
 
-<p>The <code>make_integrate</code> function binds together target functions, integration backends and steppers.  It creates functions with relatively few arguments that are tailored to the way the function will be used.</p>
+<h2>Status</h2>
 
-<p>Documentation as the package evolves available <a href="http://richfitz.github.io/rodeint/">here</a> (generated with <a href="https://github.com/hadley/staticdocs">staticdocs</a>).</p>
+<p>The package is not yet stable, but most features are now in place aside from better deSolve support and low level stepper features.</p>
 
 
     <h2>Help topics</h2>
@@ -76,13 +78,10 @@
         <code><a href="partially_apply.html">partially_apply</a></code><br />Partially Apply Arguments to a Function</li>
             
       <li>
-        <code><a href="stepper_algorithms.html">stepper_algorithms</a></code>(stepper_basic_algorithms, stepper_categories, stepper_controlled_algorithms, stepper_dense_algorithms)<br />Lists of Stepper Algorithms</li>
-            
-      <li>
         <code><a href="stepper_deSolve.html">stepper_deSolve-class</a></code>(make_stepper_deSolve, make_stepper_deSolve_basic, make_stepper_deSolve_controlled, stepper_deSolve)<br />Stepper (deSolve wrappers)</li>
             
       <li>
-        <code><a href="stepper.html">stepper-class</a></code>(make_stepper, make_stepper_basic, make_stepper_controlled, make_stepper_dense, stepper)<br />Stepper</li>
+        <code><a href="stepper.html">stepper-class</a></code>(make_stepper, stepper, stepper_algorithms, stepper_categories)<br />Create ODE Stepper</li>
     
     </ul>
   </div>

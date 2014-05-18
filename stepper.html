@@ -35,62 +35,205 @@
         
       </header>
       
-      <h1>Stepper</h1>
+      <h1>Create ODE Stepper</h1>
 
 <div class="row">
   <div class="span8">
     <h2>Usage</h2>
-    <pre><div>make_stepper_basic(algorithm, abs_tol&nbsp;=&nbsp;NA_real_, rel_tol&nbsp;=&nbsp;NA_real_, ublas_state&nbsp;=&nbsp;NA)</div>
-<div>make_stepper_controlled(algorithm, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, ublas_state&nbsp;=&nbsp;NA)</div>
-<div>make_stepper_dense(algorithm, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, ublas_state&nbsp;=&nbsp;NA)</div>
-<div>make_stepper(category, algorithm, ...)</div></pre>
+    <pre><div>make_stepper(category, algorithm, abs_tol&nbsp;=&nbsp;1e-06, rel_tol&nbsp;=&nbsp;1e-06, has_jacobian&nbsp;=&nbsp;NA)</div>
+<div>stepper_categories()</div>
+<div>stepper_algorithms(category, has_jacobian&nbsp;=&nbsp;FALSE)</div></pre>
     
     <h2>Arguments</h2>
     <dl>
+      <dt>category</dt>
+      <dd>Broad stepper strategy: "basic", "controlled" or
+"dense" (see details below)</dd>
+      <dt>algorithm</dt>
+      <dd>The stepper algorithm (e.g. "runge_kutta_dopri5"
+or "rosenbrock4").  Possible values are returned by
+<code>stepper_algorithms</code> and are described in the details below.</dd>
       <dt>abs_tol</dt>
-      <dd>Absolute tolerance (see odeint docs for now)</dd>
+      <dd>Absolute tolerance, used in the adaptive step
+size.  See the <a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.controlled_steppers'>odeint
+documentation</a> for interpretation, but bigger numbers allow bigger
+steps at the cost of lower absolute accuracy.</dd>
       <dt>rel_tol</dt>
-      <dd>Relative tolerance (see odeint docs for now)</dd>
-      <dt>ublas_state</dt>
+      <dd>As for <code>abs_tol</code>, but for <em>relative</em>
+tolerance.</dd>
+      <dt>has_jacobian</dt>
       <dd>Logical, indicating on whether the stepper
 should use the internal data structures required by the stiff
 systems.  This is likely to disappear soon, as it depends entirely
 on the system itself.  The default, NA, will switch based on the
-<code>algorithm</code> argument -- <code>rosenbrock4</code> is the stiff system
-stepper.  However, to use other steppers with the stiff system, we
-need to set up normal steppers similarly.  So probably at runtime
-this will just rebuild the stepper for us.</dd>
-      <dt>category</dt>
-      <dd>Either "basic" or "controlled"</dd>
-      <dt>algorithm</dt>
-      <dd>The stepper algorithm (e.g. "runge_kutta4") - see
-lists in <code><a href='stepper_algorithms.html'>stepper_algorithms</a></code></dd>
-      <dt>...</dt>
-      <dd>Additional parameters passed from <code>make_stepper</code>
-to either <code>make_stepper_basic</code> (none allowed) or
-<code>make_stepper_controlled</code>.</dd>
+<code>algorithm</code> argument -- <code>rosenbrock4</code> is the stiff
+system stepper, and on the ode system itself.  To use other
+steppers with the stiff system, we need to set up normal steppers
+similarly.  At runtime we rebuild steppers if they are specfied
+incorrectly, so this argument will disappear soon.</dd>
     </dl>
     
-    <div class="Stepper">
-      <h2>Stepper</h2>
+    <div class="Create ODE Stepper">
+      <h2>Create ODE Stepper</h2>
       
     </div>
 
     <div class="Description">
       <h2>Description</h2>
       
-      <p>Stepper (documentation coming)</p>
+      <p>These functions, and the class <code>stepper</code> create a "stepper"
+object for solving a system of ordinary differential equations
+created with <code><a href='ode_system-class.html'>ode_system</a></code>.  They cannot yet be used
+for directly manually stepping a system of ODEs, but essentially
+act as placeholders collecting information about algorithms.</p>
   
     </div>
-      </div>
+
+    <div class="Details">
+      <h2>Details</h2>
+      
+      <p>There are three "categories" of stepper.  These are the broadest
+class of distinctions between approaches</p>
+  
+      <p><ul>
+<li> <code>basic</code>: step with a fixed step size
+</li>
+<li> <code>controlled</code>: step with a step size that is tuned based
+on errors reported by the stepper
+</li>
+<li> <code>dense</code>: as for <code>controlled</code>, but it can make use
+of "dense output" to interpolate points <em>between</em> steps where
+needed.
+</li>
+</ul></p>
+  
+      <p>These correspond to the concepts "Stepper", "Controlled Stepper",
+and "Dense Output Stepper" in the
+<a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html'>odeint
+documentation</a>.</p>
+  
+      <p>Within steppers there are "algorithms" - these are the
+mathematical rules used to advance the system.  Almost all the
+algorithms in odeint are supported by rodeint.  There are many
+<a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.stepper_overview'>possible
+algorithms</a>!</p>
+  
+      <p>The function <code>stepper_algorithms</code> return vectors of valid
+algorithms for a given category.</p>
+  
+      <p>The <code>runge_kutta_dopri5</code> stepper is described by <code>odint</code>
+as possibly "the best default stepper", so probably start with
+that and see the <code>odeint</code> documentation for when the other
+types might be more appropriate.  If your system has a Jacobian
+associated with it, you can also use the <code>rosenbrock4</code>
+algorithm (for any of the three categories).</p>
+  
+      <p>Steppers in the "controlled" and "dense" categories adjust their
+step size according the detected error, in an effort to take as
+big a step as possible while keeping the error to within some
+specified bounds.  The precise that this affects the stepper
+depends on the algorithm, and is described in the
+<a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/steppers.html#boost_numeric_odeint.odeint_in_detail.steppers.controlled_steppers'>odeint
+documentation</a>.  The parameter <code>abs_tol</code> changes the
+tolerance for <em>absolute</em> error while <code>abs_tol</code> changes
+the tolerance for <em>relative</em> error.  For the Runge Kutta
+steppers the interpretation is similar to <code>deSolve</code>, though I
+believe not identical.</p>
+  
+      <p>Some algorithms in odeint are not supported yet:
+<ul>
+<li> Any of the multistep steppers (<code>adams_bashforth</code>,
+<code>adams_moulton</code>, <code>adams_bashforth_moulton</code>) because
+these require explicit initialisation from another stepper and so
+represent an interface challenge.  However, they are apparently
+good for expensive functions, so might end up in the package soon.
+</li>
+<li> Any of the "symplectic" steppers (<code>symplectic_euler</code>,
+<code>symplectic_rkn_sb3a_mclachlan</code>,
+<code>symplectic_rkn_sb3a_m4_mclachlan</code>) because I've never done
+any work with Hamiltonian systems.  If these are implemented they
+will get a new category.
+</li>
+<li> The <code>velocity_verlet</code> stepper for second order systems.
+</li>
+<li> The <code>implicit_euler</code> stepper for stiff systems.
+</li>
+</ul></p>
+  
+      <p></p>
+  
+    </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## The three stepper categories are:
+stepper_categories()
+</div>
+<div class='output'>[1] &quot;basic&quot;      &quot;controlled&quot; &quot;dense&quot;     
+</div>
+<div class='input'>
+## To return valid algorithms, use stepper_algorithms(category):
+stepper_algorithms(&quot;controlled&quot;)
+</div>
+<div class='output'>[1] &quot;runge_kutta_cash_karp54&quot; &quot;runge_kutta_fehlberg78&quot; 
+[3] &quot;runge_kutta_dopri5&quot;      &quot;bulirsch_stoer&quot;         
+</div>
+<div class='input'>
+## If you add has_jacobian=TRUE to this call you&#39;ll get the
+## &quot;rosenbrock4&quot; stepper added to the list
+stepper_algorithms(&quot;controlled&quot;, has_jacobian=TRUE)
+</div>
+<div class='output'>[1] &quot;runge_kutta_cash_karp54&quot; &quot;runge_kutta_fehlberg78&quot; 
+[3] &quot;runge_kutta_dopri5&quot;      &quot;bulirsch_stoer&quot;         
+[5] &quot;rosenbrock4&quot;            
+</div>
+<div class='input'>
+## To build a stepper use the &quot;make_stepper&quot; function:
+s &lt;- make_stepper(&quot;controlled&quot;, &quot;runge_kutta_dopri5&quot;)
+print(s)
+</div>
+<div class='output'>A stepper for solving ordinary differential equations
+
+This object has no useful methods
+Pass this stepper to functions in ?rodeint_integrate
+
+Details:
+	category: controlled
+	algorithm: runge_kutta_dopri5
+	abs_tol: 1e-06
+	rel_tol: 1e-06
+</div>
+<div class='input'>
+## The tolerances can be adjusted by passing in optional arguments
+## &quot;abs_tol&quot; and &quot;rel_tol&quot;
+s &lt;- make_stepper(&quot;controlled&quot;, &quot;runge_kutta_dopri5&quot;,
+                  abs_tol=1e-4, rel_tol=1e-8)
+print(s)
+</div>
+<div class='output'>A stepper for solving ordinary differential equations
+
+This object has no useful methods
+Pass this stepper to functions in ?rodeint_integrate
+
+Details:
+	category: controlled
+	algorithm: runge_kutta_dopri5
+	abs_tol: 1e-04
+	rel_tol: 1e-08
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
-      <li>make_stepper</li><li>make_stepper_basic</li><li>make_stepper_controlled</li><li>make_stepper_dense</li><li>stepper</li><li>stepper-class</li>
+      <li>make_stepper</li><li>stepper</li><li>stepper-class</li><li>stepper_algorithms</li><li>stepper_categories</li>
     </ul>
     <ul>
       
     </ul> -->
       
+    <h2>See also</h2>
+    
+<code><a href='rodeint_integrate.html'>integrate_const</a></code>, which uses these steppers to solve
+systems of ODEs created by <code>link{ode_system}</code>.
+
         
   </div>
 </div>

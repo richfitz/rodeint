@@ -50,13 +50,13 @@ Rich FitzJohn
       <dt>ode_system</dt>
       <dd>A ode_system function (<code><a href='ode_system-class.html'>ode_system</a></code>).</dd>
       <dt>...</dt>
-      <dd>Additional arguments to bind.  Setting <code>t0</code> when a
-system is time independent means <code>t1</code> will be a function of
-elapsed time, which can be useful.  All integrate functions take a
-<code>dt</code> argument, so that's useful to bind too.  You can also
-pass in <code>set_as_defaults=TRUE</code> and the arguments, including
-<code>stepper</code> and <code>ode_system</code> will simply be set as defaults
-allowing some tuning later.</dd>
+      <dd>Additional <em>named</em> arguments to bind.  Setting
+<code>t0</code> when a system is time independent means <code>t1</code> will
+be a function of elapsed time, which can be useful.  All integrate
+functions take a <code>dt</code> argument, so that's useful to bind too.
+You can also pass in <code>set_as_defaults=TRUE</code> and the
+arguments, including <code>stepper</code> and <code>ode_system</code> will
+simply be set as defaults allowing some tuning later.</dd>
       <dt>stepper</dt>
       <dd>A stepper object. By default the controlled
 <code>runge_kutta_dopri</code> stepper is used with default tolerances.
@@ -77,19 +77,262 @@ stepper object.</dd>
       
       <p>Helper function for binding ode_systems, steppers and integration
 functions together.  This can be used to create a function
-<code>f(y0, t)</code> from your system of <code>f\'(y0, t)</code>.</p>
+<code>f(y0, t)</code> from your system of <code>f\'(y0, t)</code>.  These
+functions reurn <em>new functions</em> that have all the arguments
+that won't change set.  For those interested, this form of
+programming is nicely described
+<a href = 'http://adv-r.had.co.nz/Functional-programming.html#closures'>here</a>,
+(though you do not need to understand that to use these
+functions).</p>
   
     </div>
 
     <div class="Details">
       <h2>Details</h2>
       
+      <p>The motivation here is that often we just want to specify a set of
+ODE solving parameters once and then solve a system many times -
+at different initial conditions, or over different parameter
+sets.  This function simplifies this approach by remembering
+arguments passed in.</p>
+  
       <p>Note the opposite ordering of the <code>ode_system</code> and <code>stepper</code>
 arguments here compared with the rest of the package (following
-<code>odeint</code>.</p>
+<code>odeint</code>.  This is because a reasonable default stepper will
+be chosen if none is provided, but a system of ODEs is always
+required!</p>
+  
+      <p>The function <code>make_integrate_pars</code> is a higher-higher order
+function.  It returns a function that takes parameters of the
+system as an argument.  When <em>that</em> function is run it
+returns a function with arguments bound as for
+<code>make_integrate</code>.  This is a lot simpler than it sounds - see
+the final example.</p>
   
     </div>
-      </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## A system of differential equations describing a harmonic oscillator:
+derivs &lt;- function(y, t, pars) {
+  c(y[2],
+    -y[1] - pars * y[2])
+}
+
+## Parameters of the system:
+pars &lt;- 0.5
+
+## Build the system itself
+sys &lt;- ode_system(derivs, pars)
+
+## To integrate this system, we need to specify a stepper, initial
+## conditions, begining and end times and an initial step size:
+s &lt;- make_stepper(&quot;dense&quot;, &quot;runge_kutta_dopri5&quot;)
+y0 &lt;- c(0, 1)
+t0 &lt;- 0
+t1 &lt;- 5
+dt &lt;- 0.01
+integrate_adaptive(s, sys, y0, t0, t1, dt)
+</div>
+<div class='output'>[1] -0.2934480  0.1101724
+</div>
+<div class='input'>
+## If we wanted to run this from a couple of different starting points
+## it gets quite tedious:
+y1 &lt;- c(1, 1)
+y2 &lt;- c(2, 1)
+y3 &lt;- c(3, 1)
+integrate_adaptive(s, sys, y0, t0, t1, dt)
+</div>
+<div class='output'>[1] -0.2934480  0.1101724
+</div>
+<div class='input'>integrate_adaptive(s, sys, y1, t0, t1, dt)
+</div>
+<div class='output'>[1] -0.3299995  0.4036207
+</div>
+<div class='input'>integrate_adaptive(s, sys, y2, t0, t1, dt)
+</div>
+<div class='output'>[1] -0.3665507  0.6970691
+</div>
+<div class='input'>integrate_adaptive(s, sys, y3, t0, t1, dt)
+</div>
+<div class='output'>[1] -0.4031018  0.9905174
+</div>
+<div class='input'>
+## There is a lot of repetition here, and it&#39;s not actually that clear
+## what is changing.  The make_integrate functions binds arguments
+## that won&#39;t change (all arguments must be named!)
+f &lt;- make_integrate(sys, t0=t0, t1=t1, dt=dt, stepper=s)
+
+## Our function now has only a single required argument (y) and an
+## optional argument &quot;save_state&quot;:
+args(f)
+</div>
+<div class='output'>function (y, save_state = FALSE) 
+NULL
+</div>
+<div class='input'>
+## This is because all the arguments in integrate_adaptive that
+## matched the list given were set to the values provided.
+
+## This new function can then be run like so:
+f(y0)
+</div>
+<div class='output'>[1] -0.2934480  0.1101724
+</div>
+<div class='input'>f(y1)
+</div>
+<div class='output'>[1] -0.3299995  0.4036207
+</div>
+<div class='input'>f(y2)
+</div>
+<div class='output'>[1] -0.3665507  0.6970691
+</div>
+<div class='input'>f(y3)
+</div>
+<div class='output'>[1] -0.4031018  0.9905174
+</div>
+<div class='input'>
+## Or, to get intermediate values out:
+f(y0, save_state=TRUE)
+</div>
+<div class='output'>[1] -0.2934480  0.1101724
+attr(,&quot;steps&quot;)
+[1] 20
+attr(,&quot;t&quot;)
+ [1] 0.0000000 0.0100000 0.0550000 0.2575000 0.5286291 0.7997582 1.0708873
+ [8] 1.3420164 1.6309726 1.9199289 2.2088851 2.4978413 2.7867975 3.0757537
+[15] 3.3769160 3.6780782 3.9792404 4.2804026 4.5815649 4.9062149 5.0000000
+attr(,&quot;y&quot;)
+              [,1]         [,2]
+ [1,]  0.000000000  1.000000000
+ [2,]  0.009974875  0.994962646
+ [3,]  0.054223288  0.971390003
+ [4,]  0.238952009  0.848922710
+ [5,]  0.443225135  0.653105633
+ [6,]  0.591317282  0.437489651
+ [7,]  0.680232383  0.219316983
+ [8,]  0.711397537  0.013818617
+ [9,]  0.686939264 -0.177312376
+[10,]  0.612736126 -0.329041820
+[11,]  0.501208969 -0.434955990
+[12,]  0.365989311 -0.493041141
+[13,]  0.220704048 -0.505247071
+[14,]  0.077924018 -0.476803382
+[15,] -0.056715101 -0.412187698
+[16,] -0.167793270 -0.322159984
+[17,] -0.249321789 -0.217795884
+[18,] -0.298618473 -0.109820786
+[19,] -0.316069565 -0.007762507
+[20,] -0.302701104  0.086826934
+[21,] -0.293447959  0.110172429
+</div>
+<div class='input'>
+## If we also wanted &#39;t1&#39; to be left free, just don&#39;t provide it to
+## make_integrate:
+f &lt;- make_integrate(sys, t0=t0, dt=dt, stepper=s)
+args(f)
+</div>
+<div class='output'>function (y, t1, save_state = FALSE) 
+NULL
+</div>
+<div class='input'>
+## We now have a function f(y, t1).  Note that this approach has
+## convered a function dy/dt (derivs) into a function simply of time
+## and initial conditions.
+
+## This approach works with integrate_times, too, by specifying that
+## as the &quot;integrate&quot; argument:
+f_at_times &lt;- make_integrate(sys, dt=dt, stepper=s,
+                             integrate=integrate_times)
+
+## This returns a function taking &quot;y&quot; and &quot;times&quot; as arguments (no
+## save_state, because integrate_times does not accept that argument.
+args(f_at_times)
+</div>
+<div class='output'>function (y, times) 
+NULL
+</div>
+<div class='input'>
+## It can be run like so:
+tt &lt;- seq(0, 5, length=21)
+f_at_times(y0, tt)
+</div>
+<div class='output'>              [,1]        [,2]
+ [1,]  0.000000000  1.00000000
+ [2,]  0.232566467  0.85388370
+ [3,]  0.424212946  0.67503025
+ [4,]  0.568546731  0.47773963
+ [5,]  0.662691401  0.27570916
+ [6,]  0.707041898  0.08130374
+ [7,]  0.704856976 -0.09501040
+ [8,]  0.661732484 -0.24505382
+ [9,]  0.584999685 -0.36314410
+[10,]  0.483092454 -0.44613408
+[11,]  0.364924706 -0.49329775
+[12,]  0.239313411 -0.50608814
+[13,]  0.114474794 -0.48779664
+[14,] -0.002385602 -0.44314438
+[15,] -0.105374905 -0.37783875
+[16,] -0.190103724 -0.29812379
+[17,] -0.253765888 -0.21035157
+[18,] -0.295115971 -0.12059842
+[19,] -0.314358881 -0.03434291
+[20,] -0.312967362  0.04378464
+[21,] -0.293447959  0.11017243
+attr(,&quot;steps&quot;)
+[1] 20
+attr(,&quot;t&quot;)
+ [1] 0.00 0.25 0.50 0.75 1.00 1.25 1.50 1.75 2.00 2.25 2.50 2.75 3.00 3.25 3.50
+[16] 3.75 4.00 4.25 4.50 4.75 5.00
+attr(,&quot;y&quot;)
+[1] -0.2934480  0.1101724
+</div>
+<div class='input'>
+## Finally, sometimes it is useful to easily apply the function over a
+## series of parameters.  To do this, use make_integrate_pars.  The
+## calling sequence is the same as above.
+g &lt;- make_integrate_pars(sys, t0=t0, dt=dt, stepper=s)
+
+## This returns a function of &#39;pars&#39; only:
+args(g)
+</div>
+<div class='output'>function (pars) 
+NULL
+</div>
+<div class='input'>
+## When run with parameters, this function returns a function of y and t1:
+args(g(pars))
+</div>
+<div class='output'>function (y, t1, save_state = FALSE) 
+NULL
+</div>
+<div class='input'>
+## So
+g(pars)(y0, t1)
+</div>
+<div class='output'>[1] -0.2934480  0.1101724
+</div>
+<div class='input'>
+## sets parametes to pars, and then integrates with initial conditions
+## y0 up until time t1, using t0, dt and the stepper provided above.
+
+## This makes it easy to explore how the system changes over parameter
+## space
+g &lt;- make_integrate_pars(sys, y=y0, t0=t0, t1=1, dt=dt, stepper=s)
+
+g(pars * 0.9)()
+</div>
+<div class='output'>[1] 0.6780312 0.2959686
+</div>
+<div class='input'>g(pars)()
+</div>
+<div class='output'>[1] 0.6626914 0.2757092
+</div>
+<div class='input'>g(pars * 1.1)()
+</div>
+<div class='output'>[1] 0.6478414 0.2565744
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
       <li>make_integrate</li><li>make_integrate_pars</li>
@@ -98,6 +341,12 @@ arguments here compared with the rest of the package (following
       
     </ul> -->
       
+    <h2>See also</h2>
+    
+<code><a href='rodeint_integrate.html'>integrate_adaptive</a></code>, which this function
+wraps around, and <code><a href='ode_system-class.html'>ode_system</a></code> for building a system
+of ODEs to integrate.
+
     
     <h2>Author</h2>
     

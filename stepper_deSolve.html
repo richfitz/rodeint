@@ -51,9 +51,7 @@
       <dt>algorithm</dt>
       <dd>The stepper algorithm (e.g. "runge_kutta4")</dd>
       <dt>...</dt>
-      <dd>Additional parameters passed from <code>make_stepper</code>
-to either <code>make_stepper_basic</code> (none allowed) or
-<code>make_stepper_controlled</code>.</dd>
+      <dd>Additional parameters (still under development)</dd>
       <dt>abs_tol</dt>
       <dd>Absolute tolerance (see atol in deSolve docs for now)</dd>
       <dt>rel_tol</dt>
@@ -68,7 +66,10 @@ to either <code>make_stepper_basic</code> (none allowed) or
     <div class="Description">
       <h2>Description</h2>
       
-      <p>Stepper (documentation coming)</p>
+      <p>Wrapper around <code>deSolve</code> to allow them to use the integration
+functions in this package, even though <code>deSolve</code> will do all
+the integration.  This section is experimental, and prone to
+change.  Please avoid at the moment.</p>
   
     </div>
       </div>

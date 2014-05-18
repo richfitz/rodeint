@@ -53,7 +53,7 @@ Rich FitzJohn
       <dd>A <code>stepper</code> object, created by
 <code><a href='stepper.html'>make_stepper</a></code></dd>
       <dt>ode_system</dt>
-      <dd>The ode_system system, created by
+      <dd>A system of ODEs, created by
 <code><a href='ode_system-class.html'>ode_system</a></code></dd>
       <dt>y</dt>
       <dd>Initial conditions</dd>
@@ -70,7 +70,8 @@ Rich FitzJohn
       <dt>save_state</dt>
       <dd>Logical: return information about intermediate
 points as an attribute.  Not applicable for
-<code>integrate_times</code>.</dd>
+<code>integrate_times</code>, which always returns information about
+intermediate points.</dd>
     </dl>
     
     <div class="Integrate a System of ODEs">
@@ -81,23 +82,209 @@ points as an attribute.  Not applicable for
     <div class="Description">
       <h2>Description</h2>
       
-      <p>Integrate a system of ODEs</p>
+      <p>Integrate a system of ordinary differential equations (ODEs).
+This is the low-level interface that corresponds exactly to the
+<code>ideint</code> interface.  An easier to use, more R-ish, interface
+is available using <code><a href='make_integrate.html'>make_integrate</a></code>.</p>
   
     </div>
 
     <div class="Details">
       <h2>Details</h2>
       
-      <p>integrate_const: "Equidistant observer calls"</p>
+      <p>There are four different integration functions here.  See the
+odeint documentation for more detail about the precice
+differences.  The summary, though, is:</p>
   
-      <p>integrate_n_steps: "Integrate a given number of steps"</p>
+      <p><ul>
+<li> <code>integrate_const</code> "Equidistant observer calls"
+</li>
+<li> <code>integrate_n_steps</code> "Integrate a given number of steps"
+</li>
+<li> <code>integrate_adaptive</code> "Observer calls at each step"
+</li>
+<li> <code>integrate_times</code> "Observer calls at given time points"
+</li>
+</ul></p>
   
-      <p>integrate_adaptive "Observer calls at each step"</p>
+      <p><a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/integrate_functions.html'>This page</a>
+provides much more detail. The functions here are direct wrappers
+of the odeint functions, so the interpretation is identical.</p>
   
-      <p>integrate_times: "Observer calls at given time points"</p>
+      <p>If you just want the end-points, <code>integrate_adaptive</code> is
+probably the function to use.  If you want to know intermediate
+values at particular times too, use <code>integrate_times</code>.  The
+functions <code>integrate_const</code> and <code>integrate_n_steps</code> are
+provided more for completeness than for utility, but they may be
+useful in specific applications.</p>
   
     </div>
-      </div>
+    
+    <h2 id="examples">Examples</h2>
+    <pre class="examples"><div class='input'>## Picking up with the harmonic oscillator from the ode_system
+## example:
+derivs &lt;- function(y, t, pars) {
+  c(y[2],
+    -y[1] - pars * y[2])
+}
+
+## Parameters of the system:
+pars &lt;- 0.5
+
+## Build the system itself
+sys &lt;- ode_system(derivs, pars)
+
+## We also need a stepper (see the ?stepper help page)
+s &lt;- make_stepper(&quot;dense&quot;, &quot;runge_kutta_dopri5&quot;)
+
+## Suppose we want output at these times:
+times &lt;- seq(0, 10, length=101)
+
+## Starting from this initial state:
+y0 &lt;- c(0, 1)
+
+## Initial step size guess:
+dt &lt;- 0.01
+
+## This intergrates the system (all integrate_ functions take stepper,
+## system, y as the first theree arguments).
+y &lt;- integrate_times(s, sys, y0, times, dt)
+
+## Here are the variables changing over time:
+matplot(times, y, type=&quot;l&quot;)
+</div>
+<p><img src='rodeint_integrate-2.png' alt='' width='400' height='400' /></p>
+<div class='input'>
+## The result also has useful attributes.  The &quot;t&quot; attribute is the
+## times (this is the same as &#39;times&#39; here)
+attr(y, &quot;t&quot;)
+</div>
+<div class='output'>  [1]  0.0  0.1  0.2  0.3  0.4  0.5  0.6  0.7  0.8  0.9  1.0  1.1  1.2  1.3  1.4
+ [16]  1.5  1.6  1.7  1.8  1.9  2.0  2.1  2.2  2.3  2.4  2.5  2.6  2.7  2.8  2.9
+ [31]  3.0  3.1  3.2  3.3  3.4  3.5  3.6  3.7  3.8  3.9  4.0  4.1  4.2  4.3  4.4
+ [46]  4.5  4.6  4.7  4.8  4.9  5.0  5.1  5.2  5.3  5.4  5.5  5.6  5.7  5.8  5.9
+ [61]  6.0  6.1  6.2  6.3  6.4  6.5  6.6  6.7  6.8  6.9  7.0  7.1  7.2  7.3  7.4
+ [76]  7.5  7.6  7.7  7.8  7.9  8.0  8.1  8.2  8.3  8.4  8.5  8.6  8.7  8.8  8.9
+ [91]  9.0  9.1  9.2  9.3  9.4  9.5  9.6  9.7  9.8  9.9 10.0
+</div>
+<div class='input'>
+## The &quot;steps&quot; attributes contains the number of steps the system took
+attr(y, &quot;steps&quot;)
+</div>
+<div class='output'>[1] 34
+</div>
+<div class='input'>
+## Here, the number is lower than the number of times!  This is
+## because we used a &quot;dense output stepper&quot; which can interpolate back
+## over times that have passed.  See the &quot;See also&quot; section for a link
+## to the odeint help about this.
+
+## The &quot;y&quot; attribute contains the final system state - here it will be
+## the same as the last row of &#39;y&#39; itself
+attr(y, &quot;y&quot;)
+</div>
+<div class='output'>[1] -0.02160347 -0.07397367
+</div>
+<div class='input'>y[nrow(y),]
+</div>
+<div class='output'>[1] -0.02160347 -0.07397367
+</div>
+<div class='input'>
+## If you don&#39;t care about intermediate times, the
+## &quot;integrate_adaptive&quot; function is probably the right one to use.
+y_a &lt;- integrate_adaptive(s, sys, y0, min(times), max(times), dt)
+y_a
+</div>
+<div class='output'>[1] -0.02160347 -0.07397367
+</div>
+<div class='input'>
+## Here we jump all the way to the final time as quickly as possible.
+y_a
+</div>
+<div class='output'>[1] -0.02160347 -0.07397367
+</div>
+<div class='input'>attr(y, &quot;y&quot;)
+</div>
+<div class='output'>[1] -0.02160347 -0.07397367
+</div>
+<div class='input'>
+## It&#39;s possible to remember the steps taken by usin the &quot;save_state&quot;
+## argument.
+y_a &lt;- integrate_adaptive(s, sys, y0, min(times), max(times), dt,
+                          save_state=TRUE)
+
+## Now y_a contains three attributes, the same as returned by
+## integrate_times.  &quot;t&quot; is the vector of times that the stepper
+## stopped at:
+attr(y_a, &quot;t&quot;)
+</div>
+<div class='output'> [1]  0.0000000  0.0100000  0.0550000  0.2575000  0.5286291  0.7997582
+ [7]  1.0708873  1.3420164  1.6309726  1.9199289  2.2088851  2.4978413
+[13]  2.7867975  3.0757537  3.3769160  3.6780782  3.9792404  4.2804026
+[19]  4.5815649  4.9062149  5.2308649  5.5555149  5.8801650  6.2048150
+[25]  6.5294650  6.8677236  7.2059821  7.5442406  7.8969110  8.2710404
+[31]  8.6451698  9.0192992  9.3934286  9.7675581 10.0000000
+</div>
+<div class='input'>
+## &quot;y&quot; contains the y values at these points, wherever they are:
+attr(y_a, &quot;y&quot;)
+</div>
+<div class='output'>              [,1]         [,2]
+ [1,]  0.000000000  1.000000000
+ [2,]  0.009974875  0.994962646
+ [3,]  0.054223288  0.971390003
+ [4,]  0.238952009  0.848922710
+ [5,]  0.443225135  0.653105633
+ [6,]  0.591317282  0.437489651
+ [7,]  0.680232383  0.219316983
+ [8,]  0.711397537  0.013818617
+ [9,]  0.686939264 -0.177312376
+[10,]  0.612736126 -0.329041820
+[11,]  0.501208969 -0.434955990
+[12,]  0.365989311 -0.493041141
+[13,]  0.220704048 -0.505247071
+[14,]  0.077924018 -0.476803382
+[15,] -0.056715101 -0.412187698
+[16,] -0.167793270 -0.322159984
+[17,] -0.249321789 -0.217795884
+[18,] -0.298618473 -0.109820786
+[19,] -0.316069565 -0.007762507
+[20,] -0.302701104  0.086826934
+[21,] -0.262144225  0.158870217
+[22,] -0.202383887  0.204797941
+[23,] -0.132060540  0.224094028
+[24,] -0.059538647  0.218887991
+[25,]  0.007858600  0.193353173
+[26,]  0.066468459  0.151073056
+[27,]  0.109028144  0.099619884
+[28,]  0.133597519  0.045785838
+[29,]  0.140335725 -0.006429422
+[30,]  0.129061730 -0.051716116
+[31,]  0.103426366 -0.082750940
+[32,]  0.069114475 -0.098049484
+[33,]  0.031935795 -0.098366179
+[34,] -0.002929415 -0.086217132
+[35,] -0.021603470 -0.073973666
+</div>
+<div class='input'>
+## Here is the dense output (thick lines) with the actual observed
+## spots overlaid.  You can see the step size change at the beginning
+## of the problem until the stepper works out how fast it can go while
+## achieving the required accuracy.
+matplot(times, y, type=&quot;l&quot;, col=c(&quot;grey&quot;, &quot;pink&quot;), lty=1, lwd=10,
+        xlim=c(0, 2))
+</div>
+<p><img src='rodeint_integrate-22.png' alt='' width='400' height='400' /></p>
+<div class='input'>matlines(attr(y_a, &quot;t&quot;), attr(y_a, &quot;y&quot;), type=&quot;o&quot;, pch=19)
+</div>
+<p><img src='rodeint_integrate-24.png' alt='' width='400' height='400' /></p>
+<div class='input'>
+## Manually specifying the stepper and step size and passing around 6
+## or so parameters all the time gets old, so there is a function
+## &quot;make_integrate&quot; to help collect everything together.  See
+## ?make_integrate for more information.
+</div></pre>
+  </div>
   <div class="span4">
     <!-- <ul>
       <li>integrate_adaptive</li><li>integrate_const</li><li>integrate_n_steps</li><li>integrate_times</li>
@@ -106,6 +293,19 @@ points as an attribute.  Not applicable for
       
     </ul> -->
       
+    <h2>See also</h2>
+    
+<code><a href='stepper.html'>make_stepper</a></code> for building steppers and for
+information about possible algorithms, <code><a href='ode_system-class.html'>ode_system</a></code> for
+building a sytem of ODEs, and <code><a href='make_integrate.html'>make_integrate</a></code> for a
+higher-level interface to these functions.
+
+The odeint documentation also has useful reference information on
+<a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/integrate_functions.html'>differences
+between the four integrate functions</a>, and how
+<a href = 'http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/concepts/dense_output_stepper.html'>dense
+output steppers</a> work.
+
     
     <h2>Author</h2>
     
