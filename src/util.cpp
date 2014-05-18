@@ -18,11 +18,11 @@ namespace rodeint {
 //   * t1 < t0, dt = 0 -- ERR: integration not possible
 void check_dt(double t0, double t1, double dt) {
   if (dt == 0) {
-    Rcpp::stop("dt cannot be zero");
+    util::stop("dt cannot be zero");
   } else if (t0 != t1) {
     const bool t_forwards = t1 > t0, dt_forwards = dt > 0;
     if (t_forwards != dt_forwards) {
-      Rcpp::stop("dt has the wrong sign for t0, t1 pair");
+      util::stop("dt has the wrong sign for t0, t1 pair");
     }
   }
 }
@@ -31,7 +31,7 @@ namespace util {
 
 size_t safe_size_t_from_r(int n) {
   if (n < 0) {
-    Rcpp::stop("Required a non-negative value");
+    util::stop("Required a non-negative value");
   }
   return static_cast<size_t>(n);
 }

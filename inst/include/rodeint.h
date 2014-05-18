@@ -27,6 +27,7 @@
 // Rcpp.h -- after this point anything is allowed to include Rcpp
 // without causing a hassle.
 #include <rodeint/rcpp_pre.hpp>
+#include <rodeint/common.hpp>
 
 #include <Rcpp.h>
 

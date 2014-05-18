@@ -1,6 +1,7 @@
 #ifndef _RODEINT_UTIL_HPP_
 #define _RODEINT_UTIL_HPP_
 
+#include <rodeint/common.hpp>
 #include <Rcpp.h>
 #include <vector>
 #include <sstream> // std::stringstream
@@ -17,7 +18,7 @@ template <typename T>
 void check_ptr_valid(Rcpp::XPtr<T> p) {
   T* test = p;
   if (test == NULL) {
-    Rcpp::stop("Pointer is NULL - please run rebuild()");
+    util::stop("Pointer is NULL - please run rebuild()");
   }
 }
 
@@ -26,7 +27,7 @@ Rcpp::NumericMatrix
 to_rcpp_matrix_by_row(const std::vector<T>& x) {
   const size_t nr = x.size();
   if (nr == 0) {
-    Rcpp::stop("Can't make matrix of empty vector");
+    util::stop("Can't make matrix of empty vector");
   }
   Rcpp::NumericMatrix ret(static_cast<int>(nr),
                           static_cast<int>(x.begin()->size()));
@@ -44,7 +45,7 @@ Rcpp::NumericMatrix
 to_rcpp_matrix_by_col(const std::vector<T>& x) {
   const size_t nc = x.size();
   if (nc == 0) {
-    Rcpp::stop("Can't make matrix of empty vector");
+    util::stop("Can't make matrix of empty vector");
   }
   Rcpp::NumericMatrix ret(static_cast<int>(x.begin()->size()),
                           static_cast<int>(nc));
@@ -59,7 +60,7 @@ template<typename T>
 std::string to_string(T x) {
   std::ostringstream o;
   if (!(o << x))
-    Rcpp::stop("String conversion failure");
+    util::stop("String conversion failure");
   return o.str();
 }
 
@@ -86,7 +87,7 @@ bool is_sorted(ForwardIterator first, ForwardIterator last,
 
 inline void check_length(size_t recieved, size_t expected) {
   if (expected != recieved)
-    Rcpp::stop("Incorrect length input; expected " +
+    util::stop("Incorrect length input; expected " +
                to_string(expected) + ", recieved " +
                to_string(recieved));
 }

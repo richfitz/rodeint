@@ -23,12 +23,10 @@
 #include <string>
 #include <vector>
 
-#include <rodeint/stop.hpp>
+#include <rodeint/common.hpp>
 #include <boost/any.hpp>
 
 namespace rodeint {
-typedef std::vector<double> vector_stl;
-typedef boost::numeric::ublas::vector<double> vector_ublas;
 
 // 1. Basic stepper algorithms
 typedef
@@ -220,7 +218,7 @@ public:
       Stepper ret = boost::any_cast<Stepper>(stepper_odeint);
       return ret;
     } catch (const boost::bad_any_cast&) {
-      Rcpp::stop("Failed to get stepper");
+      util::stop("Failed to get stepper");
       return Stepper(); // Won't get here.
     }
   }
@@ -287,7 +285,7 @@ boost::any stepper::construct(stepper::Category category,
   case DENSE:
     return construct_dense<T>(algorithm, abs_tol, rel_tol);
   default:
-    stop("Invalid category"); // defensive
+    util::stop("Invalid category"); // defensive
   }
   return boost::any(); // Won't get here.
 }

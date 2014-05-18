@@ -41,7 +41,7 @@ def integrate(return_type, algorithms, storage):
 ${return_type} run() {
   switch(s.category_id()) {${switch}
   default:
-    stop("Unimplemented category"); // TODO: give details
+    util::stop("Unimplemented category"); // TODO: give details
     return ${return_type}(); // never get here
   }
 }"""
@@ -61,7 +61,7 @@ def integrate_algorithms(return_type, category, algorithms, storage):
 ${return_type} run_${category}() {
   switch(s.algorithm_id()) {${switch}
   default:
-    stop("Unimplemented algorithm"); // TODO: give details
+    util::stop("Unimplemented algorithm"); // TODO: give details
     return ${return_type}(); // never get here
   }
 }"""

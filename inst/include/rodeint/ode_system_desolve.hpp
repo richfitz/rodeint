@@ -39,7 +39,7 @@ public:
 private:
   void copy_pars_to_deSolve() {
     if (pars_deSolve == NULL) {
-      Rcpp::stop("Whoa, not copying into a null ptr, crazy person");
+      util::stop("Whoa, not copying into a null ptr, crazy person");
     }
     std::copy(pars.begin(), pars.end(), pars_deSolve);
   }

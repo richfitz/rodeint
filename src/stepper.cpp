@@ -1,5 +1,5 @@
 #include <rodeint/stepper.hpp>
-#include <Rcpp.h> // Rcpp::stop
+#include <Rcpp.h> // CharacterVector
 
 namespace rodeint {
 
@@ -16,7 +16,7 @@ std::string stepper::category_name(stepper::Category category) {
   case BASIC:      return "basic";
   case CONTROLLED: return "controlled";
   case DENSE:      return "dense";
-  default: stop("Invalid category");
+  default: util::stop("Invalid category");
   }
 }
 
@@ -31,7 +31,7 @@ std::string stepper::algorithm_name(stepper::Algorithm algorithm) {
   case RUNGE_KUTTA_DOPRI5:      return "runge_kutta_dopri5";
   case BULIRSCH_STOER:          return "bulirsch_stoer";
   case ROSENBROCK4:             return "rosenbrock4";
-  default: stop("Invalid algorithm");
+  default: util::stop("Invalid algorithm");
   }
 }
 
@@ -43,7 +43,7 @@ stepper::category_from_string(const std::string& x) {
   if      (x == "basic")      {ret = BASIC;     }
   else if (x == "controlled") {ret = CONTROLLED;}
   else if (x == "dense")      {ret = DENSE;     }
-  else {stop("Invalid category " + x);}
+  else {util::stop("Invalid category " + x);}
   return ret;
 }
 
@@ -58,7 +58,7 @@ stepper::Algorithm stepper::algorithm_from_string(const std::string& x) {
   else if (x == "runge_kutta_dopri5")      {ret = RUNGE_KUTTA_DOPRI5;     }
   else if (x == "bulirsch_stoer")          {ret = BULIRSCH_STOER;         }
   else if (x == "rosenbrock4")             {ret = ROSENBROCK4;            }
-  else {stop("Invalid algorithm " + x);}
+  else {util::stop("Invalid algorithm " + x);}
   return ret;
 }
 
@@ -68,33 +68,33 @@ void stepper::validate(stepper::Category category,
                        double abs_tol, double rel_tol) {
   if (category == BASIC) {
     if (!ok_basic[algorithm]) {
-      stop("Cannot make a basic stepper with algorithm " +
-           algorithm_name(algorithm));
+      util::stop("Cannot make a basic stepper with algorithm " +
+                 algorithm_name(algorithm));
     }
     if (!R_IsNA(abs_tol) || !R_IsNA(rel_tol)) {
-      stop("Basic steppers must have NA tolerances");
+      util::stop("Basic steppers must have NA tolerances");
     }
   } else if (category == CONTROLLED) {
     if (!ok_controlled[algorithm]) {
-      stop("Cannot make a controlled stepper with algorithm " +
-           algorithm_name(algorithm));
+      util::stop("Cannot make a controlled stepper with algorithm " +
+                 algorithm_name(algorithm));
     }
     if (R_IsNA(abs_tol) || R_IsNA(rel_tol)) {
-      stop("Tolerances must be non-NA");
+      util::stop("Tolerances must be non-NA");
     }
   } else if (category == DENSE) {
     if (!ok_dense[algorithm]) {
-      stop("Cannot make a dense stepper of algorithm " +
-           algorithm_name(algorithm));
+      util::stop("Cannot make a dense stepper of algorithm " +
+                 algorithm_name(algorithm));
     }
     // NOTE: These are ignored by euler though...
     if (R_IsNA(abs_tol) || R_IsNA(rel_tol)) {
-      stop("Tolerances must be non-NA");
+      util::stop("Tolerances must be non-NA");
     }
   }
   if (!ublas_state && needs_jacobian[algorithm]) {
-    stop("The stepper algorithm " + algorithm_name(algorithm) +
-         " requires a Jacobian");
+    util::stop("The stepper algorithm " + algorithm_name(algorithm) +
+               " requires a Jacobian");
   }
 }
 
@@ -128,7 +128,7 @@ stepper::construct_basic<vector_stl>(stepper::Algorithm algorithm) {
   case RUNGE_KUTTA_DOPRI5:
     return stepper_basic_runge_kutta_dopri5_stl();
   default:
-    stop("Invalid basic algorithm"); // TODO: print algorithm
+    util::stop("Invalid basic algorithm"); // TODO: print algorithm
     return boost::any();
   }
 }
@@ -152,7 +152,7 @@ stepper::construct_basic<vector_ublas>(stepper::Algorithm algorithm) {
   case ROSENBROCK4:
     return stepper_basic_rosenbrock4_ublas();
   default:
-    stop("Invalid basic algorithm"); // TODO: print algorithm
+    util::stop("Invalid basic algorithm"); // TODO: print algorithm
     return boost::any();
   }
 }
@@ -179,7 +179,7 @@ stepper::construct_controlled<vector_stl>(stepper::Algorithm algorithm,
   case BULIRSCH_STOER:
     return bulirsch_stoer<state>(abs_tol, rel_tol);
   default:
-    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    util::stop("Invalid controlled algorithm"); // TODO: print algorithm
     return boost::any();
   }
 }
@@ -208,7 +208,7 @@ stepper::construct_controlled<vector_ublas>(stepper::Algorithm algorithm,
   case ROSENBROCK4:
     return make_controlled<stepper_basic_rosenbrock4_ublas>(abs_tol, rel_tol);
   default:
-    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    util::stop("Invalid controlled algorithm"); // TODO: print algorithm
     return boost::any();
   }
 }
@@ -231,7 +231,7 @@ stepper::construct_dense<vector_stl>(stepper::Algorithm algorithm,
   case BULIRSCH_STOER:
     return bulirsch_stoer_dense_out<vector_stl>(abs_tol, rel_tol);
   default:
-    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    util::stop("Invalid controlled algorithm"); // TODO: print algorithm
     return boost::any();
   }
 }
@@ -257,7 +257,7 @@ stepper::construct_dense<vector_ublas>(stepper::Algorithm algorithm,
     return make_dense_output<stepper_basic_rosenbrock4_ublas>
       (abs_tol, rel_tol);
   default:
-    stop("Invalid controlled algorithm"); // TODO: print algorithm
+    util::stop("Invalid controlled algorithm"); // TODO: print algorithm
     return boost::any();
   }
 }

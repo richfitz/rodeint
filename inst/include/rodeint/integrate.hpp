@@ -74,7 +74,7 @@ struct integrate_const_data {
     case stepper::DENSE:
       return run_dense();
     default:
-      stop("Unimplemented category"); // TODO: give details
+      util::stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -93,7 +93,7 @@ struct integrate_const_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -108,7 +108,7 @@ struct integrate_const_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -121,7 +121,7 @@ struct integrate_const_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_dense_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -152,7 +152,7 @@ struct integrate_n_steps_data {
     using boost::numeric::odeint::integrate_n_steps;
     // Different check on dt here, compared with the (t0, t1) integrators.
     if (dt == 0.0) {
-      Rcpp::stop("dt cannot be zero");
+      util::stop("dt cannot be zero");
     }
     Stepper s_typed = s.template as<Stepper>();
     state_saver<state_type> state;
@@ -182,7 +182,7 @@ struct integrate_n_steps_data {
     case stepper::DENSE:
       return run_dense();
     default:
-      stop("Unimplemented category"); // TODO: give details
+      util::stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -201,7 +201,7 @@ struct integrate_n_steps_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -216,7 +216,7 @@ struct integrate_n_steps_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -229,7 +229,7 @@ struct integrate_n_steps_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_dense_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -285,7 +285,7 @@ struct integrate_adaptive_data {
     case stepper::DENSE:
       return run_dense();
     default:
-      stop("Unimplemented category"); // TODO: give details
+      util::stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -304,7 +304,7 @@ struct integrate_adaptive_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -319,7 +319,7 @@ struct integrate_adaptive_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -332,7 +332,7 @@ struct integrate_adaptive_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_dense_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericVector(); // never get here
     }
   }
@@ -371,7 +371,7 @@ struct integrate_times_data {
     if (!util::is_sorted(times.begin(), times.end(), dt > 0)) {
       if (times.front() != times.back()) { // corner case :-/
         std::string msg = "Times must be sorted ";
-        stop(msg + (dt > 0 ? "(increasing)" : "(decreasing)"));
+        util::stop(msg + (dt > 0 ? "(increasing)" : "(decreasing)"));
       }
     }
 
@@ -404,7 +404,7 @@ struct integrate_times_data {
     case stepper::DENSE:
       return run_dense();
     default:
-      stop("Unimplemented category"); // TODO: give details
+      util::stop("Unimplemented category"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here
     }
   }
@@ -423,7 +423,7 @@ struct integrate_times_data {
     case stepper::RUNGE_KUTTA_DOPRI5:
       return run<stepper_basic_runge_kutta_dopri5_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here
     }
   }
@@ -438,7 +438,7 @@ struct integrate_times_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_controlled_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here
     }
   }
@@ -451,7 +451,7 @@ struct integrate_times_data {
     case stepper::BULIRSCH_STOER:
       return run<stepper_dense_bulirsch_stoer_stl>();
     default:
-      stop("Unimplemented algorithm"); // TODO: give details
+      util::stop("Unimplemented algorithm"); // TODO: give details
       return Rcpp::NumericMatrix(); // never get here
     }
   }
