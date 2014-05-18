@@ -1,4 +1,7 @@
-##' Integrate a system of ODEs
+##' Integrate a system of ordinary differential equations (ODEs).
+##' This is the low-level interface that corresponds exactly to the
+##' \code{ideint} interface.  An easier to use, more R-ish, interface
+##' is available using \code{\link{make_integrate}}.
 ##'
 ##' There are four different integration functions here.  See the
 ##' odeint documentation for more detail about the precice
@@ -35,12 +38,20 @@
 ##' @param times Vector of times (\code{integrate_times} only)
 ##' @param save_state Logical: return information about intermediate
 ##' points as an attribute.  Not applicable for
-##' \code{integrate_times}.
+##' \code{integrate_times}, which always returns information about
+##' intermediate points.
 ##' @author Rich FitzJohn
 ##' @rdname rodeint_integrate
-##' @seealso
+##' @seealso \code{\link{make_stepper}} for building steppers and for
+##' information about possible algorithms, \code{\link{ode_system}} for
+##' building a sytem of ODEs, and \code{\link{make_integrate}} for a
+##' higher-level interface to these functions.
+##'
+##' The odeint documentation also has useful reference information on
+##' \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/integrate_functions.html}{differences
+##' between the four integrate functions}, and how
 ##' \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/concepts/dense_output_stepper.html}{dense
-##' output steppers}
+##' output steppers} work.
 ##' @examples
 ##' ## Picking up with the harmonic oscillator from the ode_system
 ##' ## example:
@@ -184,60 +195,4 @@ integrate_times <- function(stepper, ode_system, y, times, dt) {
   }
   assert_scalar_numeric(dt)
   ode_system$integrate_times(stepper$ptr, ode_system$ptr, y, times, dt)
-}
-
-##' Helper function for binding ode_systems, steppers and integration
-##' functions together.  This can be used to create a function
-##' \code{f(y0, t)} from your system of \code{f\'(y0, t)}.
-##'
-##' Note the opposite ordering of the \code{ode_system} and \code{stepper}
-##' arguments here compared with the rest of the package (following
-##' \code{odeint}.
-##'
-##' @title Make Integration Function
-##' @param ode_system A ode_system function (\code{\link{ode_system}}).
-##' @param ... Additional arguments to bind.  Setting \code{t0} when a
-##' system is time independent means \code{t1} will be a function of
-##' elapsed time, which can be useful.  All integrate functions take a
-##' \code{dt} argument, so that's useful to bind too.  You can also
-##' pass in \code{set_as_defaults=TRUE} and the arguments, including
-##' \code{stepper} and \code{ode_system} will simply be set as defaults
-##' allowing some tuning later.
-##' @param stepper A stepper object. By default the controlled
-##' \code{runge_kutta_dopri} stepper is used with default tolerances.
-##' If you want to change the tolerance, you must provide a different
-##' stepper object.
-##' @param integrate One of the integration functions.  The default is
-##' \code{\link{integrate_adaptive}}.
-##' @author Rich FitzJohn
-##' @export
-make_integrate <- function(ode_system, ..., stepper=NULL,
-                           integrate=integrate_adaptive) {
-  if (is.null(stepper)) {
-    stepper <- make_stepper("controlled", "runge_kutta_dopri5")
-  }
-  assert_stepper(stepper)
-  assert_ode_system(ode_system)
-  ode_system <- ode_system$copy()
-  ## TODO: Option to rewrite t1 -> t if t0 = 0?
-  partially_apply(integrate, stepper=stepper, ode_system=ode_system, ...)
-}
-
-## Possible inefficiencies here -- the construction of the ode_system in
-## the first place, the extra copy that happens during all
-## make_integrate calls here.  I'm not concerned about it though - the
-## copy should be fairly cheap and the startup cost should not be bad
-## either.
-##' @rdname make_integrate
-##' @export
-make_integrate_pars <- function(ode_system, ...) {
-  ## First check that things work with the arguments we got (or we
-  ## might not find out for ages).  This also deals with the issues
-  ## described in ?force
-  make_integrate(ode_system, ...)
-  ode_system <- ode_system$copy()
-  function(pars) {
-    ode_system$set_pars(pars)
-    make_integrate(ode_system, ...)
-  }
 }

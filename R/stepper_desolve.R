@@ -1,4 +1,7 @@
-##' Stepper (documentation coming)
+##' Wrapper around \code{deSolve} to allow them to use the integration
+##' functions in this package, even though \code{deSolve} will do all
+##' the integration.  This section is experimental, and prone to
+##' change.  Please avoid at the moment.
 ##' @title Stepper (deSolve wrappers)
 ##' @aliases stepper_deSolve
 ##' @rdname stepper_deSolve

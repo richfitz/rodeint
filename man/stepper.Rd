@@ -78,11 +78,9 @@ algorithms for a given category.
 The \code{runge_kutta_dopri5} stepper is described by \code{odint}
 as possibly "the best default stepper", so probably start with
 that and see the \code{odeint} documentation for when the other
-types might be more appropriate.
-
-If your system has a Jacobian associated with it, you can also use
-the \code{rosenbrock4} algorithm (for any of the three
-categories).
+types might be more appropriate.  If your system has a Jacobian
+associated with it, you can also use the \code{rosenbrock4}
+algorithm (for any of the three categories).
 
 Steppers in the "controlled" and "dense" categories adjust their
 step size according the detected error, in an effort to take as
@@ -93,8 +91,8 @@ depends on the algorithm, and is described in the
 documentation}.  The parameter \code{abs_tol} changes the
 tolerance for \emph{absolute} error while \code{abs_tol} changes
 the tolerance for \emph{relative} error.  For the Runge Kutta
-steppers the interpretation is similar, though I believe not
-identical, to the steppers in \code{deSolve}.
+steppers the interpretation is similar to \code{deSolve}, though I
+believe not identical.
 
 Some algorithms in odeint are not supported yet:
 \itemize{
@@ -119,9 +117,9 @@ stepper_categories()
 ## To return valid algorithms, use stepper_algorithms(category):
 stepper_algorithms("controlled")
 
-## If you add have_jacobian=TRUE to this call you'll get the
+## If you add has_jacobian=TRUE to this call you'll get the
 ## "rosenbrock4" stepper added to the list
-stepper_algorithms("controlled", have_jacobian=TRUE)
+stepper_algorithms("controlled", has_jacobian=TRUE)
 
 ## To build a stepper use the "make_stepper" function:
 s <- make_stepper("controlled", "runge_kutta_dopri5")
@@ -132,5 +130,9 @@ print(s)
 s <- make_stepper("controlled", "runge_kutta_dopri5",
                   abs_tol=1e-4, rel_tol=1e-8)
 print(s)
+}
+\seealso{
+\code{\link{integrate_const}}, which uses these steppers to solve
+systems of ODEs created by \code{link{ode_system}}.
 }
 

@@ -26,6 +26,9 @@ make_stepper_deSolve_controlled(algorithm, abs_tol = 1e-06, rel_tol = 1e-06)
 \item{rel_tol}{Relative tolerance (see rtol in deSolve docs for now)}
 }
 \description{
-Stepper (documentation coming)
+Wrapper around \code{deSolve} to allow them to use the integration
+functions in this package, even though \code{deSolve} will do all
+the integration.  This section is experimental, and prone to
+change.  Please avoid at the moment.
 }
 

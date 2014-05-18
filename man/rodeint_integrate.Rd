@@ -35,10 +35,14 @@ integrate_times(stepper, ode_system, y, times, dt)
 
 \item{save_state}{Logical: return information about intermediate
 points as an attribute.  Not applicable for
-\code{integrate_times}.}
+\code{integrate_times}, which always returns information about
+intermediate points.}
 }
 \description{
-Integrate a system of ODEs
+Integrate a system of ordinary differential equations (ODEs).
+This is the low-level interface that corresponds exactly to the
+\code{ideint} interface.  An easier to use, more R-ish, interface
+is available using \code{\link{make_integrate}}.
 }
 \details{
 There are four different integration functions here.  See the
@@ -152,7 +156,15 @@ matlines(attr(y_a, "t"), attr(y_a, "y"), type="o", pch=19)
 Rich FitzJohn
 }
 \seealso{
+\code{\link{make_stepper}} for building steppers and for
+information about possible algorithms, \code{\link{ode_system}} for
+building a sytem of ODEs, and \code{\link{make_integrate}} for a
+higher-level interface to these functions.
+
+The odeint documentation also has useful reference information on
+\href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/odeint_in_detail/integrate_functions.html}{differences
+between the four integrate functions}, and how
 \href{http://headmyshoulder.github.io/odeint-v2/doc/boost_numeric_odeint/concepts/dense_output_stepper.html}{dense
-output steppers}
+output steppers} work.
 }
 
